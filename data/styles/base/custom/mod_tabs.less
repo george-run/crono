@@ -1,0 +1,71 @@
+
+.nav-tabs {
+  border-bottom: 1px solid @brand-primary;
+  > li {
+    background: @white;
+    margin-right:1px;
+    border-top: 1px solid @gray-93;
+    border-right: 1px solid @gray-93;
+    border-left: 1px solid @gray-93;
+    font-weight: 600;
+    > a {
+      margin-bottom: -1px;
+      border-bottom: 1px solid @brand-primary;
+      border-left:0;
+      border-right: 0;
+      background: @gray-93;
+      margin: 0;
+      color: @brand-primary;
+      border-radius: 0;
+
+      &:hover {
+        background: @gray-96;
+        border-left:0;
+        border-right: 0;
+      }
+    }
+    &.active {
+      border: 1px solid @brand-primary;
+      > a {
+        background-color: @white;
+        border-left:0;
+        border-right: 0;
+        border-top-color:@white;
+        margin-top: 0;
+        box-shadow: none;
+        color: @black;
+        &:focus, &:hover {
+          background-color: @white;
+          border-top-color:@white;
+          border-left:0;
+          border-right: 0;
+          color: @black;
+        }
+      }
+      &.active:hover {
+        border-top: 1px solid  @brand-primary;
+        border-right: 1px solid  @brand-primary;
+        border-left: 1px solid  @brand-primary;
+      }
+    }
+  }
+  > li:hover{
+    border-top: 1px solid  @gray-96;
+    border-right: 1px solid  @gray-96;
+    border-left: 1px solid  @gray-96;
+  }
+  > li:hover a:hover{
+    border-top: 1px solid  @gray-96;
+  }
+}
+
+.tab-content {
+  border: 1px solid @brand-primary;
+  border-top: 0;
+  padding: 10px;
+  &.tab-content-bordered {
+    border: 1px solid @brand-primary;
+    border-top: 0;
+  }
+  background:@white;
+}

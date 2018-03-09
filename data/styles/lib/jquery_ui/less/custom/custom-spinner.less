@@ -1,0 +1,44 @@
+@import "../spinner.less";
+
+.form-control.ui-spinner-input {
+  border: 1px solid @gray-80 !important;
+}
+
+.ui-spinner {
+  a.ui-spinner-button {
+    border: 1px solid @gray-80;
+  }
+  a.ui-spinner-button + a.ui-spinner-button {
+    border-top: 0;
+    padding-top: 1px;
+  }
+}
+
+// Feedback states
+.has-success {
+  .ui-spinner-form-control-validation(@state-success-text; @state-success-bg);
+}
+
+.has-warning {
+  .ui-spinner-form-control-validation(@state-warning-text; @state-warning-bg);
+}
+
+.has-error {
+  .ui-spinner-form-control-validation(@state-danger-text; @state-danger-bg);
+}
+
+.ui-spinner {
+  border: 0 !important;
+}
+
+.ui-spinner-form-control-validation(@text-color; @background-color) {
+  .ui-spinner-input {
+    border: 1px solid @text-color !important;
+  }
+  .ui-spinner {
+    a.ui-spinner-button {
+      border: 1px solid @text-color;
+      background-color: @background-color;
+    }
+  }
+}

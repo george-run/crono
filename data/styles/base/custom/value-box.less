@@ -1,0 +1,82 @@
+// Core variables and mixins
+@import "../../../styles/base/variables.less";
+@import "../../../styles/base/custom/custom-variables.less";
+@import "../../../styles/base/mixins.less";
+
+@value-box-disabled:   @gray-76;
+@value-box-danger:   @brand-danger;
+@value-box-warning:   @brand-warning;
+@value-box-success:   @brand-success;
+@value-box-info:   @brand-info;
+@value-box-primary:   @brand-primary;
+@value-box-inverse:   @black;
+
+.value-box {
+  padding: 10px;
+  border: 1px solid @gray-80;
+  box-sizing: border-box;
+  .value {
+    font-size: 38px;
+    font-weight: bold;
+  }
+}
+
+.value-box.value-box-inverse {
+  background: @black;
+  color: @white;
+  border: 1px solid @black;
+}
+
+.value-box.value-box-primary {
+  background: @value-box-primary;
+  border: 1px solid @value-box-primary;
+}
+
+.value-box.value-box-info {
+  background: @value-box-info;
+  border: 1px solid @value-box-info;
+}
+
+.value-box.value-box-success {
+  background: @value-box-success;
+  border: 1px solid @value-box-success;
+}
+
+.value-box.value-box-warning {
+  background: @value-box-warning;
+  border: 1px solid @value-box-warning;
+}
+
+.value-box.value-box-danger {
+  background: @value-box-danger;
+  border: 1px solid @value-box-danger;
+}
+
+.value-box.value-box-disabled {
+  background: @value-box-disabled;
+  border: 1px solid @value-box-disabled;
+  pointer-events: none;
+}
+
+.flex-container {
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  justify-content: flex-start;
+  > div {
+    padding: 15px;
+    display: flex;
+    align-items: stretch;
+    > div {
+      width: 100%;
+    }
+  }
+}
+
+.row.flex-container {
+  &:after {
+    content: none;
+  }
+  &:before {
+    content: none;
+  }
+}

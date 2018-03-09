@@ -1,0 +1,111 @@
+/*!
+ * jQuery UI Slider @VERSION
+ * http://jqueryui.com
+ *
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/slider/#theming
+ */
+
+///* Styling the Range Input Types: Start */
+.shadow(@shadow-size,@shadow-blur,@shadow-color) {
+  box-shadow: @shadow-size @shadow-size @shadow-blur @shadow-color, 0px 0px @shadow-size lighten(@shadow-color,5%);
+}
+
+.ui-slider {
+	position: relative;
+	text-align: left;
+    width: @track-width;
+    cursor: pointer;
+    border: @track-border-width solid @track-border-color!important;
+    background-color: @track-color;
+    & .ui-slider-handle {
+      position: absolute;
+      z-index: 2;
+      border: @thumb-border-width solid @thumb-border-color;
+      height: @thumb-height;
+      width: @thumb-width;
+      border-radius: @thumb-radius;
+      background: @thumb-color;
+      cursor: pointer;
+      .shadow(@thumb-shadow-size,@thumb-shadow-blur,@thumb-shadow-color);
+      -ms-touch-action: none;
+      touch-action: none;
+    }
+    & .ui-slider-range {
+      position: absolute;
+      z-index: 1;
+      font-size: @font-size-small;
+      display: block;
+      border: 0;
+      background-position: 0 0;
+      background-color: darken(@track-color,15%);
+    }
+  &.has-success {
+    background: lighten(@brand-success,40%);
+    border-color: @brand-success;
+    & .ui-slider-range {
+      background-color: darken(@brand-success,15%);
+    }
+  }
+  &.has-warning {
+    background: lighten(@brand-warning,40%);
+    border-color: @brand-warning;
+    & .ui-slider-range {
+      background-color: darken(@brand-warning,15%);
+    }
+  }
+  &.has-error {
+    background: lighten(@brand-danger,40%);
+    border-color: @brand-danger;
+    & .ui-slider-range {
+      background-color: darken(@brand-danger,15%);
+    }
+  }
+  &.ui-state-disabled {
+    & .ui-slider-handle,.ui-slider-range {
+      filter: inherit;
+    }
+  }
+}
+
+.ui-slider-horizontal {
+    height: @track-height;
+  & .ui-slider-handle {
+    top: -6px;
+    margin-left: -6px;
+  }
+  & .ui-slider-range {
+    top: 0;
+    height: 100%;
+  }
+  & .ui-slider-range-min {
+    left: 0;
+  }
+  & .ui-slider-range-max {
+    right: 0;
+  }
+}
+
+.ui-slider-vertical{
+    width: @track-height;
+    height: 200px;
+    margin:0 auto;
+    & .ui-slider-handle {
+      left: -6px;
+      margin-left: 0;
+      margin-bottom: -6px;
+    }
+    & .ui-slider-range {
+      left: 0;
+      width: 100%;
+    }
+    & .ui-slider-range-min {
+      bottom: 0;
+    }
+    & .ui-slider-range-max {
+      top: 0;
+    }
+}

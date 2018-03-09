@@ -1,0 +1,46 @@
+/*!
+ * jQuery UI Autocomplete @VERSION
+ * http://jqueryui.com
+ *
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/autocomplete/#theming
+ */
+
+.ui-autocomplete-input {
+
+}
+
+.ui-autocomplete {
+	position: absolute;
+    padding: 0;
+	top: 0;
+	left: 0;
+    border: 1px solid @input-border;
+    border-radius: @input-border-radius;
+    border-top: 0;
+    background: @dropdown-bg;
+    box-shadow: 0 4px 5px rgba(0,0,0,.15);
+    & .ui-menu-item {
+      font-size: @font-size-base;
+      margin: 0;
+      padding: @padding-base-vertical @padding-base-horizontal;
+      list-style: none;
+      line-height: @line-height-computed;
+      word-wrap: break-word;
+      -webkit-touch-callout: none;
+      border: 1px solid @dropdown-bg;
+      &.ui-state-hover,&.ui-state-focus {
+        background: @brand-primary;
+        border-color: @brand-primary;
+        color: #fff;
+      }
+      &.ui-state-active {
+        background: darken(@brand-primary,10%);
+        border-color: darken(@brand-primary,10%);
+        color: #fff;
+      }
+    }
+}

@@ -1,0 +1,210 @@
+
+
+select.form-control, .form-control:focus {
+  box-shadow:none;
+}
+
+.btn {
+  & > i {
+    &:not(.hidden) + *{
+      margin-left:7px;
+    }
+  }
+}
+
+.form-sep {
+  display:block;
+  line-height: @input-height-base;
+}
+.form-sep-lg {
+  display:block;
+  line-height: @input-height-large;
+}
+.form-sep-sm {
+  display:block;
+  line-height: @input-height-small;
+}
+
+.input-group-addon input[type=radio], .input-group-addon input[type=checkbox] {
+  margin-top: 3px;
+}
+
+///* Fix for overflowing textareas*/
+textarea.fixed-width-textarea {
+  max-width:100%!important;
+  width:100%!important;
+}
+
+.panel {
+  .panel-title {
+    font-weight: bold;
+  }
+}
+
+
+.label {
+  padding: .2em .6em .2em;
+}
+
+.jumbotron {  
+  padding: @content-page-pad-top (@content-page-pad-side - 5px) (@content-page-pad-bottom + 5px);
+  @media (min-width: @screen-sm-min) {
+    padding: @content-page-pad-top @content-page-pad-side @content-page-pad-bottom;
+  }  
+  .page-content > & {
+      margin: 0 0 30px;
+  }
+  &.content-header {
+    box-shadow: none;
+    margin: -20px;
+    padding-top: (@jumbotron-padding / 2);
+    padding-bottom: (@jumbotron-padding / 2);
+
+    p {
+      margin-bottom: 0;
+    }
+    b, strong {
+      font-weight: 600;
+    }
+  }
+}
+
+.progress {
+  padding: @internal-padding;
+  .progress-bar {
+    line-height: @internal-line-height;
+  }
+}
+
+.modal-header {
+  padding-right:50px;
+  position:relative;
+  .close {
+    margin: @modal-title-top-bottom-padding @modal-title-left-right-padding;
+    padding: 2px;
+    position: absolute;
+    top:0;
+    right:0;
+    * {
+      display: block;
+    }
+  }
+}
+.modal-footer {
+  padding: @modal-footer-padding;
+  text-align: initial;
+}
+
+[data-notify="container"] {
+  .box-shadow(0 3px 7px -2px rgba(0,0,0,.5));
+}
+
+.form-group, .form-limited-input {
+  position:relative;
+}
+
+.form-group {
+  .ui-autocomplete {
+    width: 100%!important;
+  }
+}
+
+.truncate {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.show-panel-example {
+  .navbar {
+    .container-fluid {
+      padding-right: 0;
+    }
+  }
+}
+
+.flag-icon {
+  width: 20px;
+  height: 15px;
+}
+
+.dt-editable-text {
+    position:relative;
+}
+.dt-editable-input {
+    background-color: #f1f1f1;
+    width:100%!important;
+    position:absolute;
+    visibility:hidden;
+    left:-99999px;
+}
+
+.dt-editable {
+    .dt-editable-text {
+        position:absolute;
+        visibility:hidden;
+        left:-99999px;
+    }
+    .dt-editable-input {
+        position:relative;
+        left:0;
+        visibility: visible;
+    }
+}
+
+.pagination > li > a, .pagination > li > span {
+    font-weight: 700;
+}
+
+
+.well {
+    &:last-child {
+        margin-bottom:0;
+    }
+}
+
+.badge {
+  position: relative;
+  top: -1px;
+}
+
+.title-anchor {
+  pointer-events: none;
+  opacity: 0;
+  height: 0;
+  font-size: 0;
+  line-height: 0;
+  top: -30px;
+  position: relative;
+  display: block;
+}
+
+.chosen-select {
+  display: block!important;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: @input-height-base!important;
+}
+
+.hide-with-opacity {
+  display: block;
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 1px;
+
+  select {
+    display: block;
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: @input-height-base!important;
+  }
+}
+
+/*Fix for File upload border*/
+.input-group .input-group-btn {
+  z-index: 1;
+}

@@ -1,0 +1,129 @@
+@import "jQuery.chosen-1.4.2.min.less";
+
+.form-control.chosen-select[disabled] {
+  opacity: 0;
+}
+
+.chosen-container-multi {
+  .chosen-choices {
+    padding-left: 5px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    li.search-choice {
+      background-color: @white;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    li.search-field {
+      input[type=text] {
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.chosen-container-single .chosen-search input[type="text"] {
+  width: 100% !important;
+}
+
+.chosen-container {
+  .chosen-choices {
+    li.search-field {
+      input[type=text] {
+        color: #999;
+      }
+    }
+  }
+}
+
+.chosen-container.chosen-container-active {
+  .chosen-choices {
+    li.search-field {
+      input[type=text] {
+        color: @black;
+      }
+    }
+  }
+}
+
+// Feedback states
+.has-success {
+  .chosen-form-control-validation(@state-success-text; @white);
+}
+
+.has-warning {
+  .chosen-form-control-validation(@state-warning-text; @white);
+}
+
+.has-error {
+  .chosen-form-control-validation(@state-danger-text; @white);
+}
+
+.chosen-container.chosen-container-active {
+  box-shadow: none;
+}
+
+.chosen-form-control-validation(@text-color; @background-color) {
+
+  .chosen-container-single {
+    .chosen-single {
+      color: @text-color;
+      div:after {
+        color: @text-color;
+      }
+      abbr:after {
+        color: @text-color;
+      }
+    }
+  }
+
+  .chosen-container {
+    background-color: @background-color;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+  /* @group Multi Chosen */
+  .chosen-choices li {
+    &.search-field {
+      input[type="text"] {
+        background-color: @background-color;
+      }
+    }
+  }
+  /* @end */
+  .chosen-with-drop {
+    .chosen-choices li {
+      &.search-field {
+        input[type="text"] {
+          background-color: @background-color;
+        }
+      }
+    }
+  }
+  .chosen-container.chosen-container-active {
+    background-color: @background-color;
+    box-shadow: none;
+    .chosen-choices li {
+      &.search-field {
+        input[type="text"] {
+          background-color: @background-color;
+        }
+      }
+    }
+  }
+  /* @group Multi Chosen */
+  .chosen-container-multi {
+    .chosen-choices {
+      box-shadow: none;
+    }
+    .chosen-choices li {
+      &.search-field {
+        input[type="text"] {
+          color: @text-color;
+        }
+      }
+    }
+  }
+  /* @end */
+}
+

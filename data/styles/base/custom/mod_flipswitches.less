@@ -1,0 +1,74 @@
+///* Flip switch styling:START */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  line-height: inherit;
+  vertical-align: middle;
+  width: @flip-switch-width;
+  height: @flip-switch-height;
+  padding: @flip-switch-internal-padding;
+  background-color: white;
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+.switch-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.switch-label {
+  position: relative;
+  display: block;
+  height: (@flip-switch-height - @flip-switch-internal-padding * 2);
+  font-size: 10px;
+  text-transform: uppercase;
+  background: @flip-switch-color-off;
+  border-radius: inherit;
+  box-shadow: none;
+  border:1px solid @flip-switch-unchecked-border;
+  .transition(@flip-switch-transition);
+  .transition-property(opacity background);
+
+  .switch-input:checked ~ & {
+    background: #47a8d8;
+    box-shadow: none;
+    &:before { opacity: 0; }
+    &:after { opacity: 1; }
+  }
+}
+
+.switch-handle {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 4px 0 8px rgba(0,0,0,.1);
+  //.linear-gradient(top, white 40%, #f0f0f0);
+  .transition(left @flip-switch-transition);
+
+  .switch-input:checked ~ & {
+    left: 34px;
+    box-shadow: -4px 0 8px rgba(0,0,0,.2);
+  }
+}
+
+.switch > .switch-input:checked ~ .switch-label {
+  background: @brand-info;
+  border: 1px solid @flip-switch-checked-border;
+}
+
+.input-group-addon {
+    > .switch {
+        margin: -3px 0;
+    }
+}
+
+///* Flip switch styling:END */

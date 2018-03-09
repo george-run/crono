@@ -1,0 +1,77 @@
+/**
+ * jQuery Custom Scrollbar 0.5.5
+ * GitHub: https://github.com/mzubala/jquery-custom-scrollbar
+ */
+
+@custom-scrollbar-width: 100%;
+@custom-scrollbar-height: 100%;
+
+.scrollable {
+	position: relative;
+	&:focus {
+		outline: 0;
+	}
+	.viewport {
+		overflow: hidden;
+		position: relative;
+		.overview {
+			position: absolute;
+		}
+	}
+	.scroll-bar {
+		display: none;
+		.thumb {
+			position: absolute;
+		}
+	}
+	.scroll-bar.vertical {
+		height: @custom-scrollbar-height;
+		position: absolute;
+		right: 0;
+		.thumb {
+			min-height: 10px;
+			width: @custom-scrollbar-width;
+		}
+	}
+	.scroll-bar.horizontal {
+		position: relative;
+		width: @custom-scrollbar-width;
+		.thumb {
+			height: @custom-scrollbar-height;
+			left: 0;
+			min-width: 10px;
+		}
+	}
+}
+.not-selectable {
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+.scrollable.default-skin {
+	padding-bottom: 6px;
+	padding-right: 10px;
+	.scroll-bar.vertical {
+		width: 6px;
+	}
+	.scroll-bar.horizontal {
+		height: 6px;
+	}
+	.scroll-bar {
+		.thumb {
+			-moz-border-radius: 4px;
+			-webkit-border-radius: 4px;
+			background-color: black;
+			border-radius: 3px;
+			opacity: 0.4;
+		}
+		&:hover {
+			.thumb {
+				opacity: 0.6;
+			}
+		}
+	}
+}

@@ -1,0 +1,111 @@
+///* MAIN FOOTER STYLING */
+
+/* MAIN FOOTER STYLING */
+
+.footer {
+    padding-top: 75px;
+    height: 0;
+    width: 0;
+
+    .footer-inner {
+        position: absolute;
+        z-index: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        .footer-content {
+            position: absolute;
+            background-color: transparent;
+        }
+
+        .sidebar ~ & {
+            left: 0;
+
+            @media (min-width: @screen-sm-min) {
+                left: @sidebar-max-width;
+            }
+        }
+
+        .sidebar.sidebar-min ~ & {
+            @media (min-width: @screen-sm-min) {
+                left: @sidebar-min-width;
+            }
+        }
+    }
+
+    &.footer-fixed .footer-inner {
+        position: fixed;
+        z-index: 110;
+        bottom: 0;
+
+        .sidebar ~ & {
+            left: 0;
+
+            @media (min-width: @screen-sm-min) {
+                left: (@sidebar-max-width - 1);
+            }
+        }
+
+        .sidebar.sidebar-min ~ & {
+            @media (min-width: @screen-sm-min) {
+                left: (@sidebar-min-width - @sidebar-border-width);
+            }
+        }
+
+        .footer-content {
+            .clearfix();
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: @sidebar-first-level-bg;
+            border-width: 1px 0 0 0;
+            border-style: solid;
+            border-color: @sidebar-outer-border-color;
+        }
+    }
+}
+//.footer
+
+.footer-inner {
+    position: relative;
+
+    .footer-content {
+        left: @content-page-pad-side;
+        right: @content-page-pad-side;
+        bottom: 0px;
+        padding: 0;
+        padding-top: floor(((@sidebar-cell-height - @line-height-computed) / 2));
+        padding-bottom: floor(((@sidebar-cell-height - @line-height-computed) / 2));
+        background-color: @sidebar-first-level-bg;
+        line-height: @line-height-computed;
+        border-top: 1px solid #E5E5E5;
+        min-height: (@sidebar-cell-height - 1);
+        vertical-align: middle;
+        font-size: @font-size-small;
+
+        @media (min-width: @screen-sm-min) {
+            .panel-controls {
+                margin-top: -7px;
+                margin-bottom: -7px;
+
+                &.panel-controls-xs {
+                    margin-top: -1px;
+                    margin-bottom: -1px;
+                }
+
+                &.panel-controls-sm {
+                    margin-top: -5px;
+                    margin-bottom: -5px;
+                }
+
+                &.panel-controls-lg {
+                    margin-top: -13px;
+                    margin-bottom: -13px;
+                }
+            }
+        }
+    }
+}
+//.footer-inner
+

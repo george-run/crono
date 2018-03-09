@@ -1,0 +1,39 @@
+///* AUTHENTICATION BOX */
+
+.auth-box {
+  margin: 40px auto;
+  width: 100%;
+  -webkit-animation: jumpUpAndShowYourself 1000ms linear both;
+  animation: jumpUpAndShowYourself 1000ms linear both;
+  + .auth-box {
+    margin-bottom: 20px;
+  }
+
+  .auth-title {
+    font-size:24px;
+    color: @brand-primary;
+    margin: 0 0 15px;
+  }
+  .panel {
+    .panel-body {
+      padding: 15px 15px;
+      label {
+        font-weight:400;
+      }
+    }
+    .panel-header, .panel-footer {
+      padding: 10px 25px;
+    }
+  }
+  @media (min-width: @screen-sm-min) {
+    width: 360px;
+    .auth-title {
+      margin: 0 0 30px;
+    }
+    .panel {
+      .panel-body {
+        padding: 25px 25px;
+      }
+    }
+  }
+}

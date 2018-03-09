@@ -1,0 +1,109 @@
+// Core variables and mixins
+@import "../../../styles/base/variables.less";
+
+@hint-margin: 2px 0 0 2px;
+@next-prev-pad: 3px 10px 4px 10px;
+@next-prev-font-size: 21px;
+@hint-border: 3px;
+@hint-dot-border: 10px;
+@bullets-width-height: 10px;
+
+.introjs-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.introjs-helperNumberLayer {
+  background: @blue-normal;
+  box-shadow: none;
+  line-height: 21px;
+  text-shadow: none;
+}
+
+.introjs-bullets {
+  ul {
+    li {
+      a {
+        height: @bullets-width-height;
+        width: @bullets-width-height;
+      }
+    }
+  }
+}
+
+.introjs-button {
+  background-color: @white;
+  background-image: none;
+  border-radius: 2px;
+  border: 1px solid @gray-80;
+  color: @black;
+  font-size: 12px;
+  padding: 7px 10px;
+  text-shadow: none;
+  &:hover {
+    background: @gray-93;
+    color: @black;
+  }
+}
+
+a.introjs-skipbutton {
+  float: left;
+}
+
+a.introjs-skipbutton:focus {
+  text-decoration: none;
+}
+
+.introjs-prevbutton {
+  border-radius: 2px 0 0 2px;
+  border-right: 0;
+  padding: @next-prev-pad;
+  i {
+    font-size: @next-prev-font-size;
+  }
+}
+
+.introjs-nextbutton {
+  border-radius: 0 2px 2px 0;
+  padding: @next-prev-pad;
+  i {
+    font-size: @next-prev-font-size;
+  }
+}
+
+.introjs-disabled {
+  color: @gray-80;
+  &:hover {
+    background: @white;
+    color: @gray-80;
+  }
+}
+
+.introjs-progress {
+  background-color: @gray-93;
+}
+
+.introjs-progressbar {
+  background-color: @green-normal;
+}
+
+.introjs-hint {
+  &:hover > .introjs-hint-pulse {
+    border: @hint-border solid @red-normal;
+    margin: @hint-margin;
+  }
+}
+
+.introjs-hint-pulse {
+  background-color: @red-normal;
+  border: @hint-border solid transparent;
+  margin: @hint-margin;
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.introjs-hint-dot {
+  border: @hint-dot-border solid @red-normal;
+  box-sizing: content-box;
+}

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="js">
+<head>
+
+    <title>Crono</title>
+    <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="george-run@users.noreply.github.com">
+
+<link rel="stylesheet" href="dist/plugins/datetimepicker/bootstrap-datetimepicker.4.17.37.min.css">
+
+<!-- PHOTON main styles -->
+<link rel="stylesheet" href="dist/css/main_style.min.css" data-dependency-name="main_style">
+
+<!--[if lt IE 9]>
+    <script src="dist/js/lib/html5shiv.min.js"></script>
+    <script src="dist/js/lib/respond.min.js"></script>
+<![endif]-->
+
+</head>
+    <!--[if lt IE 9]>
+<body class="lt-ie9">
+<![endif]-->
+<!--[if lt IE 9]><p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+<!--[if gt IE 8]>
+<body>
+<![endif]-->
+<!--[if !IE]> -->
+<body>
+<!-- <![endif]-->
+
+
+<!-- PAGE:Start -->
+<div class="main-container" id="main-container"></div>
+        <!-- SIDEBAR:End -->
+        <!-- CONTENT:Start -->
+        <div class="main-content">
+            <div class="page-content">
+                <div class="panel panel-default">
+                            <div id="pannel_main">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
+                                            <div class="form-group">
+                                                <button id="start" class="btn btn-default">
+                                                    <i class='fa fa-play'></i>
+                                                    Start
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5 col-sm-5 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="time" id="time" value="" placeholder="Select the start time">
+                                                    <div class="input-group-addon cursor-pointer"><i class="fa fa-clock-o"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-5 col-sm-6 col-md-8 col-lg-8 text-right">
+                                            <div class="form-group">
+                                                <button id="getSql" class="btn btn-default">
+                                                    <i class='fa fa-plus'></i>
+                                                    Get sql
+                                                </button>
+                                                <button id="reset" class="btn btn-default">
+                                                    <i class='fa fa-trash'></i>
+                                                    Clear data
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <div class="form-group">
+                                                <input type="text" id="runnerNumber" name="runnerNumber" class="form-control input-lg" placeholder="Runner number" style="height: 100px;font-size: 66px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="well hidden" id="sql"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <table class="table table-striped table-hover font-size-200" id="result">
+                                                <tbody>
+                                                    <tr></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+            </div>
+        </div>
+        <!-- CONTENT:End -->
+    </div>
+</div>
+<!-- PAGE:End -->
+
+<!-- POPUPS:Start -->
+<div id="pop_space"></div>
+<!-- POPUPS:End -->
+
+<!-- SCRIPTS:Start -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>window.jQuery || document.write("<script src=\"dist/js/lib/jquery-1.11.3.min.js\">"+"<"+"/script>")</script>
+<script src="dist/plugins/numberformatter/jQuery.numberFormatter-1.0.0.js"></script>
+<script src="dist/plugins/datetimepicker/moment.2.10.6.min.js"></script>
+<script src="dist/plugins/datetimepicker/bootstrap-datetimepicker.4.17.37.min.js"></script>
+<script src="dist/plugins/datetimepicker/locales/bootstrap-datetimepicker.min.en.js"></script>
+<script src="dist/js/main_script.min.js"></script>
+<script src="dist/js/demo_helpers.js"></script>
+<!-- SCRIPTS:End -->
+
+<!-- DOCUMENT-READY:Start -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        console.log('Ready, Captain!');
+
+        //start format
+        window.onbeforeunload = confirmExit;
+        function confirmExit() {
+            return "You have attempted to leave this page. Are you sure?";
+        }
+
+        $('#time').datetimepicker({format : 'HH:mm:ss'})
+            .next().on('click', function() {
+                $(this).prev().focus();
+        });
+        $("#runnerNumber").numberFormatter({
+            decimal_separator: "",
+            thousands_separator: "",
+            no_of_decimals: 0
+        });
+        $("#runnerNumber").focus();
+        //end format
+
+        /*@todo
+            test app
+            add
+            edit
+            cahange order
+            api call
+        */
+
+        if (typeof(Storage) === "undefined") {
+            alert("Sorry! No Web Storage support");
+        }
+
+        if(localStorage.getItem("info") === null){
+            resetData();
+        }
+
+        if(localStorage.getItem("info") != null){
+            var info = JSON.parse(localStorage.getItem("info"));
+            addRunner(info);
+        }
+        
+        function resetData(){
+            $("#result tbody").html("<tr></tr>");
+            $("#runnerNumber").val('');
+            localStorage.clear();
+        }
+
+        $("body").delegate(".details", "keyup", function(e){
+            console.log($(this).val());
+            var order = $(this).data('details');
+            var details = $(this).val();
+            setDetails(order, details);
+        });
+
+        $("body").delegate(".removeRunner", "click", function(e){
+            var order = $(this).data('order');
+            removeRunner(order);
+        });
+
+        $("#getSql").on('click', function (e) {
+            var info = JSON.parse(localStorage.getItem("info"));
+            getSql(info);
+        });
+        
+        function secToTime (time) {
+            var time = parseInt(time, 10) / 1000;
+            var hours   = Math.floor(time / 3600);
+            var minutes = Math.floor((time - (hours * 3600)) / 60);
+            var seconds = time - (hours * 3600) - (minutes * 60);
+
+            if (hours   < 10) {hours   = "0"+hours;}
+            if (minutes < 10) {minutes = "0"+minutes;}
+            if (seconds < 10) {seconds = "0"+seconds;}
+            return hours+':'+minutes+':'+seconds;
+        }
+
+        $("#start").on('click', function (e) {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            if (hours   < 10) {hours   = "0"+hours;}
+            if (minutes < 10) {minutes = "0"+minutes;}
+            if (seconds < 10) {seconds = "0"+seconds;}
+
+            $('#time').val(hours+':'+minutes+':'+seconds);
+        });
+
+        $( "#start" ).trigger( "click" );
+
+        $("#reset").on('click', function (e) {
+            var result = confirm('All data will be deleted. Are you sure?');
+            if (result) {
+                resetData();
+            }
+        });
+
+        function addRunner(info){
+            
+            var length = info.length;
+            for (var i = 0; i < length; i++) {
+                var runnerNumber = info[i].runnerNumber;
+                var finalTime = info[i].finalTime;
+                var isDuplicate = info[i].isDuplicate;
+                var order = info[i].order;
+                var details = info[i].details;
+                var textDuplicate = (isDuplicate)?(' <span class="label label-danger">Duplicate</span>'):("");
+                var sql = "insert into result_stage set runner_number ="+runnerNumber+", stage_final_time = '"+finalTime+"', stage_id = 1, position='';";
+                
+                result = "<tr>" +
+                            "<td>" + 
+                                runnerNumber + textDuplicate +
+                            "</td>" + 
+                            "<td>" + 
+                                "<input type='text' class='details' data-details='" + order + "' value='" + details + "'>" +
+                            "</td>" + 
+                            "<td class='text-right'>" +
+                                finalTime + 
+                                " <i class='fa fa-remove cursor-pointer removeRunner' data-order='" + order + "'></i>" + 
+                            "</td>" +
+                        "</tr>";
+                $('#result tbody').prepend(result);
+            }
+
+        }
+
+        function removeRunner(order){
+            var info = JSON.parse(localStorage.getItem("info"));
+            var newInfo = [];
+            info.forEach(function(entry) {
+                if(entry.order !== order){
+                    newInfo.push(entry);
+                }
+            });
+            resetData();
+            localStorage.setItem("info", JSON.stringify(newInfo));
+            addRunner(newInfo);
+
+        }
+
+        function setDetails(order, details){
+            var info = JSON.parse(localStorage.getItem("info"));
+            var length = info.length;
+            for (var i = 0; i < length; i++) {
+                if(info[i].order == order){
+                   info[i].details = details;
+                }
+            }
+            console.log(info);
+            localStorage.setItem("info", JSON.stringify(info));
+
+        }
+
+        function isDuplicate(info, runnerNumber){
+            if(info == null){
+                return false;
+            } 
+            var length = info.length;
+            for (var i = 0; i < length; i++) {
+                if(info[i].runnerNumber == runnerNumber){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function getSql(info){
+           
+            if(info == null){
+                $('#sql').html('No data.');
+            } else{
+                var length = info.length;
+                var sql = '';
+                for (var i = 0; i < length; i++) {
+                    var runnerNumber = info[i].runnerNumber;
+                    var finalTime = info[i].finalTime;
+                    var sql = sql + "<div>insert into result_stage set runner_number ="+runnerNumber+", stage_final_time = '"+finalTime+"', stage_id = 1, position='';</div>";
+                }
+                $('#sql').html(sql);
+            }
+            $( "#sql" ).toggleClass('hidden');
+        }
+
+
+        $("#runnerNumber").on('keyup', function (e) {
+            e.preventDefault();
+            if (e.keyCode == 13) {
+
+                // calculate time
+                var startDate = $('#time').val().trim();
+                var now = new Date();
+                var endDate = new Date("1970-1-1 " +  now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds());
+                var diff = endDate - new Date("1970-1-1 " + startDate);
+                var finalTime = secToTime(diff);
+                //end time
+
+                
+                
+                var runnerNumber = $( this ).val().trim();
+                if(runnerNumber == ''){
+                    return false;
+                }
+                $(this).val('');
+                
+                if(
+                    localStorage.getItem("info") == null || 
+                    typeof JSON.parse(localStorage.getItem("info")) !== 'object'
+                    ){
+                    var info = [];
+                    var order = 0;
+                } else{
+                    var info = JSON.parse(localStorage.getItem("info"));
+                    var order = info.length;
+                }
+                
+                var newRunner = {
+                                    'startDate':startDate,
+                                    'endDate':endDate, 
+                                    'runnerNumber':runnerNumber,
+                                    'finalTime':finalTime,
+                                    'isDuplicate':isDuplicate(info, runnerNumber),
+                                    'order':order,
+                                    'details':''
+                                };
+                info.push(newRunner);
+                localStorage.setItem("info", JSON.stringify(info));
+
+                addRunner([newRunner])
+
+            }
+        });
+
+    });
+</script>
+<!-- DOCUMENT-READY:End -->
+
+</body>
+</html>

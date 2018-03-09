@@ -1,0 +1,206 @@
+///* CUSTOM CSS TOOLTIPS */
+
+///* MIXINS */
+
+.tooltip-variant(@tool-bkg; @tool-bor; @tip-bkg; @tip-arrow) {
+  background-color: @tool-bkg;
+  border-color: @tool-bor;
+  &:before {
+    background-color: @tip-bkg;
+  }
+  &:after {
+    border-color: @tip-arrow transparent transparent transparent;
+  }
+}
+
+.tool-position (@pos:top; @tool-tp:auto; @tool-rt:auto; @tool-bt:auto; @tool-lt:auto){
+  top: @tool-tp;
+  right: @tool-rt;
+  bottom:@tool-bt;
+  left: @tool-lt;
+  .test-args();
+  .test-args() when (@pos = top) {
+    .translate(-50%; 0);
+  }
+  .test-args() when (@pos = bottom) {
+    .translate(-50%; 0);
+  }
+  .test-args() when (@pos = left) {
+    .translate(0; -50%);
+  }
+  .test-args() when (@pos = right) {
+    .translate(0; -50%);
+  }
+}
+
+.tip-position (@pos:top; @tip-tp:auto; @tip-rt:auto; @tip-bt:auto; @tip-lt:auto; @tip-color: #333){
+  top: @tip-tp;
+  right: @tip-rt;
+  bottom: @tip-bt;
+  left: @tip-lt;
+  .test-args();
+  .test-args() when (@pos = top) {
+    .translate(-50%;0);
+    border-width: 15px 12px 0 12px;
+    border-color: @tip-color transparent transparent transparent;
+  }
+  .test-args() when (@pos = right) {
+    .translate(0; -50%);
+    border-width: 10px 12px 10px 0;
+    border-color: transparent @tip-color transparent transparent;
+  }
+  .test-args() when (@pos = bottom) {
+    .translate(-50%;0);
+    border-width: 0 12px 15px 12px;
+    border-color: transparent transparent @tip-color transparent;
+  }
+  .test-args() when (@pos = left) {
+    .translate(0; -50%);
+    border-width: 10px 0 10px 12px;
+    border-color: transparent transparent transparent @tip-color;
+  }
+}
+
+///* BASE CODE */
+.info-tooltip {
+  display:inline-block;
+  position:relative;
+  //color:inherit;
+  vertical-align:baseline;  
+  text-decoration:none;
+  &:not(.btn){
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  &:before {
+    position:absolute;
+    background-color: @tooltip-bg;
+    padding: 5px 10px;
+    min-width: 50px;
+    max-width: 200px;
+    content:attr(data-content);
+    color:@tooltip-color;
+    display:none;
+    visibility: hidden;
+    font-size:@font-size-small;
+    border-radius: @border-radius-base;
+    z-index: 100;
+    text-align:center;
+    line-height: @line-height-base;
+    white-space: normal;
+    .tool-position  (@pos:top; @tool-tp:auto; @tool-rt:auto; @tool-bt:115%; @tool-lt:50%);
+  }
+  &:after {
+    position: absolute;
+    content: " ";
+    display: none;
+    visibility: hidden;
+    margin: 0;
+    border-style: solid;
+    z-index: 3;
+    .tip-position   (@pos:top; @tip-tp:auto; @tip-rt:auto; @tip-bt:90%; @tip-lt:50%; @tooltip-bg);
+  }
+
+  &.tt-right {
+    &:before {
+      .tool-position  (@pos:right; @tool-tp:50%; @tool-rt:auto; @tool-bt:auto; @tool-lt:105%);
+    }
+    &:after {
+      .tip-position   (@pos:right; @tip-tp:50%; @tip-rt:-10%; @tip-bt:auto; @tip-lt:auto; @tooltip-bg);
+    }
+  }
+  &.tt-bottom {
+    &:before {
+      .tool-position  (@pos:bottom; @tool-tp:115%; @tool-rt:auto; @tool-bt:auto; @tool-lt:50%);
+    }
+    &:after {
+      .tip-position   (@pos:bottom; @tip-tp:auto; @tip-rt:auto; @tip-bt:-40%; @tip-lt:50%; @tooltip-bg);
+    }
+  }
+  &.tt-left {
+    &:before {
+      .tool-position  (@pos:left; @tool-tp:50%; @tool-rt:105%; @tool-bt:auto; @tool-lt:auto);
+    }
+    &:after {
+      .tip-position   (@pos:left; @tip-tp:50%; @tip-rt:auto; @tip-bt:auto; @tip-lt:-12%; @tooltip-bg);
+    }
+  }
+  &.tt-block {
+    display: block;
+    margin: 0;
+
+    &:before {
+      bottom: 120%;
+    }
+    &:after {
+      bottom: 100%;
+    }
+  }
+  &:hover, &:focus {
+    outline: 0;
+    &:before,&:after {
+      display:block;
+      visibility: visible;
+    }
+  }
+}
+
+.tt-default, .tt-primary, .tt-info, .tt-success, .tt-warning, .tt-danger {
+  padding: .18em .50em;
+  border: 2px solid transparent;
+  line-height: 1;
+  border-radius: 100%;
+  color: #fff;
+  &:hover, &:focus {
+    background-color: #fff;
+    color: inherit;
+  }
+  &.tt-block {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+}
+.tt-default {
+  .tooltip-variant(@tooltip-bg; @tooltip-bg; @tooltip-bg; @tooltip-bg);
+}
+.tt-primary {
+  .tooltip-variant(@brand-primary; @brand-primary; @brand-primary; @brand-primary);
+}
+.tt-info {
+  .tooltip-variant(@brand-info; @brand-info; @brand-info; @brand-info);
+}
+.tt-success {
+  .tooltip-variant(@brand-success; @brand-success; @brand-success; @brand-success);
+}
+.tt-warning {
+  .tooltip-variant(@brand-warning; @brand-warning; @brand-warning; @brand-warning);
+}
+.tt-danger {
+  .tooltip-variant(@brand-danger; @brand-danger; @brand-danger; @brand-danger);
+}
+
+///* FIX FOR TOOLTIPS IN BUTTONS */
+///*.btn.info-tooltip {
+//  font-size:@font-size-base;
+//}*/
+
+///* TEXTAREA INPUT LIMITER */
+
+.limiterBox {
+  position:absolute;
+  background-color: @tooltip-bg;
+  padding: 5px 10px;
+  color:@tooltip-color;
+  border-radius: @border-radius-base;
+  font-size:@font-size-small;
+  &:after {
+    position: absolute;
+    content: " ";
+    margin: 0;
+    border-style: solid;
+    z-index: 3;
+    .tip-position(@pos:bottom; @tip-tp:auto; @tip-rt:auto; @tip-bt:75%; @tip-lt:50%; @tooltip-bg);
+  }
+}

@@ -1,0 +1,49 @@
+@import "selectize.bootstrap3.less";
+
+.selectize-control.multi {
+  .selectize-input.has-items {
+    padding-left: 5px;
+  }
+  .selectize-input > div {
+    box-shadow: none;
+    background: @white;
+  }
+}
+
+.has-success {
+  .selectize-form-control-validation(@state-success-text; @white);
+}
+
+.has-warning {
+  .selectize-form-control-validation(@state-warning-text; @white);
+}
+
+.has-error {
+  .selectize-form-control-validation(@state-danger-text; @white);
+}
+
+.selectize-input {
+  &.focus {
+    box-shadow: none;
+  }
+}
+
+.form-control.selectize-control {
+  line-height: 1;
+  .selectize-dropdown {
+    color: black;
+    background: @white;
+    border-color: @gray-80;
+    border-radius: 0;
+    margin-top: -2px;
+  }
+}
+
+.selectize-form-control-validation(@text-color; @background-color) {
+  .selectize-input {
+    border-color: @text-color;
+    background: @background-color;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
+}

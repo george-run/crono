@@ -1,0 +1,169 @@
+@import "../variables.less";
+
+@selected-tab-color: #112236;
+
+.show-panel.code-example {
+  border: 0;
+}
+
+.show-panel {
+  &:not(pre) > code[class*="language-"] {
+    background: @selected-tab-color;
+    border: 0;
+  }
+  pre[class*="language-"] {
+    background: @selected-tab-color;
+    border: 0;
+  }
+}
+
+.code-container {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.show-panel-body.code-example {
+  .code-header {
+    border-bottom: 1px solid @gray-80;
+    margin: 20px 0 0 0;
+
+    > div {
+      padding: 0 15px;
+    }
+
+    .btn-source {
+      border: 0;
+      color: @brand-primary;
+      height: 45px;
+      padding: 0 15px;
+      background: @gray-96;
+      position: absolute;
+      right:0;
+      bottom:0;
+      line-height: 45px;
+
+      i + i {
+        margin-left: 5px;
+      }
+    }
+
+    .btn-source:focus {
+      outline: none;
+    }
+
+    .btn-source.collapsed {
+      background: @white;
+    }
+
+    .btn-source.collapsed:hover {
+      background: @gray-96;
+    }
+
+    h4 {
+      margin: 0;
+    }
+
+    .module-description {
+      h4 {
+        color: @black;
+        font-size: 15px;
+        line-height: 28px;
+        margin: 8px 0 10px 0;
+      }
+    }
+  }
+}
+
+/*Tabs style just for code-example */
+.nav-tabs.code-example {
+  border-bottom: 1px solid @selected-tab-color;
+  padding-bottom: 1px;
+  padding-left: 1px;
+}
+
+.nav-tabs.code-example > li {
+  background: white;
+  margin-left: -1px;
+  border: 0;
+  border-right: 1px solid @gray-80;
+}
+
+.nav-tabs.code-example > li > a {
+  border: 0;
+  border-top: 1px solid transparent;
+  margin: 0;
+  color: @brand-primary;
+  border-radius: 0;
+  border-top-color: transparent;
+  padding-left: 15px;
+  padding-right: 15px;
+  background: white;
+
+  &:hover {
+    background: #f6f6f6;
+    border-color: @gray-80;
+    border-top-color: transparent;
+  }
+}
+
+.nav-tabs.code-example > li.active > a {
+  background-color: @selected-tab-color;
+  border-color: @gray-80;
+  border-bottom: 1px solid @selected-tab-color;
+  border-top-color: transparent;
+  box-shadow: none;
+  color: white;
+  margin-top: 0;
+  padding: 8px 15px 7px 15px;
+
+  &:focus {
+    background-color: @selected-tab-color;
+    border-color: @gray-80;
+    border-bottom-color: transparent;
+    border-top-color: transparent;
+    color: white;
+  }
+
+  &:hover {
+    background-color: @selected-tab-color;
+    border-color: @gray-80;
+    border-bottom-color: transparent;
+    border-top-color: transparent;
+    color: white;
+  }
+}
+
+.nav-tabs.code-example > li.active {
+  border-right: 1px solid transparent;
+
+  &:hover {
+    border: 0;
+    border-right: 1px solid transparent;
+  }
+}
+
+.tab-content.code-example {
+  border: 0;
+  border-top: 0;
+  padding: 10px;
+  background: #112236;
+  color: #fff
+}
+
+.nav-tabs.code-example > li a,
+.nav-tabs.code-example > li a:hover,
+.nav-tabs.code-example > li a:focus,
+.nav-tabs.code-example > li.active a,
+.nav-tabs.code-example > li.active a:hover,
+.nav-tabs.code-example > li.active a:focus {
+  border-left-color: transparent;
+}
+
+.nav-tabs.code-example > li + li a,
+.nav-tabs.code-example > li + li a:hover,
+.nav-tabs.code-example > li + li a:focus,
+.nav-tabs.code-example > li + li.active a,
+.nav-tabs.code-example > li + li.active a:hover,
+.nav-tabs.code-example > li + li.active a:focus {
+  border-left-color: @gray-80;
+}
