@@ -1,2 +1,2 @@
-# crono
-Chronometer for in-house competitions. 
+# Crono - Mini Web app
+Chronometer for small and in-house sport competitions. 
