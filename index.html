@@ -2,8 +2,8 @@
 <html lang="en" class="js">
 <head>
 
-    <title>Crono</title>
-    <meta charset="utf-8">
+<title>Crono</title>
+<meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +20,7 @@
 <![endif]-->
 
 </head>
-    <!--[if lt IE 9]>
+ <!--[if lt IE 9]>
 <body class="lt-ie9">
 <![endif]-->
 <!--[if lt IE 9]><p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
@@ -31,7 +31,6 @@
 <body>
 <!-- <![endif]-->
 
-
 <!-- PAGE:Start -->
 <div class="main-container" id="main-container"></div>
         <!-- SIDEBAR:End -->
@@ -39,62 +38,62 @@
         <div class="main-content">
             <div class="page-content">
                 <div class="panel panel-default">
-                            <div id="pannel_main">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
-                                            <div class="form-group">
-                                                <button id="start" class="btn btn-default">
-                                                    <i class='fa fa-play'></i>
-                                                    Start
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-5 col-sm-5 col-md-3 col-lg-3">
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" name="time" id="time" value="" placeholder="Select the start time">
-                                                    <div class="input-group-addon cursor-pointer"><i class="fa fa-clock-o"></i></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-5 col-sm-6 col-md-8 col-lg-8 text-right">
-                                            <div class="form-group">
-                                                <button id="getSql" class="btn btn-default">
-                                                    <i class='fa fa-plus'></i>
-                                                    Get sql
-                                                </button>
-                                                <button id="reset" class="btn btn-default">
-                                                    <i class='fa fa-trash'></i>
-                                                    Clear data
-                                                </button>
-                                            </div>
-                                        </div>
+                    <div id="pannel_main">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
+                                    <div class="form-group">
+                                        <button id="start" class="btn btn-default">
+                                            <i class='fa fa-play'></i>
+                                            Start
+                                        </button>
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <div class="form-group">
-                                                <input type="text" id="runnerNumber" name="runnerNumber" class="form-control input-lg" placeholder="Runner number" style="height: 100px;font-size: 66px;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <div class="well hidden" id="sql"></div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <table class="table table-striped table-hover font-size-200" id="result">
-                                                <tbody>
-                                                    <tr></tr>
-                                                </tbody>
-                                            </table>
+                                </div>
+                                <div class="col-xs-5 col-sm-5 col-md-3 col-lg-3">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="time" id="time" value="" placeholder="Select the start time">
+                                            <div class="input-group-addon cursor-pointer"><i class="fa fa-clock-o"></i></div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-xs-5 col-sm-6 col-md-8 col-lg-8 text-right">
+                                    <div class="form-group">
+                                        <button id="getSql" class="btn btn-default">
+                                            <i class='fa fa-plus'></i>
+                                            Get sql
+                                        </button>
+                                        <button id="reset" class="btn btn-default btn-danger">
+                                            <i class='fa fa-trash'></i>
+                                            Clear data
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group">
+                                        <input type="text" id="runnerNumber" name="runnerNumber" class="form-control input-lg" placeholder="Runner number" style="height: 100px;font-size: 66px;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <div class="well hidden" id="sql"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <table class="table table-striped table-hover font-size-200" id="result">
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,13 +114,19 @@
 <script src="dist/plugins/datetimepicker/bootstrap-datetimepicker.4.17.37.min.js"></script>
 <script src="dist/plugins/datetimepicker/locales/bootstrap-datetimepicker.min.en.js"></script>
 <script src="dist/js/main_script.min.js"></script>
-<script src="dist/js/demo_helpers.js"></script>
 <!-- SCRIPTS:End -->
 
 <!-- DOCUMENT-READY:Start -->
 <script type="text/javascript">
     $(document).ready(function () {
-        console.log('Ready, Captain!');
+       
+        /*@todo
+            test app
+            add
+            edit
+            cahange order
+            api call
+        */
 
         //start format
         window.onbeforeunload = confirmExit;
@@ -133,6 +138,7 @@
             .next().on('click', function() {
                 $(this).prev().focus();
         });
+
         $("#runnerNumber").numberFormatter({
             decimal_separator: "",
             thousands_separator: "",
@@ -140,14 +146,6 @@
         });
         $("#runnerNumber").focus();
         //end format
-
-        /*@todo
-            test app
-            add
-            edit
-            cahange order
-            api call
-        */
 
         if (typeof(Storage) === "undefined") {
             alert("Sorry! No Web Storage support");
@@ -222,27 +220,24 @@
         function addRunner(info){
             
             var length = info.length;
+
             for (var i = 0; i < length; i++) {
-                var runnerNumber = info[i].runnerNumber;
-                var finalTime = info[i].finalTime;
-                var isDuplicate = info[i].isDuplicate;
-                var order = info[i].order;
-                var details = info[i].details;
-                var textDuplicate = (isDuplicate)?(' <span class="label label-danger">Duplicate</span>'):("");
-                var sql = "insert into result_stage set runner_number ="+runnerNumber+", stage_final_time = '"+finalTime+"', stage_id = 1, position='';";
+
+                var textDuplicate = (info[i].isDuplicate)?(' <span class="label label-danger">Duplicate</span>'):("");
                 
                 result = "<tr>" +
                             "<td>" + 
-                                runnerNumber + textDuplicate +
+                                info[i].runnerNumber + textDuplicate +
                             "</td>" + 
                             "<td>" + 
-                                "<input type='text' class='details' data-details='" + order + "' value='" + details + "'>" +
+                                "<input type='text' class='details' data-details='" + info[i].order + "' value='" + info[i].details + "'>" +
                             "</td>" + 
                             "<td class='text-right'>" +
-                                finalTime + 
-                                " <i class='fa fa-remove cursor-pointer removeRunner' data-order='" + order + "'></i>" + 
+                                info[i].finalTime + 
+                                " <i class='fa fa-remove cursor-pointer removeRunner' data-order='" + info[i].order + "'></i>" + 
                             "</td>" +
                         "</tr>";
+
                 $('#result tbody').prepend(result);
             }
 
@@ -296,9 +291,7 @@
                 var length = info.length;
                 var sql = '';
                 for (var i = 0; i < length; i++) {
-                    var runnerNumber = info[i].runnerNumber;
-                    var finalTime = info[i].finalTime;
-                    var sql = sql + "<div>insert into result_stage set runner_number ="+runnerNumber+", stage_final_time = '"+finalTime+"', stage_id = 1, position='';</div>";
+                    var sql = sql + "<div>insert into result_stage set runner_number = " + info[i].runnerNumber + ", stage_final_time = '" + info[i].finalTime + "', stage_id = 1, position = 0; #" + info[i].details + "</div>";
                 }
                 $('#sql').html(sql);
             }
@@ -338,14 +331,15 @@
                 }
                 
                 var newRunner = {
-                                    'startDate':startDate,
-                                    'endDate':endDate, 
-                                    'runnerNumber':runnerNumber,
-                                    'finalTime':finalTime,
-                                    'isDuplicate':isDuplicate(info, runnerNumber),
-                                    'order':order,
-                                    'details':''
-                                };
+                    'startDate':startDate,
+                    'endDate':endDate, 
+                    'runnerNumber':runnerNumber,
+                    'finalTime':finalTime,
+                    'isDuplicate':isDuplicate(info, runnerNumber),
+                    'order':order,
+                    'details':''
+                };
+                
                 info.push(newRunner);
                 localStorage.setItem("info", JSON.stringify(info));
 
