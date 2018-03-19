@@ -300,7 +300,9 @@
         }
 
         function exportData(info){
-            
+            if(info == null){
+                return;
+            }
             var length = info.length;
             $("#resultExcel tbody").html("");
             result = "";
