@@ -59,6 +59,9 @@
                                 </div>
                                 <div class="col-xs-5 col-sm-6 col-md-8 col-lg-8 text-right">
                                     <div class="form-group">
+                                        <button class="btn btn-primary" id="excel">
+                                            <i class="fa fa-download"></i> Download
+                                        </button>
                                         <button id="getSql" class="btn btn-default">
                                             <i class='fa fa-plus'></i>
                                             Get sql
@@ -98,6 +101,20 @@
                                             <tr></tr>
                                         </tbody>
                                     </table>
+
+                                    <table class="hidden" id="resultExcel">
+                                         <thead>
+                                            <tr>
+                                                <th>Position</th>
+                                                <th>Runner number</th>
+                                                <th>Obs.</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+
                                 </div>
                             </div>
                         </div>
@@ -121,6 +138,7 @@
 <script src="dist/plugins/datetimepicker/moment.2.10.6.min.js"></script>
 <script src="dist/plugins/datetimepicker/bootstrap-datetimepicker.4.17.37.min.js"></script>
 <script src="dist/plugins/datetimepicker/locales/bootstrap-datetimepicker.min.en.js"></script>
+<script src="tableexport-xls-bold-headers.js"></script>
 <script src="dist/js/main_script.min.js"></script>
 <!-- SCRIPTS:End -->
 
@@ -128,6 +146,16 @@
 <script type="text/javascript">
     $(document).ready(function () {
        
+        $( "#excel" ).on( "click", function() {
+            var info = JSON.parse(localStorage.getItem("info"));
+            exportData(info);
+            $('#resultExcel').tableExport({
+                type: 'excel',
+                escape: 'false',
+                filename: 'export-results.xls'
+            });
+        });
+
         /*@todo
             test app
             add
@@ -232,9 +260,9 @@
             for (var i = 0; i < length; i++) {
 
                 var textDuplicate = (info[i].isDuplicate)?(' <span class="label label-danger">Duplicate</span>'):("");
-                var index = i+1;
+                var index = info[i].order + 1;
                 result = "<tr style='width:20px;'>" +
-                            "<td><small><i style='font-size:12px;'>" + index + "</i></small></td>"+
+                            "<td><small><i style='font-size:12px;'>" + index  + "</i></small></td>"+
                             "<td>" + 
                                 info[i].runnerNumber + textDuplicate +
                             "</td>" + 
@@ -251,6 +279,33 @@
             }
 
         }
+
+        function exportData(info){
+            
+            var length = info.length;
+            $("#resultExcel tbody").html("");
+            result = "";
+            for (var i = 0; i < length; i++) {
+                var textDuplicate = (info[i].isDuplicate)?(' - Duplicate'):("");
+                var index = info[i].order + 1;
+                result += "<tr>" +
+                            "<td>" + index  + "</td>"+
+                            "<td>" + 
+                                info[i].runnerNumber + textDuplicate +
+                            "</td>" + 
+                            "<td>" + 
+                                "" + info[i].details + "" +
+                            "</td>" + 
+                            "<td>" +
+                                info[i].finalTime + 
+                            "</td>" +
+                        "</tr>";
+            }
+            console.log(result);
+            $('#resultExcel tbody').html(result);
+
+        }
+
 
         function removeRunner(order){
             var info = JSON.parse(localStorage.getItem("info"));
