@@ -168,20 +168,21 @@
 <!-- DOCUMENT-READY:Start -->
 <script type="text/javascript">
     $(document).ready(function () {
-       
-        $( "#excel" ).on( "click", function() {
-            var info = JSON.parse(localStorage.getItem("info"));
-            exportData(info);
-            $('#resultExcel').tableToCSV();
-        });
-
-        /*@todo
+        
+        /*
+        @todo
             test app
             add
             edit
             cahange order
             api call
         */
+
+        $( "#excel" ).on( "click", function() {
+            var info = JSON.parse(localStorage.getItem("info"));
+            exportData(info);
+            $('#resultExcel').tableToCSV();
+        });
 
         //start format
         window.onbeforeunload = confirmExit;
@@ -303,6 +304,7 @@
             if(info == null){
                 return;
             }
+
             var length = info.length;
             $("#resultExcel tbody").html("");
             result = "";
@@ -322,9 +324,8 @@
                             "</td>" +
                         "</tr>";
             }
-            console.log(result);
-            $('#resultExcel tbody').html(result);
 
+            $('#resultExcel tbody').html(result);
         }
 
 
@@ -376,7 +377,7 @@
                 var length = info.length;
                 var sql = '';
                 for (var i = 0; i < length; i++) {
-                    var sql = sql + "<div>insert into result_stage set runner_number = " + info[i].runnerNumber + ", stage_final_time = '" + info[i].finalTime + "', stage_id = 1, position = 0; #" + info[i].details + "</div>";
+                    var sql = sql + "<div>insert into result_stage set runner_number = " + info[i].runnerNumber + ", stage_final_time = '" + info[i].finalTime + "', stage_id = 3, position = 0; #" + info[i].details + "</div>";
                 }
                 $('#sql').html(sql);
             }
