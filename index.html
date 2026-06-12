@@ -54,7 +54,7 @@
   .field { display: flex; flex-direction: column; gap: 4px; }
   .field label { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
 
-  input[type="text"], input[type="time"] {
+  input[type="text"], input[type="time"], select {
     background: var(--panel-2);
     color: var(--text);
     border: 1px solid var(--border);
@@ -63,7 +63,10 @@
     font-size: 1rem;
     font-variant-numeric: tabular-nums;
   }
-  input:focus { outline: 2px solid var(--primary); outline-offset: 0; border-color: var(--primary); }
+  input:focus, select:focus { outline: 2px solid var(--primary); outline-offset: 0; border-color: var(--primary); }
+
+  .results-head { display: flex; align-items: flex-end; margin-bottom: 12px; }
+  #rankingFilter { min-width: 220px; cursor: pointer; }
 
   #startTime { width: 130px; text-align: center; font-size: 1.1rem; }
 
@@ -137,6 +140,13 @@
     padding: 2px 6px; border-radius: 6px; margin-left: 6px; vertical-align: middle;
   }
   .tag.dup { background: var(--warn); color: #1f2937; }
+
+  .cat-tag {
+    display: inline-block; font-size: .7rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 6px; margin-left: 6px; vertical-align: middle;
+    background: var(--panel-2); color: var(--muted); border: 1px solid var(--border);
+    font-variant-numeric: tabular-nums;
+  }
 
   .obs { width: 100%; min-width: 120px; background: transparent; border: 1px solid transparent; color: var(--text); border-radius: 6px; padding: 6px 8px; font-size: 1rem; }
   .obs:hover { border-color: var(--border); }
@@ -217,6 +227,10 @@
 
     /* Full-width, thumb-friendly Record button under the number field. */
     #recordBtn { width: 100%; padding: 18px; font-size: 1.4rem; }
+
+    .results-head { width: 100%; }
+    .results-head .field { flex: 1 1 auto; width: 100%; }
+    #rankingFilter { width: 100%; }
   }
 </style>
 </head>
@@ -253,17 +267,24 @@
           the existing list (it never deletes your recorded times).
         </p>
         <p>
-          Upload a <strong>.csv</strong> file with one participant per line. The
-          <strong>first column is the bib number</strong>, the <strong>second is the name</strong>:
+          Upload a <strong>.csv</strong> file with one participant per line. The columns are
+          <strong>number, name, sex, birth year</strong> — in that order:
         </p>
-        <pre>number,name
-12,Ana Popescu
-13,Mihai Ionescu
-27,Andrei Georgescu</pre>
+        <pre>number,name,sex,birth_year
+12,Ana Popescu,F,1998
+13,Mihai Ionescu,M,1986
+27,Andrei Georgescu,M,1971</pre>
         <ul>
-          <li>A header row like <code>number,name</code> is detected and skipped automatically.</li>
-          <li>Comma <code>,</code>, semicolon <code>;</code> and tab separators all work.</li>
-          <li>Names with commas or quotes are fine if wrapped in quotes, e.g. <code>"Popescu, Ana"</code>.</li>
+          <li><strong>Sex</strong> and <strong>birth year</strong> are optional. Without them a
+              runner still gets timed, but only shows up in the “All” ranking — not in the
+              men/women or age-category rankings.</li>
+          <li><code>sex</code> = <code>M</code> or <code>F</code> (also accepts
+              <code>male/female</code>, <code>masculin/feminin</code>).</li>
+          <li><code>birth_year</code> = a 4-digit year; Crono derives the athletics
+              age category (10-year brackets, e.g. <code>M30–39</code>).</li>
+          <li>A header row like <code>number,name,sex,birth_year</code> is detected and skipped.</li>
+          <li>Comma <code>,</code>, semicolon <code>;</code> and tab separators all work; wrap
+              names containing a comma in quotes, e.g. <code>"Popescu, Ana"</code>.</li>
           <li>You can create the file in Excel / Google Sheets → <em>Save as / Download → CSV</em>.</li>
         </ul>
       </div>
@@ -290,6 +311,12 @@
 
   <!-- Results -->
   <div class="panel">
+    <div class="results-head">
+      <div class="field">
+        <label for="rankingFilter">Ranking</label>
+        <select id="rankingFilter" aria-label="Ranking filter"></select>
+      </div>
+    </div>
     <table id="result">
       <thead>
         <tr>
@@ -323,7 +350,8 @@
   // ----- State --------------------------------------------------------------
   var startEpoch = null;          // absolute ms timestamp of the race start
   var entries = [];               // [{ id, runnerNumber, finishEpoch, details }]
-  var participants = {};          // { "<number>": "<name>" }
+  var participants = {};          // { "<number>": { name, sex, birthYear } }
+  var currentFilter = "all";      // active ranking filter: all | M | F | "M|30" ...
 
   // ----- Elements -----------------------------------------------------------
   var $start = document.getElementById("startTime");
@@ -334,6 +362,7 @@
   var $statParticipants = document.getElementById("statParticipants");
   var $statDup = document.getElementById("statDup");
   var $importFile = document.getElementById("importFile");
+  var $filter = document.getElementById("rankingFilter");
 
   // ----- Time helpers -------------------------------------------------------
 
@@ -400,6 +429,105 @@
     try { participants = JSON.parse(localStorage.getItem(KEY_PARTICIPANTS)) || {}; }
     catch (e) { participants = {}; }
     if (typeof participants !== "object" || participants === null) participants = {};
+
+    // Migrate the older "number -> name string" shape to the object shape.
+    Object.keys(participants).forEach(function (num) {
+      var p = participants[num];
+      if (typeof p === "string") {
+        participants[num] = { name: p, sex: "", birthYear: null };
+      } else if (!p || typeof p !== "object") {
+        participants[num] = { name: "", sex: "", birthYear: null };
+      }
+    });
+  }
+
+  // ----- Participants & categories -----------------------------------------
+
+  function participantName(num) { var p = participants[num]; return p ? (p.name || "") : ""; }
+
+  // Normalize a free-form sex value to "M" / "F" / "".
+  function normalizeSex(v) {
+    v = String(v || "").trim().toLowerCase();
+    if (!v) return "";
+    if (v[0] === "m" || v[0] === "b") return "M"; // m / male / masculin / b (bărbat)
+    if (v[0] === "f" || v[0] === "w") return "F"; // f / female / feminin / w
+    return "";
+  }
+
+  // Athletics 10-year brackets. The bracket's lower bound doubles as its id.
+  // The upper bound is one below the next bracket; the last one is open-ended.
+  var AGE_BRACKETS = [0, 20, 30, 40, 50, 60];
+  function bracketRange(lo) {
+    var idx = AGE_BRACKETS.indexOf(lo);
+    if (idx === AGE_BRACKETS.length - 1) return lo + "+";
+    return lo + "–" + (AGE_BRACKETS[idx + 1] - 1);
+  }
+
+  // Compute the sex+age category for a participant, or null when data is missing.
+  function ageCategory(p) {
+    if (!p || !p.sex || !p.birthYear) return null;
+    var raceYear = new Date(startEpoch).getFullYear();
+    var age = raceYear - p.birthYear;
+    if (age < 0) return null;
+    var lo = AGE_BRACKETS[0];
+    for (var i = 0; i < AGE_BRACKETS.length; i++) {
+      if (age >= AGE_BRACKETS[i]) lo = AGE_BRACKETS[i];
+    }
+    var range = bracketRange(lo);
+    var sexWord = p.sex === "M" ? "Men" : "Women";
+    return {
+      key: p.sex + "|" + lo,
+      shortLabel: p.sex + range,          // e.g. "M30–39"
+      longLabel: sexWord + " " + range    // e.g. "Men 30–39"
+    };
+  }
+
+  // Category for a recorded entry (looks up its participant), or null.
+  function entryCategory(e) { return ageCategory(participants[e.runnerNumber]); }
+
+  // Build the ranking dropdown: All / Men / Women + every category present.
+  function buildFilterOptions() {
+    var opts = [
+      { value: "all", label: "All" },
+      { value: "M", label: "Men — overall" },
+      { value: "F", label: "Women — overall" }
+    ];
+    var seen = {};
+    Object.keys(participants).forEach(function (num) {
+      var c = ageCategory(participants[num]);
+      if (c && !seen[c.key]) { seen[c.key] = c.longLabel; }
+    });
+    Object.keys(seen).sort().forEach(function (key) {
+      opts.push({ value: key, label: seen[key] });
+    });
+
+    if (!opts.some(function (o) { return o.value === currentFilter; })) currentFilter = "all";
+
+    $filter.innerHTML = "";
+    opts.forEach(function (o) {
+      var el = document.createElement("option");
+      el.value = o.value; el.textContent = o.label;
+      if (o.value === currentFilter) el.selected = true;
+      $filter.appendChild(el);
+    });
+  }
+
+  // Predicate deciding whether an entry belongs to the active filter.
+  function matchesFilter(e, filter) {
+    if (filter === "all") return true;
+    var p = participants[e.runnerNumber];
+    if (filter === "M" || filter === "F") return !!p && p.sex === filter;
+    var c = ageCategory(p);
+    return !!c && c.key === filter;
+  }
+
+  // Map of entry id -> 1-based place within `list`, ranked by finish time.
+  function computePlaces(list) {
+    var places = {};
+    list.slice()
+      .sort(function (a, b) { return a.finishEpoch - b.finishEpoch; })
+      .forEach(function (e, i) { places[e.id] = i + 1; });
+    return places;
   }
 
   // ----- Rendering ----------------------------------------------------------
@@ -416,28 +544,34 @@
 
   function render(newId) {
     var dups = duplicateNumbers();
-    var dupCount = 0;
 
-    // Most recent finisher on top.
-    var ordered = entries.slice().sort(function (a, b) { return b.finishEpoch - a.finishEpoch; });
+    // Entries shown depend on the active ranking filter.
+    var visible = entries.filter(function (e) { return matchesFilter(e, currentFilter); });
+    var places = computePlaces(visible); // place within the current ranking
+
+    // "All" keeps the most-recent finisher on top (handy during live timing);
+    // any specific ranking is sorted by time so it reads 1, 2, 3…
+    var ordered = visible.slice().sort(function (a, b) {
+      return currentFilter === "all" ? b.finishEpoch - a.finishEpoch
+                                     : a.finishEpoch - b.finishEpoch;
+    });
 
     $body.innerHTML = "";
     ordered.forEach(function (e) {
-      var place = e.finishEpoch <= 0 ? "" :
-        entries.filter(function (x) { return x.finishEpoch <= e.finishEpoch; }).length;
       var isDup = !!dups[e.runnerNumber];
-      if (isDup) dupCount++;
 
       var tr = document.createElement("tr");
       if (e.id === newId) tr.className = "new";
 
-      var name = participants[e.runnerNumber] || "";
+      var name = participantName(e.runnerNumber);
+      var cat = entryCategory(e);
+      var catTag = cat ? '<span class="cat-tag">' + escapeHtml(cat.shortLabel) + "</span>" : "";
 
       tr.innerHTML =
-        '<td class="place" data-label="Place">' + place + "</td>" +
+        '<td class="place" data-label="Place">' + (places[e.id] || "") + "</td>" +
         '<td class="num" data-label="Number">' + escapeHtml(e.runnerNumber) +
           (isDup ? '<span class="tag dup">dup</span>' : "") + "</td>" +
-        '<td class="name" data-label="Name">' + escapeHtml(name) + "</td>" +
+        '<td class="name" data-label="Name">' + escapeHtml(name) + catTag + "</td>" +
         '<td data-label="Obs."><input class="obs" type="text" value="' + escapeAttr(e.details || "") +
           '" placeholder="add note…"></td>' +
         '<td class="time" data-label="Time">' + formatElapsed(e.finishEpoch - startEpoch) + "</td>" +
@@ -458,10 +592,19 @@
       $body.appendChild(tr);
     });
 
-    $empty.style.display = entries.length ? "none" : "block";
+    // Empty state: distinguish "nothing recorded" from "nothing in this ranking".
+    if (visible.length) {
+      $empty.style.display = "none";
+    } else {
+      $empty.style.display = "block";
+      $empty.textContent = entries.length
+        ? "No finishers in this ranking yet."
+        : "No results yet. Enter a runner number above and press Enter as each finishes.";
+    }
+
     $statCount.textContent = entries.length;
     $statParticipants.textContent = Object.keys(participants).length;
-    $statDup.textContent = dupCount;
+    $statDup.textContent = entries.filter(function (e) { return !!dups[e.runnerNumber]; }).length;
   }
 
   function escapeHtml(s) {
@@ -507,14 +650,32 @@
   // ----- CSV ----------------------------------------------------------------
 
   function exportCSV() {
-    var rows = [["Place", "Runner number", "Name", "Obs.", "Time", "Duplicate"]];
+    var rows = [["Place", "Category place", "Runner number", "Name", "Sex", "Category", "Obs.", "Time", "Duplicate"]];
     var dups = duplicateNumbers();
+
+    // Per-category places, keyed by category id.
+    var byCat = {};
+    entries.forEach(function (e) {
+      var c = entryCategory(e);
+      if (c) { (byCat[c.key] = byCat[c.key] || []).push(e); }
+    });
+    var catPlaces = {};
+    Object.keys(byCat).forEach(function (key) {
+      var pl = computePlaces(byCat[key]);
+      Object.keys(pl).forEach(function (id) { catPlaces[id] = pl[id]; });
+    });
+
     var ordered = entries.slice().sort(function (a, b) { return a.finishEpoch - b.finishEpoch; });
     ordered.forEach(function (e, i) {
+      var p = participants[e.runnerNumber];
+      var c = entryCategory(e);
       rows.push([
         i + 1,
+        catPlaces[e.id] || "",
         e.runnerNumber,
-        participants[e.runnerNumber] || "",
+        participantName(e.runnerNumber),
+        p ? (p.sex || "") : "",
+        c ? c.shortLabel : "",
         e.details || "",
         formatElapsed(e.finishEpoch - startEpoch),
         dups[e.runnerNumber] ? "yes" : ""
@@ -547,7 +708,7 @@
   }
 
   // Parse a participant CSV. Accepts comma/semicolon/tab separators.
-  // First column = number, second = name. A header row is auto-skipped.
+  // Columns: number, name, sex, birth year. A header row is auto-skipped.
   function importCSV(text) {
     var added = 0;
     text.replace(/\r\n?/g, "\n").split("\n").forEach(function (line, idx) {
@@ -556,15 +717,24 @@
       var cells = parseCsvLine(line, sep);
       var num = (cells[0] || "").trim();
       var name = (cells[1] || "").trim();
-      // Skip a header row like "number,name" / "nr,nume".
+      // Skip a header row like "number,name,sex,birth_year".
       if (idx === 0 && num && !/^\d+$/.test(num)) return;
       if (!num) return;
-      participants[num] = name;
+
+      var sex = normalizeSex(cells[2]);
+      var year = parseInt((cells[3] || "").trim(), 10);
+      var thisYear = new Date().getFullYear();
+      var birthYear = (year >= 1900 && year <= thisYear) ? year : null;
+
+      participants[num] = { name: name, sex: sex, birthYear: birthYear };
       added++;
     });
     save();
+    buildFilterOptions();
     render();
-    alert(added ? added + " participant(s) loaded." : "No valid rows found. Expected: number,name");
+    alert(added
+      ? added + " participant(s) loaded."
+      : "No valid rows found. Expected columns: number, name, sex, birth_year");
   }
 
   function parseCsvLine(line, sep) {
@@ -601,6 +771,11 @@
     this.value = ""; // allow re-importing the same file
   });
 
+  $filter.addEventListener("change", function () {
+    currentFilter = this.value;
+    render();
+  });
+
   $start.addEventListener("change", function () {
     var epoch = clockStringToEpoch(this.value);
     if (epoch == null) {
@@ -611,6 +786,7 @@
     startEpoch = epoch;
     this.value = formatClock(startEpoch);
     save();
+    buildFilterOptions(); // race year may shift age categories
     render();
   });
 
@@ -634,6 +810,7 @@
   // ----- Init ---------------------------------------------------------------
   load();
   $start.value = formatClock(startEpoch);
+  buildFilterOptions();
   render();
   $runner.focus();
 })();
