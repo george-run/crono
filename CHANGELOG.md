@@ -4,8 +4,12 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Changed
+- Decluttered the app header: the donation link is now an icon-only button, the offline badge is shorter ("Works offline …"), and the tagline/extra badge text hide on small screens.
+- The demo mocks (landing + in-app) use a grey palette and show a small "DEMO" watermark so they read clearly as illustrations, not live UI.
+
 ### Added
-- In-app "View demo" button (empty state) opens an auto-playing usage demo modal.
+- In-app "View demo" button (header) opens an auto-playing usage demo modal.
 
 ### Added
 - Animated "how it works" demo on the landing: shows setting start+distance, then bibs being entered and finishers appearing live (respects reduced-motion).

@@ -466,8 +466,9 @@
   .coffee-link:hover { background: var(--accent-3); color: var(--on-accent); border-color: var(--accent-3); }
   .coffee-link .icon { width: 1em; height: 1em; }
   footer.app .coffee-link { margin-top: 10px; }
-  .header-coffee { flex: 0 0 auto; align-self: center; }
-  @media (max-width: 560px) { .header-coffee { padding: 6px 10px; } .header-coffee span, .header-coffee { font-size: .8rem; } }
+  /* Header donation link is icon-only (it's fully labelled in the footer). */
+  .header-coffee { flex: 0 0 auto; align-self: center; padding: 7px; }
+  .header-coffee .icon { width: 1.15em; height: 1.15em; }
 
   /* Participants: inline "add" row */
   .part-add { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 12px; }
@@ -509,4 +510,13 @@
   @media (max-width: 560px) {
     header.app { flex-wrap: wrap; gap: 10px; }
     .header-actions { width: 100%; justify-content: flex-start; }
+    /* Trim the header copy on phones so it stays uncluttered. */
+    header.app .tagline { display: none; }
+    .offline-badge-extra { display: none; }
   }
+
+/* DEMO watermark tag on the mock */
+.demo { position: relative; }
+.demo::before { content: "DEMO"; position: absolute; top: 8px; right: 12px;
+  font-size: .6rem; font-weight: 700; letter-spacing: 1.5px; color: var(--muted);
+  opacity: .55; pointer-events: none; }
