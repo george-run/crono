@@ -6,39 +6,58 @@
 <meta name="description" content="Crono — a simple, offline chronometer for small running and sport competitions.">
 <meta name="author" content="the Crono project">
 <title>Crono</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f172a;
-    --panel: #1e293b;
-    --panel-2: #273449;
-    --border: #334155;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
-    --danger: #dc2626;
-    --danger-hover: #b91c1c;
-    --ok: #16a34a;
-    --warn: #f59e0b;
-    --radius: 10px;
+    --bg: #0b0f14;
+    --panel: #141b24;
+    --panel-2: #1d2630;
+    --border: #28333f;
+    --text: #e6edf3;
+    --muted: #8b97a6;
+    --primary: #a3e635;        /* lime accent */
+    --primary-hover: #84cc16;
+    --on-accent: #0b0f14;      /* dark text on lime */
+    --danger: #f87171;
+    --danger-hover: #ef4444;
+    --ok: #a3e635;
+    --warn: #fbbf24;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --font-ui: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-display: 'Space Grotesk', var(--font-ui);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--font-ui);
     background: var(--bg);
     color: var(--text);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1000px; margin: 0 auto; padding: 16px; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 20px 16px 32px; }
 
-  header.app {
-    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
-    padding: 8px 0 16px;
+  /* Display font for the title, the big number and all timing figures. */
+  h1, #runnerNumber, td.time, td.place, td.num, .stat .num {
+    font-family: var(--font-display);
   }
-  header.app h1 { font-size: 1.5rem; margin: 0; letter-spacing: .5px; }
-  header.app .tagline { color: var(--muted); font-size: .9rem; }
+
+  /* ---- Hero header ---- */
+  header.app {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 6px 0 22px;
+  }
+  header.app .hero-text { display: flex; flex-direction: column; gap: 2px; }
+  header.app h1 {
+    font-size: 1.9rem; margin: 0; letter-spacing: -.5px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  header.app h1 .logo { color: var(--primary); width: 1.1em; height: 1.1em; }
+  header.app .tagline { color: var(--muted); font-size: .92rem; }
+  header.app .hero-art { flex: 0 0 auto; width: 132px; height: 84px; color: var(--primary); }
 
   .panel {
     background: var(--panel);
@@ -77,28 +96,36 @@
     border: 1px solid var(--border);
     background: var(--panel-2);
     color: var(--text);
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-size: .95rem;
-    display: inline-flex; align-items: center; gap: 6px;
-    transition: background .12s ease, border-color .12s ease;
+    border-radius: var(--radius-sm);
+    padding: 9px 15px;
+    font-size: .95rem; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background .12s ease, border-color .12s ease, color .12s ease;
   }
-  button:hover { background: #31415a; }
-  button.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
-  button.primary:hover { background: var(--primary-hover); }
-  button.danger { background: transparent; border-color: var(--danger); color: #fca5a5; }
-  button.danger:hover { background: var(--danger); color: #fff; }
+  button:hover { background: #232f3c; border-color: #3a4a5a; }
+  button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  button.primary { background: var(--primary); border-color: var(--primary); color: var(--on-accent); font-weight: 700; }
+  button.primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+  button.danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+  button.danger:hover { background: var(--danger); color: var(--on-accent); }
 
+  /* Inline SVG icons scale with the button/text size. */
+  .icon { width: 1.05em; height: 1.05em; flex: 0 0 auto; stroke-width: 2; }
+
+  .capture-panel { border-color: rgba(163,230,53,.35); box-shadow: inset 0 0 0 1px rgba(163,230,53,.06); }
   .capture { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; margin: 0; }
   .capture .field { flex: 1 1 320px; }
   #runnerNumber {
     font-size: clamp(2.5rem, 9vw, 4.5rem);
+    font-weight: 700;
     text-align: center;
-    padding: 12px;
+    padding: 14px;
     letter-spacing: 4px;
     width: 100%;
+    border-radius: var(--radius);
   }
-  #recordBtn { font-size: 1.25rem; padding: 16px 28px; flex: 0 0 auto; }
+  #recordBtn { font-size: 1.2rem; padding: 16px 30px; flex: 0 0 auto; border-radius: 999px; }
+  #recordBtn .icon { width: 1.25em; height: 1.25em; }
   .hint { color: var(--muted); font-size: .85rem; }
 
   .help { margin-top: 10px; font-size: .9rem; }
@@ -120,20 +147,29 @@
     font-size: .85rem; line-height: 1.45; margin: 8px 0;
   }
 
-  .stats { display: flex; gap: 24px; flex-wrap: wrap; }
-  .stat { display: flex; flex-direction: column; }
-  .stat .num { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .stat .lbl { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; }
+  .stat {
+    display: flex; flex-direction: column; gap: 2px;
+    flex: 1 1 0; min-width: 120px;
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px;
+  }
+  .stat .num { font-size: 1.7rem; font-weight: 700; line-height: 1.1; color: var(--primary); font-variant-numeric: tabular-nums; }
+  .stat .lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
 
   table { width: 100%; border-collapse: collapse; }
-  th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border); }
-  th { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; }
-  td.time, th.time { text-align: right; font-variant-numeric: tabular-nums; font-size: 1.15rem; white-space: nowrap; }
-  td.place { color: var(--muted); width: 56px; }
-  td.num { font-weight: 700; font-size: 1.15rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+  thead th { border-bottom-color: var(--border); }
+  th { font-size: .72rem; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 600; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: rgba(255,255,255,.02); }
+  td.time, th.time { text-align: right; font-variant-numeric: tabular-nums; font-size: 1.2rem; white-space: nowrap; }
+  td.place { color: var(--muted); width: 56px; font-size: 1.05rem; font-weight: 700; }
+  td.place.first { color: var(--primary); }
+  td.num { font-weight: 700; font-size: 1.2rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
   td.name { color: var(--text); }
-  tr.new td { animation: flash 1s ease; }
-  @keyframes flash { from { background: rgba(37,99,235,.35); } to { background: transparent; } }
+  tr.new td { animation: flash 1.1s ease; }
+  @keyframes flash { from { background: rgba(163,230,53,.22); } to { background: transparent; } }
 
   .tag {
     display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase;
@@ -150,10 +186,12 @@
 
   /* Clickable category chip + inline sex/year editor in the Name cell. */
   .cat-chip {
-    font-size: .7rem; font-weight: 700; padding: 1px 7px; border-radius: 6px;
+    font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
     vertical-align: middle; background: var(--panel-2); color: var(--muted);
     border: 1px solid var(--border); font-variant-numeric: tabular-nums; cursor: pointer;
+    gap: 3px;
   }
+  .cat-chip .icon { width: .9em; height: .9em; }
   .cat-chip:hover { color: var(--text); border-color: var(--primary); background: var(--panel-2); }
   .cat-chip.add { border-style: dashed; opacity: .8; }
   .cat-editor { display: inline-flex; gap: 4px; align-items: center; vertical-align: middle; flex-wrap: wrap; }
@@ -169,7 +207,12 @@
   .row-remove { background: transparent; border: none; color: var(--muted); font-size: 1.1rem; padding: 4px 8px; }
   .row-remove:hover { color: var(--danger); background: transparent; }
 
-  .empty { text-align: center; color: var(--muted); padding: 24px; }
+  .empty {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    text-align: center; color: var(--muted); padding: 40px 24px;
+  }
+  .empty .empty-art { width: 116px; height: 116px; }
+  .empty #emptyMsg { max-width: 360px; }
 
   footer.app { color: var(--muted); font-size: .8rem; text-align: center; padding: 12px 0 24px; }
   footer.app a { color: var(--muted); }
@@ -184,10 +227,11 @@
 
   /* ---- Tablet / small screens ---- */
   @media (max-width: 720px) {
-    .wrap { padding: 12px; }
-    header.app { padding: 4px 0 12px; }
-    header.app h1 { font-size: 1.3rem; }
-    .panel { padding: 12px; }
+    .wrap { padding: 14px 12px 28px; }
+    header.app { padding: 4px 0 14px; }
+    header.app h1 { font-size: 1.5rem; }
+    header.app .hero-art { width: 96px; height: 62px; }
+    .panel { padding: 14px; }
 
     /* Start row: keep the field + "now" button side by side on top. */
     .controls { gap: 10px; }
@@ -236,8 +280,10 @@
     #result td.remove-cell { position: absolute; top: 6px; right: 6px; padding: 0; width: auto; }
     #result td.remove-cell::before { content: none; }
 
-    .stats { gap: 16px; }
-    .stat .num { font-size: 1.3rem; }
+    header.app .hero-art { display: none; }
+    .stats { gap: 10px; }
+    .stat { flex: 1 1 28%; min-width: 0; padding: 10px 12px; }
+    .stat .num { font-size: 1.4rem; }
 
     /* Full-width, thumb-friendly Record button under the number field. */
     #recordBtn { width: 100%; padding: 18px; font-size: 1.4rem; }
@@ -251,8 +297,26 @@
 <body>
 <div class="wrap">
   <header class="app">
-    <h1>⏱ Crono</h1>
-    <span class="tagline">Chronometer for small &amp; in-house sport competitions</span>
+    <div class="hero-text">
+      <h1>
+        <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 2h6"/><path d="M12 4v3"/><circle cx="12" cy="14" r="8"/><path d="M12 14V9.5"/><path d="M18.5 7.5 20 6"/>
+        </svg>
+        Crono
+      </h1>
+      <span class="tagline">Chronometer for small &amp; in-house sport competitions</span>
+    </div>
+    <svg class="hero-art" viewBox="0 0 132 84" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="4"  y1="30" x2="36" y2="30" stroke-width="3" opacity=".55"/>
+      <line x1="0"  y1="44" x2="28" y2="44" stroke-width="3" opacity=".30"/>
+      <line x1="8"  y1="58" x2="32" y2="58" stroke-width="3" opacity=".40"/>
+      <circle cx="88" cy="46" r="28" stroke-width="4"/>
+      <path d="M88 46V28" stroke-width="4"/>
+      <path d="M88 46l13 6" stroke-width="4"/>
+      <path d="M80 8h16" stroke-width="4"/>
+      <path d="M88 8v9" stroke-width="4"/>
+      <path d="M112 22l6-6" stroke-width="4"/>
+    </svg>
   </header>
 
   <!-- Controls -->
@@ -262,12 +326,24 @@
         <label for="startTime">Start time</label>
         <input type="text" id="startTime" inputmode="numeric" placeholder="HH:MM:SS" aria-describedby="startHint">
       </div>
-      <button id="setStartNow" title="Set the start time to the current moment">▶ Set start now</button>
+      <button id="setStartNow" title="Set the start time to the current moment">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+        Set start now
+      </button>
       <div class="spacer"></div>
-      <button id="importBtn" title="Import a CSV list of participants (number,name)">⇪ Import participants</button>
+      <button id="importBtn" title="Import a CSV list of participants (number, name, sex, birth year)">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>
+        Import participants
+      </button>
       <input type="file" id="importFile" accept=".csv,text/csv,text/plain" class="visually-hidden">
-      <button id="exportBtn" class="primary" title="Download results as CSV">⬇ Export CSV</button>
-      <button id="clearBtn" class="danger" title="Delete all recorded results">🗑 Clear results</button>
+      <button id="exportBtn" class="primary" title="Download results as CSV">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+        Export CSV
+      </button>
+      <button id="clearBtn" class="danger" title="Delete all recorded results">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>
+        Clear results
+      </button>
     </div>
     <p class="hint" id="startHint">Times are measured against this start. Editing it recalculates every result.</p>
 
@@ -307,13 +383,16 @@
   </div>
 
   <!-- Capture -->
-  <div class="panel">
+  <div class="panel capture-panel">
     <form class="capture" id="captureForm" autocomplete="off">
       <div class="field">
         <label for="runnerNumber">Runner number — tap Record or press Enter to log the finish</label>
         <input type="text" id="runnerNumber" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="0" aria-label="Runner number">
       </div>
-      <button type="submit" class="primary" id="recordBtn">⏱ Record</button>
+      <button type="submit" class="primary" id="recordBtn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2h6"/><path d="M12 4v3"/><circle cx="12" cy="14" r="8"/><path d="M12 14V10"/></svg>
+        Record
+      </button>
     </form>
   </div>
 
@@ -345,7 +424,17 @@
       </thead>
       <tbody id="resultBody"></tbody>
     </table>
-    <div class="empty" id="emptyState">No results yet. Enter a runner number above and press Enter as each finishes.</div>
+    <div class="empty" id="emptyState">
+      <svg class="empty-art" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M26 6h12" stroke="var(--primary)"/>
+        <path d="M32 10v5"/>
+        <circle cx="32" cy="38" r="20"/>
+        <path d="M32 38V26" stroke="var(--primary)"/>
+        <path d="M32 38l9 6"/>
+        <path d="M51 19l4-4"/>
+      </svg>
+      <span id="emptyMsg">No results yet. Enter a runner number above and press Record as each finishes.</span>
+    </div>
   </div>
 
   <footer class="app">
@@ -374,11 +463,23 @@
   var $runner = document.getElementById("runnerNumber");
   var $body = document.getElementById("resultBody");
   var $empty = document.getElementById("emptyState");
+  var $emptyMsg = document.getElementById("emptyMsg");
   var $statCount = document.getElementById("statCount");
   var $statParticipants = document.getElementById("statParticipants");
   var $statDup = document.getElementById("statDup");
   var $importFile = document.getElementById("importFile");
   var $filter = document.getElementById("rankingFilter");
+
+  // ----- Inline SVG icons (stroke-based, scale with text) -------------------
+  var ICONS = {
+    x: '<path d="M6 6l12 12"/><path d="M18 6L6 18"/>',
+    check: '<path d="M5 13l4 4L19 7"/>',
+    plus: '<path d="M12 6v12"/><path d="M6 12h12"/>'
+  };
+  function svgIcon(name) {
+    return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + "</svg>";
+  }
 
   // ----- Time helpers -------------------------------------------------------
 
@@ -558,8 +659,8 @@
       "</select>" +
       '<input class="ed-year" type="text" inputmode="numeric" maxlength="4" placeholder="year" value="' +
         escapeAttr(String(year)) + '" aria-label="Birth year">' +
-      '<button type="button" class="ed-save" title="Save">✓</button>' +
-      '<button type="button" class="ed-cancel" title="Cancel">✕</button>' +
+      '<button type="button" class="ed-save" title="Save">' + svgIcon("check") + "</button>" +
+      '<button type="button" class="ed-cancel" title="Cancel">' + svgIcon("x") + "</button>" +
       "</span>";
   }
 
@@ -625,11 +726,13 @@
         catHtml = '<button type="button" class="cat-chip" title="Edit sex / birth year">' +
                   escapeHtml(cat.shortLabel) + "</button>";
       } else {
-        catHtml = '<button type="button" class="cat-chip add" title="Add sex / birth year">+ cat</button>';
+        catHtml = '<button type="button" class="cat-chip add" title="Add sex / birth year">' +
+                  svgIcon("plus") + "cat</button>";
       }
 
+      var place = places[e.id] || "";
       tr.innerHTML =
-        '<td class="place" data-label="Place">' + (places[e.id] || "") + "</td>" +
+        '<td class="place' + (place === 1 ? " first" : "") + '" data-label="Place">' + place + "</td>" +
         '<td class="num" data-label="Number">' + escapeHtml(e.runnerNumber) +
           (isDup ? '<span class="tag dup">dup</span>' : "") + "</td>" +
         '<td class="name" data-label="Name">' +
@@ -637,7 +740,7 @@
         '<td data-label="Obs."><input class="obs" type="text" value="' + escapeAttr(e.details || "") +
           '" placeholder="add note…"></td>' +
         '<td class="time" data-label="Time">' + formatElapsed(e.finishEpoch - startEpoch) + "</td>" +
-        '<td class="remove-cell"><button class="row-remove" title="Remove this result">✕</button></td>';
+        '<td class="remove-cell"><button class="row-remove" title="Remove this result">' + svgIcon("x") + "</button></td>";
 
       tr.querySelector(".obs").addEventListener("input", function () {
         e.details = this.value;
@@ -674,10 +777,10 @@
     if (visible.length) {
       $empty.style.display = "none";
     } else {
-      $empty.style.display = "block";
-      $empty.textContent = entries.length
+      $empty.style.display = "flex";
+      $emptyMsg.textContent = entries.length
         ? "No finishers in this ranking yet."
-        : "No results yet. Enter a runner number above and press Enter as each finishes.";
+        : "No results yet. Enter a runner number above and press Record as each finishes.";
     }
 
     $statCount.textContent = entries.length;
