@@ -79,6 +79,11 @@ a { color: inherit; text-decoration: none; }
 .section-head h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.2rem);
   margin: 0; letter-spacing: -.8px; line-height: 1.12; }
 
+/* Install / PWA tutorial section */
+.install-lead { margin: 12px 0 0; color: var(--muted); }
+.install-grid .card p strong { color: var(--text); }
+.install-note { text-align: center; color: var(--muted); font-size: .9rem; margin: 20px auto 0; max-width: 560px; }
+
 /* features */
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .card { position: relative; overflow: hidden; background: var(--panel); border: 1px solid var(--border);
