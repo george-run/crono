@@ -1,0 +1,14 @@
+{
+  "name": "Crono — race timing",
+  "short_name": "Crono",
+  "description": "A fast, offline chronometer for small and in-house running competitions.",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b0f14",
+  "theme_color": "#0b0f14",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
