@@ -7,6 +7,7 @@
   var KEY_PARTICIPANTS = "crono.participants";
   var KEY_DISTANCE = "crono.distanceKm";
   var KEY_SOUND = "crono.sound";
+  var KEY_CARDS = "crono.cards";
   var KEY_CONSENT = "crono.consent";
   var CONSENT_VERSION = 1;        // bump to re-prompt if the terms change
 
@@ -968,12 +969,29 @@
     }
   });
 
+  // Remember each collapsible card's open/closed state.
+  function initCards() {
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY_CARDS) || "{}") || {}; } catch (e) {}
+    Array.prototype.forEach.call(document.querySelectorAll("details.setup[data-card]"), function (d) {
+      var key = d.getAttribute("data-card");
+      if (Object.prototype.hasOwnProperty.call(saved, key)) d.open = !!saved[key];
+      d.addEventListener("toggle", function () {
+        var cur = {};
+        try { cur = JSON.parse(localStorage.getItem(KEY_CARDS) || "{}") || {}; } catch (e) {}
+        cur[key] = d.open;
+        try { localStorage.setItem(KEY_CARDS, JSON.stringify(cur)); } catch (e) {}
+      });
+    });
+  }
+
   // ----- Init ---------------------------------------------------------------
   load();
   $start.value = formatClock(startEpoch);
   $distance.value = distanceKm == null ? "" : String(distanceKm);
   updateStartPreview();
   updateSoundToggle();
+  initCards();
   buildFilterOptions();
   render();
   initConsent();
