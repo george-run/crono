@@ -442,3 +442,10 @@
     opacity: 0; transform: translateY(10px); transition: opacity .25s ease, transform .25s ease; }
   .toast.in { opacity: 1; transform: none; }
   .toast.error { border-left-color: var(--danger); }
+
+  /* Buy me a coffee (donation) link */
+  .coffee-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+    color: var(--accent-3); border: 1px solid rgba(251,191,36,.45); border-radius: 999px;
+    padding: 5px 12px; font-size: .82rem; text-decoration: none; }
+  .coffee-link:hover { background: var(--accent-3); color: var(--on-accent); border-color: var(--accent-3); }
+  .coffee-link .icon { width: 1em; height: 1em; }
