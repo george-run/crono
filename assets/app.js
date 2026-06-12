@@ -1053,9 +1053,52 @@
 })();
 
 // Register the service worker (kept here so the page needs no inline script → strict CSP).
+// On update, show a dismissible "new version" toast — never auto-reload (could interrupt a live race).
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", function () {
-    navigator.serviceWorker.register("sw.js").catch(function () {});
+    navigator.serviceWorker.register("sw.js").then(function (reg) {
+      reg.addEventListener("updatefound", function () {
+        var nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener("statechange", function () {
+          // "installed" + an existing controller = an update (not the first install).
+          if (nw.state === "installed" && navigator.serviceWorker.controller) showUpdateToast();
+        });
+      });
+    }).catch(function () {});
   });
+}
+
+function showUpdateToast() {
+  var host = document.getElementById("toasts");
+  if (!host || document.getElementById("swUpdateToast")) return;
+  var el = document.createElement("div");
+  el.id = "swUpdateToast";
+  el.className = "toast toast-update in";
+  el.setAttribute("role", "status");
+
+  var span = document.createElement("span");
+  span.textContent = "New version available";
+
+  var reload = document.createElement("button");
+  reload.type = "button";
+  reload.className = "toast-reload";
+  reload.textContent = "Reload";
+  reload.addEventListener("click", function () { location.reload(); });
+
+  var dismiss = document.createElement("button");
+  dismiss.type = "button";
+  dismiss.className = "toast-dismiss";
+  dismiss.setAttribute("aria-label", "Dismiss");
+  dismiss.textContent = "×";
+  dismiss.addEventListener("click", function () {
+    el.classList.remove("in");
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+  });
+
+  el.appendChild(span);
+  el.appendChild(reload);
+  el.appendChild(dismiss);
+  host.appendChild(el);
 }
 
