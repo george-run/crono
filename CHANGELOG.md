@@ -5,6 +5,9 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
+- In-app "View demo" button (empty state) opens an auto-playing usage demo modal.
+
+### Added
 - Animated "how it works" demo on the landing: shows setting start+distance, then bibs being entered and finishers appearing live (respects reduced-motion).
 
 ### Changed
