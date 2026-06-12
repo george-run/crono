@@ -335,6 +335,10 @@
         </g>
       </svg>
       <span id="emptyMsg">No results yet. Enter a runner number above and press Record as each finishes.</span>
+      <button type="button" id="viewDemoBtn" class="demo-open">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+        View demo
+      </button>
     </div>
   </div>
 
@@ -398,6 +402,32 @@
         <span class="spacer"></span>
         <button id="rowCancel">Cancel</button>
         <button id="rowSave" class="primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Demo modal -->
+<div class="doc-overlay" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoTitle">
+  <div class="doc-modal demo-modal">
+    <div class="doc-modal-head">
+      <h2 id="demoTitle">How to use Crono</h2>
+      <button class="doc-close" id="demoClose" title="Close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="doc-modal-body">
+      <p class="demo-intro">Set the <strong>start</strong> and (optional) <strong>distance</strong>, then type each bib number and hit <strong>Record</strong> as runners finish. This preview plays by itself:</p>
+      <div class="demo" aria-hidden="true">
+        <div class="demo-setup">
+          <div class="demo-field"><span class="demo-k">Start</span><span class="demo-v">10:00:00</span></div>
+          <div class="demo-field"><span class="demo-k">Distance</span><span class="demo-v">5 km</span></div>
+        </div>
+        <div class="demo-capture">
+          <span class="demo-num" id="demoNum">0</span>
+          <span class="demo-rec">Record</span>
+        </div>
+        <ul class="demo-list" id="demoList"></ul>
       </div>
     </div>
   </div>

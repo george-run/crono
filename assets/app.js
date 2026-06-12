@@ -910,6 +910,64 @@
     if (e.key === "Escape" && $rowModal.classList.contains("show")) closeRowEdit();
   });
 
+  // ----- In-app usage demo (auto-playing, in a modal) ----------------------
+  var $demoModal = document.getElementById("demoModal");
+  var demoTimers = [];
+  function demoStop() { for (var i = 0; i < demoTimers.length; i++) clearTimeout(demoTimers[i]); demoTimers = []; }
+  function demoT(fn, ms) { var id = setTimeout(fn, ms); demoTimers.push(id); return id; }
+  function startDemoAnim() {
+    var numEl = $demoModal.querySelector("#demoNum");
+    var listEl = $demoModal.querySelector("#demoList");
+    var recEl = $demoModal.querySelector(".demo-rec");
+    if (!numEl || !listEl) return;
+    demoStop();
+    var DATA = [{ n: "247", t: "24:31" }, { n: "183", t: "25:08" }, { n: "92", t: "25:46" }, { n: "311", t: "26:20" }];
+    var reduce = false; try { reduce = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    if (reduce) {
+      listEl.innerHTML =
+        '<li class="demo-li"><span class="demo-pl">2</span><span class="demo-bib">#183</span><span class="demo-t">25:08</span></li>' +
+        '<li class="demo-li"><span class="demo-pl">1</span><span class="demo-bib">#92</span><span class="demo-t">24:31</span></li>';
+      numEl.textContent = "247";
+      return;
+    }
+    var di, recorded;
+    function reset() { listEl.innerHTML = ""; numEl.textContent = "0"; di = 0; recorded = 0; demoT(typeNext, 800); }
+    function typeNext() {
+      if (di >= DATA.length) { demoT(reset, 2200); return; }
+      var num = DATA[di].n;
+      (function td(k) {
+        if (k > num.length) { demoT(rec, 460); return; }
+        numEl.textContent = num.slice(0, k);
+        demoT(function () { td(k + 1); }, 240);
+      })(1);
+    }
+    function rec() {
+      if (recEl) { recEl.classList.add("on"); demoT(function () { recEl.classList.remove("on"); }, 260); }
+      recorded += 1;
+      var d = DATA[di];
+      var li = document.createElement("li");
+      li.className = "demo-li in0";
+      li.innerHTML = '<span class="demo-pl">' + recorded + '</span><span class="demo-bib">#' + d.n + '</span><span class="demo-t">' + d.t + '</span>';
+      listEl.insertBefore(li, listEl.firstChild);
+      requestAnimationFrame(function () { li.classList.remove("in0"); });
+      numEl.textContent = "0"; di += 1;
+      demoT(typeNext, 1100);
+    }
+    reset();
+  }
+  function openDemo() { $demoModal.classList.add("show"); document.body.style.overflow = "hidden"; startDemoAnim(); }
+  function closeDemo() {
+    demoStop();
+    $demoModal.classList.remove("show");
+    if (!$consent.classList.contains("show")) document.body.style.overflow = "";
+  }
+  document.getElementById("viewDemoBtn").addEventListener("click", openDemo);
+  document.getElementById("demoClose").addEventListener("click", closeDemo);
+  $demoModal.addEventListener("click", function (e) { if (e.target === $demoModal) closeDemo(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && $demoModal.classList.contains("show")) closeDemo();
+  });
+
   $start.addEventListener("change", function () {
     var epoch = clockStringToEpoch(this.value);
     if (epoch == null) {
