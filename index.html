@@ -54,7 +54,11 @@
   }
 
   /* ---- Hero header ---- */
-  header.app { position: relative; padding: 10px 0 22px; }
+  header.app {
+    position: relative; padding: 10px 0 22px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  header.app .hero-art { flex: 0 0 auto; width: 156px; height: 108px; position: relative; z-index: 1; }
   header.app::before {
     content: ""; position: absolute; top: -48px; left: -70px; width: 300px; height: 210px;
     background: radial-gradient(closest-side, rgba(163,230,53,.12), transparent 70%);
@@ -99,6 +103,7 @@
   #startTime { width: 130px; text-align: center; font-size: 1.1rem; }
 
   .spacer { flex: 1 1 auto; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
 
   button {
     cursor: pointer;
@@ -241,6 +246,7 @@
     .wrap { padding: 14px 12px 28px; }
     header.app { padding: 4px 0 14px; }
     header.app h1 { font-size: 1.6rem; }
+    header.app .hero-art { width: 116px; height: 80px; }
     .panel { padding: 14px; }
 
     /* Start row: keep the field + "now" button side by side on top. */
@@ -248,8 +254,9 @@
     .controls .field { flex: 1 1 auto; }
     #startTime { width: 100%; }
     .controls .spacer { flex-basis: 100%; height: 0; }
-    /* Action buttons share the width in a tidy grid. */
-    #importBtn, #exportBtn, #clearBtn { flex: 1 1 30%; justify-content: center; }
+    /* Action buttons: equal width AND equal height (align-items:stretch on .actions). */
+    .actions { width: 100%; gap: 8px; }
+    .actions button { flex: 1 1 0; min-width: 0; justify-content: center; text-align: center; padding: 11px 8px; }
   }
 
   /* ---- Phones: turn the table into stacked cards ---- */
@@ -290,6 +297,7 @@
     #result td.remove-cell { position: absolute; top: 6px; right: 6px; padding: 0; width: auto; }
     #result td.remove-cell::before { content: none; }
 
+    header.app .hero-art { display: none; }
     .stats { gap: 10px; }
     .stat { flex: 1 1 28%; min-width: 0; padding: 10px 12px; }
     .stat .num { font-size: 1.4rem; }
@@ -325,6 +333,35 @@
   .consent-card a { color: var(--primary); }
   #consentAccept { width: 100%; padding: 12px; margin-top: 4px; }
   #consentAccept:disabled { opacity: .45; cursor: not-allowed; }
+
+  /* ---- In-app legal document modal ---- */
+  .doc-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1100;
+    align-items: center; justify-content: center; padding: 20px;
+    background: rgba(5, 8, 12, .82); backdrop-filter: blur(4px);
+  }
+  .doc-overlay.show { display: flex; }
+  .doc-modal {
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    width: 100%; max-width: 640px; max-height: 86vh; display: flex; flex-direction: column;
+  }
+  .doc-modal-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+  }
+  .doc-modal-head h2 { margin: 0; font-size: 1.25rem; font-family: var(--font-display); }
+  .doc-close { border: none; background: transparent; color: var(--muted); padding: 6px; }
+  .doc-close:hover { color: var(--text); background: rgba(255,255,255,.06); }
+  .doc-close .icon { width: 1.3em; height: 1.3em; }
+  .doc-modal-body { overflow-y: auto; padding: 20px; }
+  .doc-modal-body h3 { font-size: 1.02rem; margin: 20px 0 6px; }
+  .doc-modal-body h3:first-child { margin-top: 0; }
+  .doc-modal-body p, .doc-modal-body li { color: var(--text); margin: 6px 0; }
+  .doc-modal-body ul { padding-left: 20px; }
+  .doc-modal-body a { color: var(--primary); }
+  .doc-modal-body code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; }
+  .doc-modal-body .muted { color: var(--muted); }
+  .doc-updated { color: var(--muted); font-size: .85rem; margin-bottom: 8px; }
 </style>
 </head>
 <body>
@@ -372,12 +409,84 @@
     <label class="consent-check">
       <input type="checkbox" id="consentCheck">
       <span>I have read and accept the
-        <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and the
-        <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+        <a href="terms.html" data-doc="terms">Terms &amp; Conditions</a> and the
+        <a href="privacy.html" data-doc="privacy">Privacy Policy</a>.</span>
     </label>
     <button id="consentAccept" class="primary" disabled>Accept &amp; continue</button>
   </div>
 </div>
+
+<!-- Legal documents shown in-app, in a modal -->
+<div class="doc-overlay" id="docModal" role="dialog" aria-modal="true" aria-labelledby="docTitle">
+  <div class="doc-modal">
+    <div class="doc-modal-head">
+      <h2 id="docTitle">Terms &amp; Conditions</h2>
+      <button class="doc-close" id="docClose" title="Close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="doc-modal-body" id="docBody"></div>
+  </div>
+</div>
+
+<template id="tpl-terms">
+  <div class="doc-updated">Last updated: 12 June 2026</div>
+  <h3>1. Acceptance of these Terms</h3>
+  <p>Crono ("the Service") is a free, browser-based chronometer for timing small and in-house sport competitions, operated by the Crono project ("the operator", "we", "us"). By accepting these Terms &amp; Conditions and by using the Service, you agree to be bound by them. If you do not agree, please do not use the Service.</p>
+  <h3>2. The Service</h3>
+  <p>Crono runs entirely in your web browser. It lets you set a start time, record finish times, optionally import or enter a list of participants, organise results into rankings and export them as a CSV file. All processing happens on your device; the Service does not require an account and does not send your timing data to any server.</p>
+  <h3>3. No warranty &amp; accuracy of timing</h3>
+  <p>The Service is provided "as is" and "as available", without warranties of any kind, whether express or implied, including but not limited to fitness for a particular purpose, accuracy or uninterrupted availability.</p>
+  <p>Recorded times depend on your device's clock, your browser and your own input, and may contain errors or delays. <strong>The Service is not intended for official, certified or safety-critical timing.</strong> You are responsible for independently verifying any result before relying on it. Do not use Crono as the sole source of truth for an official competition without an appropriate backup method.</p>
+  <h3>4. Your responsibilities</h3>
+  <ul>
+    <li>Use the Service lawfully and only for purposes for which it is intended.</li>
+    <li>Ensure that you are entitled to enter or import any participant information you add (see also the <a href="privacy.html" data-doc="privacy">Privacy Policy</a>).</li>
+    <li>Keep your own backups. Because data is stored only in your browser, it can be lost if you clear your browser data, use private/incognito mode, switch device or browser, or use the in-app "Clear results" action. Export important results to CSV.</li>
+  </ul>
+  <h3>5. Local data</h3>
+  <p>The Service stores your data locally in your browser (see the <a href="privacy.html" data-doc="privacy">Privacy Policy</a> for details). The operator has no access to this data and cannot recover it for you. You are solely responsible for the data you enter and for backing it up.</p>
+  <h3>6. Intellectual property</h3>
+  <p>Crono is an open-source project. Its source code is made available under the licence included in the project's repository, and your use of the code is subject to that licence. Trademarks or names of third parties referenced in the Service belong to their respective owners.</p>
+  <h3>7. Limitation of liability</h3>
+  <p>To the maximum extent permitted by applicable law, the operator and contributors shall not be liable for any direct, indirect, incidental, special or consequential damages, or for any loss of data, results or profits, arising out of or in connection with your use of, or inability to use, the Service — including any inaccuracy of recorded times. Your sole remedy if you are dissatisfied with the Service is to stop using it.</p>
+  <h3>8. Changes to the Service and these Terms</h3>
+  <p>The Service may change or be discontinued at any time without notice. These Terms may be updated from time to time; the "Last updated" date above reflects the latest version. If the changes are material, you may be asked to accept the updated Terms again. Continued use after an update means you accept the revised Terms.</p>
+  <h3>9. Governing law</h3>
+  <p>These Terms are governed by the laws applicable in the operator's country of residence, without regard to conflict-of-law rules. Nothing in these Terms limits any mandatory consumer rights you may have under your local law.</p>
+  <h3>10. Contact</h3>
+  <p>Questions about these Terms can be raised through the project's repository at <a href="https://github.com/rungeorge/crono" target="_blank" rel="noopener">github.com/rungeorge/crono</a>.</p>
+</template>
+
+<template id="tpl-privacy">
+  <div class="doc-updated">Last updated: 12 June 2026</div>
+  <h3>1. Overview</h3>
+  <p>Crono ("the Service"), operated by the Crono project ("the operator"), is a free chronometer that runs entirely in your web browser. It is designed to be privacy-friendly: it does <strong>not</strong> use tracking, advertising or analytics cookies, it does <strong>not</strong> create user accounts, and it does <strong>not</strong> send your timing data to any server. This policy explains what is stored and where.</p>
+  <h3>2. Data stored on your device</h3>
+  <p>To work, Crono saves information locally in your browser's storage (the <code>localStorage</code> mechanism). This data stays on your device and is not transmitted to the operator or to any third party. It includes:</p>
+  <ul>
+    <li>the race start time you set;</li>
+    <li>recorded finish times and their order;</li>
+    <li>any participant list you import or enter (e.g. bib number, name, sex, birth year);</li>
+    <li>notes you add to a result;</li>
+    <li>a small record that you accepted these documents (with a version and timestamp).</li>
+  </ul>
+  <p class="muted">This storage is strictly functional — it is what makes the app usable — and is not used to profile or track you.</p>
+  <h3>3. No tracking, advertising or analytics</h3>
+  <p>The Service does not load advertising, does not use analytics or tracking cookies, and does not build any profile of you. No third-party marketing scripts are included.</p>
+  <h3>4. Hosting</h3>
+  <p>The Service is published as static files via GitHub Pages. Like any website, when your browser requests the page, the hosting provider (GitHub) may process technical connection data such as your IP address and user-agent in its server logs in order to deliver the site. This processing is carried out by the hosting provider under its own terms; the operator of Crono does not maintain its own server logs of your activity. The application itself loads no external fonts, scripts or trackers.</p>
+  <h3>5. Information about other people</h3>
+  <p>If you import or enter details about participants (such as names or year of birth), that information is stored only on your device, under your control. You are responsible for having a lawful basis to process it and for handling it in accordance with any applicable data-protection laws. The operator never receives this information.</p>
+  <h3>6. Your control over your data</h3>
+  <p>You can delete recorded results at any time with the in-app "Clear results" action, and you can remove all stored data by clearing your browser's site data for this page. Because the data lives only in your browser, the operator cannot access, export or delete it on your behalf. Export to CSV if you want to keep a copy.</p>
+  <h3>7. Children</h3>
+  <p>The Service is a general-purpose timing tool and is not directed at children. It does not knowingly collect personal data from anyone, since no data leaves your device.</p>
+  <h3>8. Changes to this policy</h3>
+  <p>This policy may be updated from time to time. The "Last updated" date above reflects the latest version. If changes are material, you may be asked to review and accept the updated documents again.</p>
+  <h3>9. Contact</h3>
+  <p>Questions about privacy can be raised through the project's repository at <a href="https://github.com/rungeorge/crono" target="_blank" rel="noopener">github.com/rungeorge/crono</a>.</p>
+</template>
 
 <div class="wrap">
   <header class="app">
@@ -392,6 +501,25 @@
       </h1>
       <span class="tagline">Chronometer for small &amp; in-house sport competitions</span>
     </div>
+    <svg class="hero-art" viewBox="0 0 170 118" fill="none" aria-hidden="true">
+      <!-- motion / speed dashes -->
+      <g stroke="var(--accent-2)" stroke-width="4" stroke-linecap="round" opacity=".55">
+        <line x1="6"  y1="44" x2="40" y2="44"/>
+        <line x1="0"  y1="62" x2="30" y2="62"/>
+        <line x1="10" y1="80" x2="36" y2="80"/>
+      </g>
+      <!-- ground / finish line -->
+      <path d="M40 110 Q 100 102 168 110" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" opacity=".4"/>
+      <!-- runner (lime) -->
+      <g stroke="var(--primary)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M96 44 L83 74"/>                <!-- torso -->
+        <path d="M92 52 L110 47 M110 47 L118 60"/><!-- front arm -->
+        <path d="M88 54 L72 49 M72 49 L64 60"/>   <!-- back arm -->
+        <path d="M83 74 L102 80 M102 80 L98 100"/><!-- front leg (drive) -->
+        <path d="M83 74 L70 92 M70 92 L80 108"/>  <!-- back leg (push-off) -->
+      </g>
+      <circle cx="99" cy="27" r="11" fill="var(--primary)"/><!-- head -->
+    </svg>
   </header>
 
   <!-- Controls -->
@@ -406,19 +534,21 @@
         Set start now
       </button>
       <div class="spacer"></div>
-      <button id="importBtn" title="Import a CSV list of participants (number, name, sex, birth year)">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>
-        Import participants
-      </button>
-      <input type="file" id="importFile" accept=".csv,text/csv,text/plain" class="visually-hidden">
-      <button id="exportBtn" class="primary" title="Download results as CSV">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
-        Export CSV
-      </button>
-      <button id="clearBtn" class="danger" title="Delete all recorded results">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>
-        Clear results
-      </button>
+      <div class="actions">
+        <button id="importBtn" title="Import a CSV list of participants (number, name, sex, birth year)">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>
+          Import participants
+        </button>
+        <input type="file" id="importFile" accept=".csv,text/csv,text/plain" class="visually-hidden">
+        <button id="exportBtn" class="primary" title="Download results as CSV">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+          Export CSV
+        </button>
+        <button id="clearBtn" class="danger" title="Delete all recorded results">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>
+          Clear results
+        </button>
+      </div>
     </div>
     <p class="hint" id="startHint">Times are measured against this start. Editing it recalculates every result.</p>
 
@@ -512,7 +642,7 @@
   <footer class="app">
     Crono — runs fully offline in your browser. Data is stored locally on this device.
     <div class="footer-links">
-      <a href="terms.html">Terms &amp; Conditions</a> · <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html" data-doc="terms">Terms &amp; Conditions</a> · <a href="privacy.html" data-doc="privacy">Privacy Policy</a>
     </div>
   </footer>
 </div>
@@ -549,6 +679,9 @@
   var $consent = document.getElementById("consent");
   var $consentCheck = document.getElementById("consentCheck");
   var $consentAccept = document.getElementById("consentAccept");
+  var $docModal = document.getElementById("docModal");
+  var $docTitle = document.getElementById("docTitle");
+  var $docBody = document.getElementById("docBody");
 
   // ----- Inline SVG icons (stroke-based, scale with text) -------------------
   var ICONS = {
@@ -1065,8 +1198,36 @@
     if (!$consentCheck.checked) return;
     try { localStorage.setItem(KEY_CONSENT, JSON.stringify({ v: CONSENT_VERSION, at: Date.now() })); } catch (e) {}
     $consent.classList.remove("show");
-    document.body.style.overflow = "";
+    if (!$docModal.classList.contains("show")) document.body.style.overflow = "";
     $runner.focus();
+  });
+
+  // ----- Legal document modal ----------------------------------------------
+  var DOC_TITLES = { terms: "Terms & Conditions", privacy: "Privacy Policy" };
+  function openDoc(which) {
+    var tpl = document.getElementById("tpl-" + which);
+    if (!tpl) return;
+    $docTitle.textContent = DOC_TITLES[which] || "";
+    $docBody.innerHTML = "";
+    $docBody.appendChild(tpl.content.cloneNode(true));
+    $docBody.scrollTop = 0;
+    $docModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+  function closeDoc() {
+    $docModal.classList.remove("show");
+    // keep scroll locked if the consent gate is still up underneath
+    if (!$consent.classList.contains("show")) document.body.style.overflow = "";
+  }
+  // Any link/element with data-doc opens the matching document in the modal.
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-doc]");
+    if (t) { e.preventDefault(); openDoc(t.getAttribute("data-doc")); }
+  });
+  document.getElementById("docClose").addEventListener("click", closeDoc);
+  $docModal.addEventListener("click", function (e) { if (e.target === $docModal) closeDoc(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && $docModal.classList.contains("show")) closeDoc();
   });
 
   $start.addEventListener("change", function () {
@@ -1106,7 +1267,9 @@
   buildFilterOptions();
   render();
   initConsent();
-  if (!$consent.classList.contains("show")) $runner.focus();
+  var hash = (location.hash || "").replace("#", "");
+  if (hash === "terms" || hash === "privacy") openDoc(hash);
+  if (!$consent.classList.contains("show") && !$docModal.classList.contains("show")) $runner.focus();
 })();
 </script>
 </body>
