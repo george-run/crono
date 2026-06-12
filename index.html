@@ -214,7 +214,9 @@
   .empty #emptyMsg { max-width: 360px; }
 
   footer.app { color: var(--muted); font-size: .8rem; text-align: center; padding: 12px 0 24px; }
-  footer.app a { color: var(--muted); }
+  footer.app a { color: var(--muted); text-decoration: underline; }
+  footer.app a:hover { color: var(--primary); }
+  .footer-links { margin-top: 6px; }
 
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
@@ -469,6 +471,9 @@
 
   <footer class="app">
     Crono — runs fully offline in your browser. Data is stored locally on this device.
+    <div class="footer-links">
+      <a href="terms.html">Terms &amp; Conditions</a> · <a href="privacy.html">Privacy Policy</a>
+    </div>
   </footer>
 </div>
 
