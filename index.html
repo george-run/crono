@@ -6,6 +6,9 @@
 <meta name="description" content="Crono — a fast, offline chronometer for small and in-house running competitions. Bib-by-bib timing, live rankings by sex and age, pace and CSV export.">
 <title>Crono — simple race timing</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#0b0f14">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -194,5 +197,6 @@
   <script>document.getElementById("yr").textContent=new Date().getFullYear();</script>
 </footer>
 
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>
