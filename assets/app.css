@@ -26,7 +26,7 @@
   /* ---- Hero header ---- */
   header.app {
     position: relative; padding: 10px 0 22px;
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
   }
   header.app::before {
     content: ""; position: absolute; top: -48px; left: -70px; width: 300px; height: 210px;
@@ -476,13 +476,6 @@
   .part-add .pa-add:hover { background: var(--ok); color: var(--on-accent); }
   .part-add .pa-add .icon { width: 18px; height: 18px; }
 
-  /* "Works offline" badge in the app header */
-  .offline-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
-    align-self: flex-start; font-size: .76rem; font-weight: 600; color: var(--primary);
-    background: rgba(163,230,53,.1); border: 1px solid rgba(163,230,53,.25);
-    padding: 4px 10px; border-radius: 999px; }
-  .offline-badge svg { width: 14px; height: 14px; flex: 0 0 auto; }
-
   /* ---- In-app demo (modal) ---- */
   .demo-open { margin-top: 4px; }
   .demo-modal { max-width: 420px; }
@@ -503,17 +496,10 @@
   .demo-bib { font-family: var(--font-display); font-weight: 700; }
   .demo-t { font-variant-numeric: tabular-nums; color: var(--muted); }
 
-  /* Header actions (View demo + Buy me a coffee) */
-  .header-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-end; }
-  .header-demo { font-size: .85rem; padding: 6px 14px; }
-  .header-demo .icon { width: 1em; height: 1em; }
-  @media (max-width: 560px) {
-    header.app { flex-wrap: wrap; gap: 10px; }
-    .header-actions { width: 100%; justify-content: flex-start; }
-    /* Trim the header copy on phones so it stays uncluttered. */
-    header.app .tagline { display: none; }
-    .offline-badge-extra { display: none; }
-  }
+  /* Header actions — icon-only buttons (View demo + Buy me a coffee). */
+  .header-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+  .header-demo { padding: 7px; }
+  .header-demo .icon { width: 1.15em; height: 1.15em; }
 
 /* DEMO watermark tag on the mock */
 .demo { position: relative; }
