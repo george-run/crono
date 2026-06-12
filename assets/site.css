@@ -42,6 +42,7 @@ a { color: inherit; text-decoration: none; }
 .hero h1 .accent { color: var(--primary); }
 .hero .lead { margin: 0 0 30px; color: var(--muted); font-size: 1.12rem; }
 .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.cta-note { margin: 14px 0 0; color: var(--muted); font-size: .9rem; }
 
 /* hero illustration with glow blob + floating result card */
 .hero-art { position: relative; display: flex; justify-content: center; align-items: center; }
