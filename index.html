@@ -22,6 +22,7 @@
     --ok: #a3e635;
     --warn: #fbbf24;
     --accent-2: #2dd4bf;       /* teal — map/route lines */
+    --accent-3: #fbbf24;       /* amber — illustration accent */
     --radius: 14px;
     --radius-sm: 10px;
     /* Self-contained, no external font request — fully offline & privacy-clean. */
@@ -104,6 +105,34 @@
 
   .spacer { flex: 1 1 auto; }
   .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+
+  /* Collapsible "Start time" setup card */
+  .setup-summary { display: flex; align-items: center; gap: 12px; cursor: pointer; list-style: none; user-select: none; }
+  .setup-summary::-webkit-details-marker { display: none; }
+  .setup-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; }
+  .setup-preview { color: var(--text); font-size: .95rem; }
+  .setup-preview strong { font-family: var(--font-display); font-variant-numeric: tabular-nums; color: var(--primary); }
+  .setup-chevron { width: 20px; height: 20px; color: var(--muted); margin-left: auto; flex: 0 0 auto; transition: transform .15s ease; }
+  .setup[open] .setup-chevron { transform: rotate(180deg); }
+  .setup-body { padding-top: 14px; }
+
+  /* Pace under each result time */
+  .pace { display: block; font-size: .78rem; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; margin-top: 2px; }
+
+  /* Confirm modal */
+  .confirm-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1200;
+    align-items: center; justify-content: center; padding: 20px;
+    background: rgba(5, 8, 12, .82); backdrop-filter: blur(4px);
+  }
+  .confirm-overlay.show { display: flex; }
+  .confirm-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    width: 100%; max-width: 400px; padding: 24px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .confirm-card h2 { margin: 0; font-size: 1.2rem; font-family: var(--font-display); }
+  .confirm-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .confirm-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
 
   button {
     cursor: pointer;
@@ -254,9 +283,9 @@
     .controls .field { flex: 1 1 auto; }
     #startTime { width: 100%; }
     .controls .spacer { flex-basis: 100%; height: 0; }
-    /* Action buttons: equal width AND equal height (align-items:stretch on .actions). */
-    .actions { width: 100%; gap: 8px; }
-    .actions button { flex: 1 1 0; min-width: 0; justify-content: center; text-align: center; padding: 11px 8px; }
+    /* Action buttons stacked full-width — clean, no text wrapping, easy to tap. */
+    .actions { width: 100%; flex-direction: column; gap: 8px; }
+    .actions button { width: 100%; justify-content: center; padding: 12px; }
   }
 
   /* ---- Phones: turn the table into stacked cards ---- */
@@ -488,6 +517,18 @@
   <p>Questions about privacy can be raised through the project's repository at <a href="https://github.com/rungeorge/crono" target="_blank" rel="noopener">github.com/rungeorge/crono</a>.</p>
 </template>
 
+<!-- Confirmation modal -->
+<div class="confirm-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="confirm-card">
+    <h2 id="confirmTitle">Confirm</h2>
+    <p id="confirmMsg"></p>
+    <div class="confirm-actions">
+      <button id="confirmCancel">Cancel</button>
+      <button id="confirmOk" class="danger">Confirm</button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
   <header class="app">
     <div class="hero-text">
@@ -501,29 +542,33 @@
       </h1>
       <span class="tagline">Chronometer for small &amp; in-house sport competitions</span>
     </div>
-    <svg class="hero-art" viewBox="0 0 170 118" fill="none" aria-hidden="true">
-      <!-- motion / speed dashes -->
-      <g stroke="var(--accent-2)" stroke-width="4" stroke-linecap="round" opacity=".55">
-        <line x1="6"  y1="44" x2="40" y2="44"/>
-        <line x1="0"  y1="62" x2="30" y2="62"/>
-        <line x1="10" y1="80" x2="36" y2="80"/>
+    <svg class="hero-art" viewBox="0 0 180 120" fill="none" aria-hidden="true">
+      <!-- flat abstract sport graphic: organic colour blobs + motion -->
+      <path d="M40 78c-22-4-34-26-22-44C32 14 64 8 92 16c26 7 30 30 14 44-16 14-44 22-66 18Z" fill="var(--accent-2)" opacity=".18"/>
+      <path d="M150 92c20 2 30-16 24-34-6-19-30-30-54-26-22 4-30 22-18 38 11 15 28 20 48 22Z" fill="var(--primary)" opacity=".22"/>
+      <ellipse cx="118" cy="44" rx="30" ry="26" fill="var(--accent-3)" opacity=".22"/>
+      <!-- motion dashes -->
+      <g stroke="var(--primary)" stroke-width="4" stroke-linecap="round" opacity=".7">
+        <line x1="8" y1="40" x2="40" y2="40"/>
+        <line x1="0" y1="58" x2="26" y2="58"/>
       </g>
-      <!-- ground / finish line -->
-      <path d="M40 110 Q 100 102 168 110" stroke="var(--accent-2)" stroke-width="3" stroke-linecap="round" opacity=".4"/>
-      <!-- runner (lime) -->
-      <g stroke="var(--primary)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M96 44 L83 74"/>                <!-- torso -->
-        <path d="M92 52 L110 47 M110 47 L118 60"/><!-- front arm -->
-        <path d="M88 54 L72 49 M72 49 L64 60"/>   <!-- back arm -->
-        <path d="M83 74 L102 80 M102 80 L98 100"/><!-- front leg (drive) -->
-        <path d="M83 74 L70 92 M70 92 L80 108"/>  <!-- back leg (push-off) -->
-      </g>
-      <circle cx="99" cy="27" r="11" fill="var(--primary)"/><!-- head -->
+      <!-- dashed running route arc -->
+      <path d="M22 96C60 70 110 70 162 30" stroke="var(--accent-2)" stroke-width="3"
+            stroke-linecap="round" stroke-dasharray="2 12" opacity=".8"/>
+      <circle cx="22" cy="96" r="5" fill="var(--primary)"/>
+      <circle cx="162" cy="30" r="6" fill="var(--accent-3)"/>
     </svg>
   </header>
 
   <!-- Controls -->
   <div class="panel">
+    <details class="setup" open>
+      <summary class="setup-summary">
+        <span class="setup-title">Start time</span>
+        <span class="setup-preview">Start <strong id="startPreview">--:--:--</strong></span>
+        <svg class="setup-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="setup-body">
     <div class="controls">
       <div class="field">
         <label for="startTime">Start time</label>
@@ -533,6 +578,10 @@
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
         Set start now
       </button>
+      <div class="field">
+        <label for="distanceKm">Distance (km)</label>
+        <input type="text" id="distanceKm" inputmode="decimal" placeholder="optional" aria-label="Race distance in kilometres">
+      </div>
       <div class="spacer"></div>
       <div class="actions">
         <button id="importBtn" title="Import a CSV list of participants (number, name, sex, birth year)">
@@ -583,6 +632,8 @@
               names containing a comma in quotes, e.g. <code>"Popescu, Ana"</code>.</li>
           <li>You can create the file in Excel / Google Sheets → <em>Save as / Download → CSV</em>.</li>
         </ul>
+      </div>
+    </details>
       </div>
     </details>
   </div>
@@ -655,6 +706,7 @@
   var KEY_START = "crono.startEpoch";
   var KEY_ENTRIES = "crono.entries";
   var KEY_PARTICIPANTS = "crono.participants";
+  var KEY_DISTANCE = "crono.distanceKm";
   var KEY_CONSENT = "crono.consent";
   var CONSENT_VERSION = 1;        // bump to re-prompt if the terms change
 
@@ -662,11 +714,14 @@
   var startEpoch = null;          // absolute ms timestamp of the race start
   var entries = [];               // [{ id, runnerNumber, finishEpoch, details }]
   var participants = {};          // { "<number>": { name, sex, birthYear } }
+  var distanceKm = null;          // optional race distance for pace
   var currentFilter = "all";      // active ranking filter: all | M | F | "M|30" ...
   var editingNum = null;          // bib number whose sex/year is being edited inline
 
   // ----- Elements -----------------------------------------------------------
   var $start = document.getElementById("startTime");
+  var $startPreview = document.getElementById("startPreview");
+  var $distance = document.getElementById("distanceKm");
   var $runner = document.getElementById("runnerNumber");
   var $body = document.getElementById("resultBody");
   var $empty = document.getElementById("emptyState");
@@ -682,6 +737,11 @@
   var $docModal = document.getElementById("docModal");
   var $docTitle = document.getElementById("docTitle");
   var $docBody = document.getElementById("docBody");
+  var $confirmModal = document.getElementById("confirmModal");
+  var $confirmTitle = document.getElementById("confirmTitle");
+  var $confirmMsg = document.getElementById("confirmMsg");
+  var $confirmOk = document.getElementById("confirmOk");
+  var $confirmCancel = document.getElementById("confirmCancel");
 
   // ----- Inline SVG icons (stroke-based, scale with text) -------------------
   var ICONS = {
@@ -715,6 +775,16 @@
     return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
   }
 
+  // Pace as M:SS per km, or "" when there is no usable distance/time.
+  function formatPace(elapsedMs, km) {
+    if (!km || km <= 0 || !(elapsedMs > 0)) return "";
+    var secPerKm = (elapsedMs / 1000) / km;
+    var m = Math.floor(secPerKm / 60);
+    var s = Math.round(secPerKm % 60);
+    if (s === 60) { m += 1; s = 0; }
+    return m + ":" + pad(s) + " /km";
+  }
+
   function pad(n) { return (n < 10 ? "0" : "") + n; }
 
   // Parse a "HH:MM:SS" (optionally ".cc") clock string into an absolute epoch.
@@ -739,6 +809,7 @@
       localStorage.setItem(KEY_START, String(startEpoch));
       localStorage.setItem(KEY_ENTRIES, JSON.stringify(entries));
       localStorage.setItem(KEY_PARTICIPANTS, JSON.stringify(participants));
+      localStorage.setItem(KEY_DISTANCE, distanceKm == null ? "" : String(distanceKm));
     } catch (e) {
       console.warn("Could not persist data:", e);
     }
@@ -769,6 +840,9 @@
         participants[num] = { name: "", sex: "", birthYear: null };
       }
     });
+
+    var d = parseFloat(localStorage.getItem(KEY_DISTANCE));
+    distanceKm = (d > 0) ? d : null;
   }
 
   // ----- Participants & categories -----------------------------------------
@@ -944,6 +1018,8 @@
       }
 
       var place = places[e.id] || "";
+      var elapsed = e.finishEpoch - startEpoch;
+      var paceStr = formatPace(elapsed, distanceKm);
       tr.innerHTML =
         '<td class="place' + (place === 1 ? " first" : "") + '" data-label="Place">' + place + "</td>" +
         '<td class="num" data-label="Number">' + escapeHtml(e.runnerNumber) +
@@ -952,7 +1028,8 @@
           (name ? escapeHtml(name) + " " : "") + catHtml + "</td>" +
         '<td data-label="Obs."><input class="obs" type="text" value="' + escapeAttr(e.details || "") +
           '" placeholder="add note…"></td>' +
-        '<td class="time" data-label="Time">' + formatElapsed(e.finishEpoch - startEpoch) + "</td>" +
+        '<td class="time" data-label="Time">' + formatElapsed(elapsed) +
+          (paceStr ? '<span class="pace">' + paceStr + "</span>" : "") + "</td>" +
         '<td class="remove-cell"><button class="row-remove" title="Remove this result">' + svgIcon("x") + "</button></td>";
 
       tr.querySelector(".obs").addEventListener("input", function () {
@@ -976,11 +1053,16 @@
         });
       }
       tr.querySelector(".row-remove").addEventListener("click", function () {
-        if (confirm("Remove runner " + e.runnerNumber + "?")) {
+        confirmModal({
+          title: "Remove result",
+          message: "Remove runner " + e.runnerNumber + " from the results?",
+          confirmLabel: "Remove", danger: true
+        }).then(function (ok) {
+          if (!ok) return;
           entries = entries.filter(function (x) { return x.id !== e.id; });
           save();
           render();
-        }
+        });
       });
 
       $body.appendChild(tr);
@@ -1012,18 +1094,27 @@
 
   // ----- Actions ------------------------------------------------------------
 
+  function applyStartNow() {
+    startEpoch = Date.now();
+    $start.value = formatClock(startEpoch);
+    updateStartPreview();
+    save();
+    render();
+  }
+
   function setStartNow() {
     // Resetting the start recalculates every recorded time — confirm first
     // once there are results, so an accidental tap can't wreck the rankings.
-    if (entries.length &&
-        !confirm("Set the start to now? This recalculates the time of all " +
-                 entries.length + " recorded finisher(s).")) {
-      return;
-    }
-    startEpoch = Date.now();
-    $start.value = formatClock(startEpoch);
-    save();
-    render();
+    if (!entries.length) { applyStartNow(); return; }
+    confirmModal({
+      title: "Set start to now?",
+      message: "This recalculates the time of all " + entries.length + " recorded finisher(s).",
+      confirmLabel: "Set start", danger: true
+    }).then(function (ok) { if (ok) applyStartNow(); });
+  }
+
+  function updateStartPreview() {
+    $startPreview.textContent = formatClock(startEpoch);
   }
 
   function recordFinish(number) {
@@ -1040,18 +1131,24 @@
   }
 
   function clearResults() {
-    if (!entries.length || confirm("All recorded results will be deleted. Are you sure?")) {
+    if (!entries.length) return;
+    confirmModal({
+      title: "Clear all results?",
+      message: "All " + entries.length + " recorded result(s) will be permanently deleted.",
+      confirmLabel: "Clear results", danger: true
+    }).then(function (ok) {
+      if (!ok) return;
       entries = [];
       save();
       render();
       $runner.focus();
-    }
+    });
   }
 
   // ----- CSV ----------------------------------------------------------------
 
   function exportCSV() {
-    var rows = [["Place", "Category place", "Runner number", "Name", "Sex", "Category", "Obs.", "Time", "Duplicate"]];
+    var rows = [["Place", "Category place", "Runner number", "Name", "Sex", "Category", "Obs.", "Time", "Pace", "Duplicate"]];
     var dups = duplicateNumbers();
 
     // Per-category places, keyed by category id.
@@ -1079,6 +1176,7 @@
         c ? c.shortLabel : "",
         e.details || "",
         formatElapsed(e.finishEpoch - startEpoch),
+        formatPace(e.finishEpoch - startEpoch, distanceKm),
         dups[e.runnerNumber] ? "yes" : ""
       ]);
     });
@@ -1230,6 +1328,34 @@
     if (e.key === "Escape" && $docModal.classList.contains("show")) closeDoc();
   });
 
+  // ----- Confirm modal ------------------------------------------------------
+  var confirmResolve = null;
+  function confirmModal(opts) {
+    opts = opts || {};
+    $confirmTitle.textContent = opts.title || "Confirm";
+    $confirmMsg.textContent = opts.message || "";
+    $confirmOk.textContent = opts.confirmLabel || "Confirm";
+    $confirmOk.className = opts.danger ? "danger" : "primary";
+    $confirmModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+    $confirmOk.focus();
+    return new Promise(function (resolve) { confirmResolve = resolve; });
+  }
+  function closeConfirm(result) {
+    $confirmModal.classList.remove("show");
+    if (!$consent.classList.contains("show") && !$docModal.classList.contains("show")) {
+      document.body.style.overflow = "";
+    }
+    var r = confirmResolve; confirmResolve = null;
+    if (r) r(result);
+  }
+  $confirmOk.addEventListener("click", function () { closeConfirm(true); });
+  $confirmCancel.addEventListener("click", function () { closeConfirm(false); });
+  $confirmModal.addEventListener("click", function (e) { if (e.target === $confirmModal) closeConfirm(false); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && $confirmModal.classList.contains("show")) closeConfirm(false);
+  });
+
   $start.addEventListener("change", function () {
     var epoch = clockStringToEpoch(this.value);
     if (epoch == null) {
@@ -1239,8 +1365,17 @@
     }
     startEpoch = epoch;
     this.value = formatClock(startEpoch);
+    updateStartPreview();
     save();
     buildFilterOptions(); // race year may shift age categories
+    render();
+  });
+
+  $distance.addEventListener("change", function () {
+    var v = parseFloat(String(this.value).replace(",", "."));
+    distanceKm = (v > 0) ? v : null;
+    this.value = distanceKm == null ? "" : String(distanceKm);
+    save();
     render();
   });
 
@@ -1264,6 +1399,8 @@
   // ----- Init ---------------------------------------------------------------
   load();
   $start.value = formatClock(startEpoch);
+  $distance.value = distanceKm == null ? "" : String(distanceKm);
+  updateStartPreview();
   buildFilterOptions();
   render();
   initConsent();
