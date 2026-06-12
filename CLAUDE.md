@@ -1,12 +1,21 @@
 # Crono — project rules for AI assistants
 
 Read this first. **If any rule here changes, update this file in the same commit.**
+New session? Skim **Status** below for where things stand, then the rules.
 
 ## TL;DR
 Static, zero-build, offline-first race chronometer on **GitHub Pages** under `/crono/`.
 Landing = `index.html`; app = `app.html`; logic = `assets/app.js` (vanilla JS, IIFE).
 Edit → commit to the dev branch → merge to `master` → sync `gh-pages` → bump `sw.js` cache if
 assets changed. There is **no network, no image tooling and no browser/render tool** here.
+
+## Status (handoff — update on every deploy)
+_So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
+- **Live & in sync** as of **2026-06-12**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty.
+- **Service worker cache:** `CACHE = "crono-v26"` in `sw.js` — bump it next time any cached asset changes.
+- **Dev branch:** `claude/rungeorge-crono-access-8k39na`.
+- **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
+- **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), **centred** label, **stopwatch** icon; all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark.
 
 ## This sandbox's constraints (important)
 - **No outbound network**: cannot fetch fonts/images/CDNs or `npm install`. (Google Fonts works
@@ -115,6 +124,7 @@ git diff --stat origin/master origin/gh-pages
 - Add a tiny Node test for new pure helpers (e.g. `parseElapsedToMs`, `formatPace`).
 - Confirm no inline `<style>`/IIFE crept back into `app.html`; relative paths only.
 - **Update `CHANGELOG.md`** (under `[Unreleased]`) for any notable user-facing change.
+- **Refresh the `Status` block** (date + `CACHE` version) so the next session has an accurate handoff.
 
 ## Current features (don't re-implement)
 Start time (+confirm), record on Enter/Record with **beep** (toggle), centiseconds, midnight-safe,

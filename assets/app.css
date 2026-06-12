@@ -79,6 +79,7 @@
 
   .spacer { flex: 1 1 auto; }
   .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+  .actions button { justify-content: center; }
 
   /* Setup card: race row + helper text + labelled divider */
   .setup-row { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; }
