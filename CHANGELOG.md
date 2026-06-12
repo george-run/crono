@@ -4,6 +4,9 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- Animated "how it works" demo on the landing: shows setting start+distance, then bibs being entered and finishers appearing live (respects reduced-motion).
+
 ### Changed
 - Copy: emphasise offline use (open once online, then works with no connection) and that data is saved on the device and not lost; new "Will I lose my data?" FAQ.
 

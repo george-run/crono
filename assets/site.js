@@ -45,6 +45,50 @@
       clock.textContent = pad(m) + ":" + pad(s) + "." + pad(cs);
     }, 70);
   }
+
+  // "How it works" demo: type a bib, hit Record, a finisher appears — on loop.
+  var demoNum = document.getElementById("demoNum");
+  var demoList = document.getElementById("demoList");
+  var demoRec = document.querySelector(".demo-rec");
+  if (demoNum && demoList && demoRec) {
+    var DEMO = [
+      { n: "247", t: "24:31" }, { n: "183", t: "25:08" },
+      { n: "92", t: "25:46" }, { n: "311", t: "26:20" }
+    ];
+    var di, recorded;
+
+    function demoReset() {
+      demoList.innerHTML = ""; demoNum.textContent = "0";
+      di = 0; recorded = 0;
+      setTimeout(demoType, 900);
+    }
+    function demoType() {
+      if (di >= DEMO.length) { setTimeout(demoReset, 2400); return; }
+      var num = DEMO[di].n;
+      (function typeDigit(k) {
+        if (k > num.length) { setTimeout(demoRecord, 480); return; }
+        demoNum.textContent = num.slice(0, k);
+        setTimeout(function () { typeDigit(k + 1); }, 240);
+      })(1);
+    }
+    function demoRecord() {
+      demoRec.classList.add("on");
+      setTimeout(function () { demoRec.classList.remove("on"); }, 260);
+      recorded += 1;
+      var d = DEMO[di];
+      var li = document.createElement("li");
+      li.className = "demo-li in0";
+      li.innerHTML = '<span class="demo-pl">' + recorded + '</span>' +
+        '<span class="demo-bib">#' + d.n + '</span>' +
+        '<span class="demo-t">' + d.t + '</span>';
+      demoList.insertBefore(li, demoList.firstChild);
+      requestAnimationFrame(function () { li.classList.remove("in0"); });
+      demoNum.textContent = "0";
+      di += 1;
+      setTimeout(demoType, 1100);
+    }
+    demoReset();
+  }
 })();
 
 // Register the service worker (kept here so the page needs no inline script → strict CSP).
