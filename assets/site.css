@@ -49,9 +49,9 @@ a { color: inherit; text-decoration: none; }
   background: radial-gradient(circle, rgba(163,230,53,.30), rgba(45,212,191,.12) 55%, transparent 72%);
   filter: blur(10px); z-index: 0; }
 .hero-scene { position: relative; z-index: 1; display: block; width: 100%; max-width: 460px; height: auto; }
-.runner-dot { display: none; }
+.map-pin { display: none; }
 .start-pulse { transform-box: fill-box; transform-origin: center; }
-.float-card { position: absolute; z-index: 2; left: 2%; bottom: 8%;
+.float-card { position: absolute; z-index: 2; right: 0; bottom: 4%;
   display: flex; align-items: center; gap: 12px;
   background: rgba(20,27,36,.92); border: 1px solid var(--border); border-radius: 14px;
   padding: 10px 14px; box-shadow: 0 12px 30px rgba(0,0,0,.45); backdrop-filter: blur(6px); }
@@ -203,7 +203,7 @@ a { color: inherit; text-decoration: none; }
 .footer-brand .btn.coffee { margin-top: 14px; }
 
 /* Hero animated scene (gated by .js-anim → respects reduced-motion) */
-.js-anim .runner-dot { display: block; filter: drop-shadow(0 0 6px rgba(163,230,53,.75)); }
+.js-anim .map-pin { display: block; filter: drop-shadow(0 0 5px rgba(163,230,53,.7)); }
 .js-anim #heroPath { stroke-dasharray: 920; stroke-dashoffset: 920; animation: routeDraw 2.4s ease .2s forwards; }
 .js-anim .start-pulse { animation: startPulse 2.4s ease-in-out infinite; }
 @keyframes startPulse { 0%, 100% { transform: scale(.8); opacity: .7; } 50% { transform: scale(1.7); opacity: .08; } }

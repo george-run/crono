@@ -74,30 +74,39 @@
       <div class="hero-art">
         <span class="blob"></span>
         <svg class="hero-scene" id="heroScene" viewBox="0 0 460 380" fill="none" aria-hidden="true">
-          <!-- faint contour arcs -->
-          <g stroke="var(--accent-2)" stroke-width="2" fill="none" opacity=".16">
-            <path d="M70 360a140 140 0 0 1 140-140"/>
-            <path d="M44 360a190 190 0 0 1 190-190"/>
+          <!-- faint map grid (streets) -->
+          <g class="map-grid" stroke="var(--border)" stroke-width="1.5" opacity=".55">
+            <line x1="0" y1="74" x2="460" y2="74"/>
+            <line x1="0" y1="150" x2="460" y2="150"/>
+            <line x1="0" y1="228" x2="460" y2="228"/>
+            <line x1="0" y1="306" x2="460" y2="306"/>
+            <line x1="86" y1="0" x2="86" y2="380"/>
+            <line x1="180" y1="0" x2="180" y2="380"/>
+            <line x1="280" y1="0" x2="280" y2="380"/>
+            <line x1="376" y1="0" x2="376" y2="380"/>
           </g>
-          <!-- running route -->
-          <path id="heroPath" d="M44 332 C 134 300, 120 178, 232 196 S 360 250, 418 70"
-                stroke="var(--primary)" stroke-width="5" stroke-linecap="round" opacity=".55"/>
-          <!-- route markers -->
-          <g fill="var(--primary)" opacity=".5">
-            <circle cx="232" cy="196" r="4"/>
-            <circle cx="120" cy="246" r="4"/>
-          </g>
+          <!-- map blocks (a park + a plaza) -->
+          <rect x="188" y="156" width="84" height="66" rx="9" fill="var(--accent-2)" opacity=".08"/>
+          <rect x="92" y="238" width="74" height="58" rx="9" fill="var(--primary)" opacity=".06"/>
+          <!-- the route -->
+          <path id="heroPath" d="M44 322 C 130 300, 130 180, 232 196 S 360 250, 416 86"
+                stroke="var(--primary)" stroke-width="5" stroke-linecap="round" opacity=".6"/>
           <!-- start (pulsing ring) -->
-          <circle class="start-pulse" cx="44" cy="332" r="9" fill="none" stroke="var(--primary)" stroke-width="3"/>
-          <circle cx="44" cy="332" r="4" fill="var(--primary)"/>
-          <!-- finish -->
-          <circle cx="418" cy="70" r="7" fill="var(--accent-3)"/>
-          <!-- moving runner -->
-          <circle class="runner-dot" cx="0" cy="0" r="8" fill="var(--primary)">
-            <animateMotion begin="indefinite" dur="5s" repeatCount="indefinite" rotate="0">
+          <circle class="start-pulse" cx="44" cy="322" r="9" fill="none" stroke="var(--primary)" stroke-width="3"/>
+          <circle cx="44" cy="322" r="4" fill="var(--primary)"/>
+          <!-- finish flag -->
+          <g transform="translate(416,86)">
+            <path d="M0 4 V-24" stroke="var(--accent-3)" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M0 -24 h13 l-3.5 5 3.5 5 H0 Z" fill="var(--accent-3)"/>
+          </g>
+          <!-- moving map pin (tip rides the route) -->
+          <g class="map-pin">
+            <path d="M0 0 C -8 -12 -15 -17 -15 -27 a15 15 0 1 1 30 0 c0 10 -7 15 -15 27 Z" fill="var(--primary)"/>
+            <circle cx="0" cy="-27" r="6" fill="var(--on-accent)"/>
+            <animateMotion begin="indefinite" dur="6s" repeatCount="indefinite" rotate="0">
               <mpath xlink:href="#heroPath"/>
             </animateMotion>
-          </circle>
+          </g>
         </svg>
         <div class="float-card" aria-hidden="true">
           <span class="fc-place">1<sup>st</sup></span>
