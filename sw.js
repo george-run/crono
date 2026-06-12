@@ -1,5 +1,5 @@
 /* Crono service worker — offline cache (cache-first). Bump CACHE to invalidate. */
-var CACHE = "crono-v4";
+var CACHE = "crono-v5";
 var ASSETS = [
   "./",
   "index.html",
@@ -36,6 +36,24 @@ self.addEventListener("fetch", function (e) {
   if (req.method !== "GET") return;
   // Don't intercept cross-origin (e.g. Google Fonts) — let the network handle it.
   if (new URL(req.url).origin !== self.location.origin) return;
+
+  var isPage = req.mode === "navigate" ||
+    (req.headers.get("accept") || "").indexOf("text/html") > -1;
+
+  if (isPage) {
+    // Network-first for HTML so deploys show up immediately when online.
+    e.respondWith(
+      fetch(req).then(function (res) {
+        if (res && res.ok) { var c = res.clone(); caches.open(CACHE).then(function (cc) { cc.put(req, c); }); }
+        return res;
+      }).catch(function () {
+        return caches.match(req).then(function (m) { return m || caches.match("app.html") || caches.match("index.html"); });
+      })
+    );
+    return;
+  }
+
+  // Cache-first for static assets (css/js/img).
   e.respondWith(
     caches.match(req).then(function (cached) {
       if (cached) return cached;
