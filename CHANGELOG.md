@@ -8,6 +8,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly (with a stopwatch icon) in the card's summary line when it's collapsed.
 
 ### Changed
+- CSS housekeeping (no visual change): lime/teal/amber tints now route through rgb tokens (`--primary-rgb`, etc.) and modal backdrops through `--overlay`, so the accent is truly single-source; the five modal overlays share one base rule; removed dead/duplicate rules and a print-selector typo.
 - "Record" now sits on its own full-width row with the label truly centred (the stopwatch icon is pinned to the left), so it reads as centred at every width.
 - Landing on mobile: hero CTAs now stack as equal full-width buttons (instead of ragged widths), the decorative background route is softened so it no longer cuts across them, and "Launch the timer" uses the same stopwatch icon as the app.
 - All action-button labels are now centred (Record + the Options actions), on desktop and mobile.
