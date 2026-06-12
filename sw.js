@@ -1,5 +1,5 @@
 /* Crono service worker — offline cache (cache-first). Bump CACHE to invalidate. */
-var CACHE = "crono-v6";
+var CACHE = "crono-v7";
 var ASSETS = [
   "./",
   "index.html",
@@ -12,8 +12,7 @@ var ASSETS = [
   "assets/app.css",
   "assets/site.css",
   "assets/app.js",
-  "assets/site.js",
-  "images/runner.png"
+  "assets/site.js"
 ];
 
 self.addEventListener("install", function (e) {

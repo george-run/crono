@@ -25,6 +25,13 @@
     Array.prototype.forEach.call(targets, function (t) { t.classList.add("is-in"); });
   }
 
+  // Start the hero scene's moving runner (SMIL motion along the route).
+  var scene = document.getElementById("heroScene");
+  if (scene) {
+    var motions = scene.querySelectorAll("animateMotion");
+    Array.prototype.forEach.call(motions, function (m) { try { m.beginElement(); } catch (e) {} });
+  }
+
   // Live stopwatch in the hero result card — conveys "live timing".
   var clock = document.getElementById("demoClock");
   if (clock) {

@@ -48,8 +48,9 @@ a { color: inherit; text-decoration: none; }
 .hero-art .blob { position: absolute; width: 78%; aspect-ratio: 1; border-radius: 50%;
   background: radial-gradient(circle, rgba(163,230,53,.30), rgba(45,212,191,.12) 55%, transparent 72%);
   filter: blur(10px); z-index: 0; }
-.hero-art img { position: relative; z-index: 1; display: block; width: 100%; max-width: 460px;
-  height: auto; mix-blend-mode: lighten; }
+.hero-scene { position: relative; z-index: 1; display: block; width: 100%; max-width: 460px; height: auto; }
+.runner-dot { display: none; }
+.start-pulse { transform-box: fill-box; transform-origin: center; }
 .float-card { position: absolute; z-index: 2; left: 2%; bottom: 8%;
   display: flex; align-items: center; gap: 12px;
   background: rgba(20,27,36,.92); border: 1px solid var(--border); border-radius: 14px;
@@ -142,7 +143,7 @@ a { color: inherit; text-decoration: none; }
   .hero-copy { max-width: 600px; margin: 0 auto; }
   .cta { justify-content: center; }
   .hero-art { order: -1; }
-  .hero-art img { max-width: 360px; }
+  .hero-scene { max-width: 360px; }
 }
 @media (max-width: 820px) {
   .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -154,7 +155,7 @@ a { color: inherit; text-decoration: none; }
   .hero { padding: 28px 0 40px; }
 }
 @media (max-width: 480px) {
-  .hero-art img { max-width: 280px; }
+  .hero-scene { max-width: 300px; }
   .float-card { left: 0; bottom: 2%; padding: 8px 10px; gap: 9px; }
 }
 
@@ -200,3 +201,9 @@ a { color: inherit; text-decoration: none; }
 .btn.coffee { border-color: rgba(251,191,36,.5); color: var(--accent-3); }
 .btn.coffee:hover { background: var(--accent-3); border-color: var(--accent-3); color: var(--on-accent); }
 .footer-brand .btn.coffee { margin-top: 14px; }
+
+/* Hero animated scene (gated by .js-anim → respects reduced-motion) */
+.js-anim .runner-dot { display: block; filter: drop-shadow(0 0 6px rgba(163,230,53,.75)); }
+.js-anim #heroPath { stroke-dasharray: 920; stroke-dashoffset: 920; animation: routeDraw 2.4s ease .2s forwards; }
+.js-anim .start-pulse { animation: startPulse 2.4s ease-in-out infinite; }
+@keyframes startPulse { 0%, 100% { transform: scale(.8); opacity: .7; } 50% { transform: scale(1.7); opacity: .08; } }

@@ -73,7 +73,32 @@
       </div>
       <div class="hero-art">
         <span class="blob"></span>
-        <img src="images/runner.png" alt="Illustration of a runner with bib number 247" width="1536" height="1024">
+        <svg class="hero-scene" id="heroScene" viewBox="0 0 460 380" fill="none" aria-hidden="true">
+          <!-- faint contour arcs -->
+          <g stroke="var(--accent-2)" stroke-width="2" fill="none" opacity=".16">
+            <path d="M70 360a140 140 0 0 1 140-140"/>
+            <path d="M44 360a190 190 0 0 1 190-190"/>
+          </g>
+          <!-- running route -->
+          <path id="heroPath" d="M44 332 C 134 300, 120 178, 232 196 S 360 250, 418 70"
+                stroke="var(--primary)" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+          <!-- route markers -->
+          <g fill="var(--primary)" opacity=".5">
+            <circle cx="232" cy="196" r="4"/>
+            <circle cx="120" cy="246" r="4"/>
+          </g>
+          <!-- start (pulsing ring) -->
+          <circle class="start-pulse" cx="44" cy="332" r="9" fill="none" stroke="var(--primary)" stroke-width="3"/>
+          <circle cx="44" cy="332" r="4" fill="var(--primary)"/>
+          <!-- finish -->
+          <circle cx="418" cy="70" r="7" fill="var(--accent-3)"/>
+          <!-- moving runner -->
+          <circle class="runner-dot" cx="0" cy="0" r="8" fill="var(--primary)">
+            <animateMotion begin="indefinite" dur="5s" repeatCount="indefinite" rotate="0">
+              <mpath xlink:href="#heroPath"/>
+            </animateMotion>
+          </circle>
+        </svg>
         <div class="float-card" aria-hidden="true">
           <span class="fc-place">1<sup>st</sup></span>
           <span class="fc-mid"><strong>#247</strong><small id="demoClock">24:31.08</small></span>

@@ -4,6 +4,9 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Changed
+- Replaced the hero photo with an animated SVG scene (self-drawing route + a runner dot moving start→finish); removed images/runner.png.
+
 ### Added
 - `CHANGELOG.md` and a richer `CLAUDE.md` (data model, code map, env constraints, deploy commands).
 - Landing animations (scroll-reveal, self-drawing route, live demo clock) — respects reduced-motion.
