@@ -1,74 +1,121 @@
 # Crono — project rules for AI assistants
 
-Read this before making changes. **If any rule here changes, update this file in the same commit.**
+Read this first. **If any rule here changes, update this file in the same commit.**
 
-## What this is
-Crono is a free, offline chronometer for small/in-house running competitions.
-Pure static site (no build step, no framework) hosted on **GitHub Pages** under the
-**`/crono/`** subpath. Live: https://rungeorge.github.io/crono/
+## TL;DR
+Static, zero-build, offline-first race chronometer on **GitHub Pages** under `/crono/`.
+Landing = `index.html`; app = `app.html`; logic = `assets/app.js` (vanilla JS, IIFE).
+Edit → commit to the dev branch → merge to `master` → sync `gh-pages` → bump `sw.js` cache if
+assets changed. There is **no network, no image tooling and no browser/render tool** here.
+
+## This sandbox's constraints (important)
+- **No outbound network**: cannot fetch fonts/images/CDNs or `npm install`. (Google Fonts works
+  for end users in the browser, but you cannot download them here.)
+- **No image tooling** (`cwebp`/`convert`/`magick`/`pngquant`/`sharp` absent): cannot resize or
+  recompress images. Ask the user to provide optimized assets (PNG/WebP/SVG); they commit them.
+- **No browser/render tool**: you cannot run the page or take screenshots → cannot visually
+  verify. Rely on `node --check` + small Node logic tests, and ask the user to eyeball the result.
+- Dev branch in use: `claude/rungeorge-crono-access-8k39na` (or whatever the task specifies).
 
 ## Structure
 ```
-index.html        Landing / presentation page  → /crono/
-app.html          The chronometer app          → /crono/app.html
-terms.html        Standalone Terms page
-privacy.html      Standalone Privacy page
+index.html        Landing page            → /crono/
+app.html          The chronometer app     → /crono/app.html
+terms.html        Standalone Terms page    privacy.html  Standalone Privacy page
 favicon.svg       Logo mark
 manifest.webmanifest, sw.js   PWA (installable + offline)
 assets/
-  theme.css       Shared design tokens (palette, fonts, radii) — single source of truth
-  app.css         App styles
-  app.js          App logic (vanilla JS, IIFE)
-  site.css        Landing styles
-  site.js         Landing behaviour/animations
-images/runner.png Hero illustration
+  theme.css   Shared design tokens (:root) — single source of truth
+  app.css     App styles            app.js   App logic (IIFE)
+  site.css    Landing styles        site.js  Landing animations
+images/runner.png   Hero illustration
 ```
 
-## Hard rules (do not break)
-1. **Zero-build, no dependencies.** No bundler, no npm, no frameworks. Only vanilla
-   HTML/CSS/JS. The single allowed external request is **Google Fonts** (Inter + Space
-   Grotesk) — disclosed in the Privacy Policy. Do not add other third-party scripts/CDNs.
-2. **Offline-first.** The app must keep working offline (PWA + localStorage). No server calls.
-3. **Relative paths only.** The site is served under `/crono/`, so always use relative URLs
-   (`assets/...`, `app.html`, `sw.js`), never absolute (`/assets/...`).
-4. **Don't rename IDs/classes used by JS** when refactoring CSS/markup. JS reads many IDs.
-5. **JS style:** vanilla ES5-ish inside an IIFE in `assets/app.js`, `"use strict"`, `var`,
-   small helpers, section comments (`// ----- X -----`). No globals leaked.
-6. **Design tokens live once** in `assets/theme.css` (`:root`). Reuse `var(--...)`; don't
-   redefine the palette per file. Dark theme + lime accent (`--primary: #a3e635`).
-7. **Modern UI, no native dialogs for confirms.** Use the in-app `confirmModal()` (a one-off
-   `prompt()` for a single value is tolerated, but prefer in-app UI).
+## Hard rules (don't break)
+1. **Zero-build, no dependencies / frameworks / bundlers.** Only vanilla HTML/CSS/JS. The one
+   allowed external request is **Google Fonts** (Inter + Space Grotesk), disclosed in Privacy.
+2. **Offline-first** (PWA + localStorage). No server calls.
+3. **Relative paths only** (served under `/crono/`): `assets/...`, `app.html`, never `/assets/...`.
+4. **Don't rename IDs/classes read by JS** when refactoring.
+5. **JS style:** ES5-ish, `"use strict"`, `var`, small helpers, `// ----- Section -----` comments,
+   no leaked globals. CSS/JS live in `assets/` — keep `app.html` free of inline `<style>`/`<script>`
+   (the tiny SW-register + reduced-motion toggle inline scripts are the only exceptions).
+6. **Design tokens once** in `theme.css`; reuse `var(--…)`. Dark theme, lime accent `--primary:#a3e635`.
+7. **No native confirm/alert for confirmations** — use `confirmModal()` (a single `prompt()` for one
+   value is tolerated). Keep modern in-app UI.
+8. **Accessibility/motion:** gate animations behind `prefers-reduced-motion` (landing uses a
+   `.js-anim` class added only when motion is allowed); keep focus-visible states and big tap targets.
+9. **Browser target:** modern evergreen + iOS/Safari. No transpiling.
+
+## Data model (localStorage)
+Keys: `crono.startEpoch`, `crono.entries`, `crono.participants`, `crono.distanceKm`,
+`crono.sound`, `crono.consent`.
+```
+entry        = { id, runnerNumber: string, finishEpoch: ms, details: string }
+participants = { "<number>": { name: string, sex: "M"|"F"|"", birthYear: number|null } }
+startEpoch   = absolute ms; elapsed = finishEpoch - startEpoch (handles midnight)
+backup JSON  = { app:"crono", v:1, exportedAt, startEpoch, distanceKm, entries, participants }
+```
+`consent` = `{ v: CONSENT_VERSION, at }`. Backups do NOT include consent.
+
+## Code map — `assets/app.js` (section comments in this order)
+Storage keys · State · Elements · Inline SVG icons (`ICONS`, `svgIcon`) · Time helpers
+(`formatElapsed`, `formatClock`, `formatPace`, `parseElapsedToMs`, `clockStringToEpoch`, `pad`) ·
+Persistence (`save`, `load`) · Sound (`beep`, `updateSoundToggle`) · Participants & categories
+(`participantName`, `normalizeSex`, `ageCategory`, `buildFilterOptions`, `matchesFilter`,
+`computePlaces`, cat editor) · Rendering (`render`, `escapeHtml/Attr`) · Actions (`setStartNow`,
+`recordFinish`, `clearResults`, `updateStartPreview`) · CSV/PDF (`exportCSV`, `exportPDF`,
+`download`) · `importCSV`/`parseCsvLine` · Backup/Restore (`exportBackup`, `importBackup`) ·
+Participants modal (`openParticipants`, `renderParticipants`, `addParticipant`) · Wire up ·
+Consent gate · Doc modal (`openDoc`) · Confirm modal (`confirmModal`) · Init.
+
+## Patterns to follow (reuse these)
+- **Inline edit:** keep a state var (`editingNumberId`, `editingTimeId`, `editingNum`); in `render()`
+  branch to show an editor vs a value+pencil; commit → mutate model, clear state, `save()`, `render()`.
+- **`render()` rebuilds `#resultBody` from scratch** → (re)attach row listeners inside the loop.
+- **Modal recipe:** `.X-overlay` + `.show` class; on open set `document.body.style.overflow="hidden"`;
+  on close restore it only if no other modal is open; support ESC + backdrop click. `confirmModal()`
+  returns a `Promise<boolean>`. Stacking z-index: doc/participants 1100, confirm 1200.
+- **Icons:** `svgIcon(name)` for JS-built markup; inline `<svg class="icon">` for static HTML buttons.
+- After changing categories/numbers, call `buildFilterOptions()` then `render()`.
 
 ## Service worker / cache (IMPORTANT)
-- `sw.js` uses a cache-first strategy with a versioned cache name (`CACHE = "crono-vN"`).
-- **Every time you change any cached asset (html/css/js/images), bump `CACHE`** (e.g.
-  `crono-v2` → `crono-v3`) so returning users get the new version. The `activate` handler
-  deletes old caches.
-- Keep the `ASSETS` precache list in `sw.js` in sync when adding/removing files.
-- SW only runs over http(s) (works on GitHub Pages; not on `file://`).
+- `sw.js` is cache-first with a versioned name `CACHE = "crono-vN"`.
+- **Bump `CACHE` whenever any cached asset changes**, and keep the `ASSETS` precache list in sync.
+- SW runs only over http(s) (GitHub Pages), not `file://`.
 
 ## Privacy / legal
-- Operator shown as **the Crono project**; contact via the GitHub repo (no public email).
-- Governing law kept generic. Legal text lives in standalone `terms.html`/`privacy.html`
-  AND as in-app modal templates (`#tpl-terms`, `#tpl-privacy`) in `app.html` — keep both in sync.
-- Consent gate stores acceptance with `CONSENT_VERSION` in `app.js`; bump it if the terms change materially.
-- Texts are general templates, not legal advice.
+- Operator = **the Crono project**; contact via the GitHub repo. Governing law generic.
+- Legal text exists twice: standalone `terms.html`/`privacy.html` AND in-app templates
+  `#tpl-terms`/`#tpl-privacy` in `app.html` — **keep both in sync**.
+- Bump `CONSENT_VERSION` in `app.js` if the terms change materially. Texts are templates, not legal advice.
 
-## Deployment workflow (every change)
-Branches: develop on `claude/...` (or the active dev branch), then publish.
-1. Commit to the dev branch and push.
-2. `master` is the source of truth: merge the dev branch into `master`, push.
-3. `gh-pages` is what GitHub Pages serves: `git merge -X theirs master` into `gh-pages`, push.
-4. Verify `git diff --stat origin/master origin/gh-pages` is **empty** (they must match).
-5. Remember to **bump the `sw.js` cache version** if assets changed.
+## Deploy (run every change)
+```sh
+# 1) commit on the dev branch
+git add -A && git commit -m "…" && git push -u origin <dev-branch>
+# 2) master = source of truth
+git checkout -B master origin/master && git merge <dev-branch> && git push origin master
+# 3) gh-pages = what Pages serves
+git checkout -B gh-pages origin/gh-pages && git merge -X theirs master && git push origin gh-pages
+git checkout <dev-branch>
+# 4) verify they match (must be empty) and bump sw.js cache if assets changed
+git diff --stat origin/master origin/gh-pages
+```
 
-## Verification before deploy
-- Syntax-check JS: `node --check assets/app.js` (and `assets/site.js`).
-- For HTML edits, confirm no inline `<style>`/`<script>` crept back into `app.html`
-  (styles/logic live in `assets/`).
-- Sanity: there is no image-processing or browser tool in this environment, and **no network
-  egress** (cannot download fonts/images). Raster assets must be provided by the user.
+## Verify before deploy
+- `node --check assets/app.js assets/site.js`
+- Add a tiny Node test for new pure helpers (e.g. `parseElapsedToMs`, `formatPace`).
+- Confirm no inline `<style>`/IIFE crept back into `app.html`; relative paths only.
 
-## Notes / known constraints
-- Can't recompress images here (no tooling/network); ask the user for optimized files.
-- PWA icon is `favicon.svg`; iOS prefers a PNG (512×512) — add if the user provides one.
+## Current features (don't re-implement)
+Start time (+confirm), record on Enter/Record with **beep** (toggle), centiseconds, midnight-safe,
+duplicates, per-row notes, **inline edit of number & time**, sex/age-category rankings via **tabs**,
+**pace** (distance), **results search**, **participant manager** (add/edit/delete/search/CSV import),
+**CSV + PDF (print) export**, **backup/restore JSON**, consent + Terms/Privacy (modal in app,
+standalone pages from landing), **PWA** (installable/offline), animated landing.
+
+## Known constraints / TODO ideas
+- `addParticipant()` uses a `prompt()` for the new number (could become an inline row).
+- iOS PWA icon is SVG; add a 512×512 PNG if the user provides one.
+- Possible next: waves/net time, splits/laps, multiple events, team scoring, i18n (RO/EN).
