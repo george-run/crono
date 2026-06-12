@@ -5,7 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
-- Replaced the hero photo with an animated SVG map scene: a faint street grid + a self-drawing route + a map pin moving start→finish; live-clock card moved to the right. Removed images/runner.png.
+- Replaced the hero photo with an animated SVG map scene: a faint street grid + a self-drawing route + a map pin moving start→finish; live-clock card moved to the right. Same map+pin animation added to the app empty state. Removed images/runner.png.
 
 ### Added
 - `CHANGELOG.md` and a richer `CLAUDE.md` (data model, code map, env constraints, deploy commands).

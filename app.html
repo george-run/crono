@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/theme.css">
 <link rel="stylesheet" href="assets/app.css">
+<script>try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("js-anim");}catch(e){}</script>
 </head>
 <body>
 
@@ -307,10 +308,28 @@
       <tbody id="resultBody"></tbody>
     </table>
     <div class="empty" id="emptyState">
-      <svg class="empty-art" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-        <circle cx="32" cy="32" r="24" stroke="currentColor" stroke-width="3" opacity=".22"/>
-        <path d="M32 8a24 24 0 0 1 22 14.7" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="32" cy="32" r="4" fill="var(--primary)"/>
+      <svg class="empty-scene" id="emptyScene" viewBox="0 0 460 320" fill="none" aria-hidden="true">
+        <!-- faint map grid (streets) -->
+        <g class="map-grid" stroke="var(--border)" stroke-width="1.5" opacity=".5">
+          <line x1="0" y1="70" x2="460" y2="70"/><line x1="0" y1="150" x2="460" y2="150"/>
+          <line x1="0" y1="230" x2="460" y2="230"/>
+          <line x1="90" y1="0" x2="90" y2="320"/><line x1="190" y1="0" x2="190" y2="320"/>
+          <line x1="290" y1="0" x2="290" y2="320"/><line x1="380" y1="0" x2="380" y2="320"/>
+        </g>
+        <rect x="196" y="150" width="84" height="60" rx="9" fill="var(--accent-2)" opacity=".08"/>
+        <path id="emptyPath" d="M40 270 C 130 250, 130 150, 232 166 S 360 210, 420 60"
+              stroke="var(--primary)" stroke-width="5" stroke-linecap="round" opacity=".6"/>
+        <circle class="start-pulse" cx="40" cy="270" r="9" fill="none" stroke="var(--primary)" stroke-width="3"/>
+        <circle cx="40" cy="270" r="4" fill="var(--primary)"/>
+        <g transform="translate(420,60)">
+          <path d="M0 4 V-22" stroke="var(--accent-3)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M0 -22 h13 l-3.5 5 3.5 5 H0 Z" fill="var(--accent-3)"/>
+        </g>
+        <g class="map-pin">
+          <path d="M0 0 C -8 -12 -15 -17 -15 -27 a15 15 0 1 1 30 0 c0 10 -7 15 -15 27 Z" fill="var(--primary)"/>
+          <circle cx="0" cy="-27" r="6" fill="var(--on-accent)"/>
+          <animateMotion begin="0s" dur="6s" repeatCount="indefinite" rotate="0"><mpath xlink:href="#emptyPath"/></animateMotion>
+        </g>
       </svg>
       <span id="emptyMsg">No results yet. Enter a runner number above and press Record as each finishes.</span>
     </div>
