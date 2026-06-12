@@ -4,6 +4,9 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time).
+
 ### Changed
 - "Record" now sits on its own full-width row with the label truly centred (the stopwatch icon is pinned to the left), so it reads as centred at every width.
 - Landing on mobile: hero CTAs now stack as equal full-width buttons (instead of ragged widths), the decorative background route is softened so it no longer cuts across them, and "Launch the timer" uses the same stopwatch icon as the app.
