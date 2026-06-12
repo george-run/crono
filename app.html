@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Crono — a simple, offline chronometer for small running and sport competitions.">
+<meta name="author" content="the Crono project">
+<title>Crono</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#0b0f14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<!-- Fine sport background: running route + topographic contour lines -->
+<div class="bg-motif" aria-hidden="true">
+  <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none">
+    <!-- topographic contours (teal) -->
+    <g stroke="var(--accent-2)" stroke-width="2" opacity=".06">
+      <ellipse cx="1060" cy="140" rx="60"  ry="46"/>
+      <ellipse cx="1060" cy="140" rx="115" ry="88"/>
+      <ellipse cx="1060" cy="140" rx="175" ry="134"/>
+      <ellipse cx="1060" cy="140" rx="240" ry="184"/>
+      <ellipse cx="1060" cy="140" rx="310" ry="238"/>
+      <ellipse cx="120" cy="670" rx="55"  ry="40"/>
+      <ellipse cx="120" cy="670" rx="110" ry="80"/>
+      <ellipse cx="120" cy="670" rx="170" ry="124"/>
+      <ellipse cx="120" cy="670" rx="235" ry="172"/>
+    </g>
+    <!-- running route (lime), dashed, winding -->
+    <path d="M-30 580 C 180 500, 250 300, 440 330 S 700 540, 870 430 S 1090 200, 1260 250"
+          stroke="var(--primary)" stroke-width="3" stroke-linecap="round"
+          stroke-dasharray="2 15" opacity=".16"/>
+    <!-- route nodes -->
+    <g fill="var(--primary)" opacity=".45">
+      <circle cx="440" cy="330" r="5"/>
+      <circle cx="870" cy="430" r="5"/>
+    </g>
+    <!-- start (hollow) & finish (filled) markers -->
+    <circle cx="150" cy="512" r="8" stroke="var(--primary)" stroke-width="3" opacity=".45"/>
+    <circle cx="1180" cy="262" r="7" fill="var(--primary)" opacity=".5"/>
+  </svg>
+</div>
+
+<!-- Consent / Terms gate -->
+<div class="consent-overlay" id="consent" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
+  <div class="consent-card">
+    <svg class="consent-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+      <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
+    </svg>
+    <h2 id="consentTitle">Welcome to Crono</h2>
+    <p>Crono keeps your timing data locally on this device only — no tracking, no advertising or analytics cookies. To continue, please review and accept the documents below.</p>
+    <label class="consent-check">
+      <input type="checkbox" id="consentCheck">
+      <span>I have read and accept the
+        <a href="terms.html" data-doc="terms">Terms &amp; Conditions</a> and the
+        <a href="privacy.html" data-doc="privacy">Privacy Policy</a>.</span>
+    </label>
+    <button id="consentAccept" class="primary" disabled>Accept &amp; continue</button>
+  </div>
+</div>
+
+<!-- Legal documents shown in-app, in a modal -->
+<div class="doc-overlay" id="docModal" role="dialog" aria-modal="true" aria-labelledby="docTitle">
+  <div class="doc-modal">
+    <div class="doc-modal-head">
+      <h2 id="docTitle">Terms &amp; Conditions</h2>
+      <button class="doc-close" id="docClose" title="Close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="doc-modal-body" id="docBody"></div>
+  </div>
+</div>
+
+<template id="tpl-terms">
+  <div class="doc-updated">Last updated: 12 June 2026</div>
+  <h3>1. Acceptance of these Terms</h3>
+  <p>Crono ("the Service") is a free, browser-based chronometer for timing small and in-house sport competitions, operated by the Crono project ("the operator", "we", "us"). By accepting these Terms &amp; Conditions and by using the Service, you agree to be bound by them. If you do not agree, please do not use the Service.</p>
+  <h3>2. The Service</h3>
+  <p>Crono runs entirely in your web browser. It lets you set a start time, record finish times, optionally import or enter a list of participants, organise results into rankings and export them as a CSV file. All processing happens on your device; the Service does not require an account and does not send your timing data to any server.</p>
+  <h3>3. No warranty &amp; accuracy of timing</h3>
+  <p>The Service is provided "as is" and "as available", without warranties of any kind, whether express or implied, including but not limited to fitness for a particular purpose, accuracy or uninterrupted availability.</p>
+  <p>Recorded times depend on your device's clock, your browser and your own input, and may contain errors or delays. <strong>The Service is not intended for official, certified or safety-critical timing.</strong> You are responsible for independently verifying any result before relying on it. Do not use Crono as the sole source of truth for an official competition without an appropriate backup method.</p>
+  <h3>4. Your responsibilities</h3>
+  <ul>
+    <li>Use the Service lawfully and only for purposes for which it is intended.</li>
+    <li>Ensure that you are entitled to enter or import any participant information you add (see also the <a href="privacy.html" data-doc="privacy">Privacy Policy</a>).</li>
+    <li>Keep your own backups. Because data is stored only in your browser, it can be lost if you clear your browser data, use private/incognito mode, switch device or browser, or use the in-app "Clear results" action. Export important results to CSV.</li>
+  </ul>
+  <h3>5. Local data</h3>
+  <p>The Service stores your data locally in your browser (see the <a href="privacy.html" data-doc="privacy">Privacy Policy</a> for details). The operator has no access to this data and cannot recover it for you. You are solely responsible for the data you enter and for backing it up.</p>
+  <h3>6. Intellectual property</h3>
+  <p>Crono is an open-source project. Its source code is made available under the licence included in the project's repository, and your use of the code is subject to that licence. Trademarks or names of third parties referenced in the Service belong to their respective owners.</p>
+  <h3>7. Limitation of liability</h3>
+  <p>To the maximum extent permitted by applicable law, the operator and contributors shall not be liable for any direct, indirect, incidental, special or consequential damages, or for any loss of data, results or profits, arising out of or in connection with your use of, or inability to use, the Service — including any inaccuracy of recorded times. Your sole remedy if you are dissatisfied with the Service is to stop using it.</p>
+  <h3>8. Changes to the Service and these Terms</h3>
+  <p>The Service may change or be discontinued at any time without notice. These Terms may be updated from time to time; the "Last updated" date above reflects the latest version. If the changes are material, you may be asked to accept the updated Terms again. Continued use after an update means you accept the revised Terms.</p>
+  <h3>9. Governing law</h3>
+  <p>These Terms are governed by the laws applicable in the operator's country of residence, without regard to conflict-of-law rules. Nothing in these Terms limits any mandatory consumer rights you may have under your local law.</p>
+  <h3>10. Contact</h3>
+  <p>Questions about these Terms can be raised through the project's repository at <a href="https://github.com/rungeorge/crono" target="_blank" rel="noopener">github.com/rungeorge/crono</a>.</p>
+</template>
+
+<template id="tpl-privacy">
+  <div class="doc-updated">Last updated: 12 June 2026</div>
+  <h3>1. Overview</h3>
+  <p>Crono ("the Service"), operated by the Crono project ("the operator"), is a free chronometer that runs entirely in your web browser. It is designed to be privacy-friendly: it does <strong>not</strong> use tracking, advertising or analytics cookies, it does <strong>not</strong> create user accounts, and it does <strong>not</strong> send your timing data to any server. This policy explains what is stored and where.</p>
+  <h3>2. Data stored on your device</h3>
+  <p>To work, Crono saves information locally in your browser's storage (the <code>localStorage</code> mechanism). This data stays on your device and is not transmitted to the operator or to any third party. It includes:</p>
+  <ul>
+    <li>the race start time you set;</li>
+    <li>recorded finish times and their order;</li>
+    <li>any participant list you import or enter (e.g. bib number, name, sex, birth year);</li>
+    <li>notes you add to a result;</li>
+    <li>a small record that you accepted these documents (with a version and timestamp).</li>
+  </ul>
+  <p class="muted">This storage is strictly functional — it is what makes the app usable — and is not used to profile or track you.</p>
+  <h3>3. No tracking, advertising or analytics</h3>
+  <p>The Service does not load advertising, does not use analytics or tracking cookies, and does not build any profile of you. No third-party marketing scripts are included.</p>
+  <h3>4. Hosting</h3>
+  <p>The Service is published as static files via GitHub Pages. Like any website, when your browser requests the page, the hosting provider (GitHub) may process technical connection data such as your IP address and user-agent in its server logs in order to deliver the site. This processing is carried out by the hosting provider under its own terms; the operator of Crono does not maintain its own server logs of your activity. The Service also loads its web fonts from Google Fonts, so your browser contacts Google's servers (which may receive your IP address) to download them; no analytics, advertising or tracking scripts are used.</p>
+  <h3>5. Information about other people</h3>
+  <p>If you import or enter details about participants (such as names or year of birth), that information is stored only on your device, under your control. You are responsible for having a lawful basis to process it and for handling it in accordance with any applicable data-protection laws. The operator never receives this information.</p>
+  <h3>6. Your control over your data</h3>
+  <p>You can delete recorded results at any time with the in-app "Clear results" action, and you can remove all stored data by clearing your browser's site data for this page. Because the data lives only in your browser, the operator cannot access, export or delete it on your behalf. Export to CSV if you want to keep a copy.</p>
+  <h3>7. Children</h3>
+  <p>The Service is a general-purpose timing tool and is not directed at children. It does not knowingly collect personal data from anyone, since no data leaves your device.</p>
+  <h3>8. Changes to this policy</h3>
+  <p>This policy may be updated from time to time. The "Last updated" date above reflects the latest version. If changes are material, you may be asked to review and accept the updated documents again.</p>
+  <h3>9. Contact</h3>
+  <p>Questions about privacy can be raised through the project's repository at <a href="https://github.com/rungeorge/crono" target="_blank" rel="noopener">github.com/rungeorge/crono</a>.</p>
+</template>
+
+<!-- Confirmation modal -->
+<div class="confirm-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="confirm-card">
+    <h2 id="confirmTitle">Confirm</h2>
+    <p id="confirmMsg"></p>
+    <div class="confirm-actions">
+      <button id="confirmCancel">Cancel</button>
+      <button id="confirmOk" class="danger">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="app">
+    <div class="hero-text">
+      <h1>
+        <svg class="logo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+          <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
+        </svg>
+        Crono
+      </h1>
+      <span class="tagline">Chronometer for small &amp; in-house sport competitions</span>
+    </div>
+  </header>
+
+  <!-- Controls -->
+  <div class="panel">
+    <details class="setup" open>
+      <summary class="setup-summary">
+        <span class="setup-title">Start time</span>
+        <span class="setup-preview">Start <strong id="startPreview">--:--:--</strong></span>
+        <svg class="setup-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="setup-body">
+    <div class="controls">
+      <div class="field">
+        <label for="startTime">Start time</label>
+        <input type="text" id="startTime" inputmode="numeric" placeholder="HH:MM:SS" aria-describedby="startHint">
+      </div>
+      <button id="setStartNow" title="Set the start time to the current moment">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+        Set start now
+      </button>
+      <div class="field">
+        <label for="distanceKm">Distance (km)</label>
+        <input type="text" id="distanceKm" inputmode="decimal" placeholder="optional" aria-label="Race distance in kilometres">
+      </div>
+      <div class="spacer"></div>
+      <div class="actions">
+        <input type="file" id="importFile" accept=".csv,text/csv,text/plain" class="visually-hidden">
+        <input type="file" id="restoreFile" accept=".json,application/json" class="visually-hidden">
+        <button id="partBtn" title="View, add and edit participants">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 19a4 4 0 0 0-8 0"/><circle cx="12" cy="9" r="3.2"/><path d="M5 19a3 3 0 0 1 4-2.8M19 19a3 3 0 0 0-4-2.8"/></svg>
+          Participants
+        </button>
+        <button id="exportBtn" class="primary" title="Download results as CSV">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+          Export CSV
+        </button>
+        <button id="pdfBtn" title="Export results as PDF (via print)">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" transform="translate(-1 0)"/><path d="M13 3v5h5" transform="translate(-1 0)"/><path d="M8 14h8M8 17h5"/></svg>
+          Export PDF
+        </button>
+        <button id="backupBtn" title="Download a full backup (.json)">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+          Backup
+        </button>
+        <button id="restoreBtn" title="Restore from a backup (.json)">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V8"/><path d="M7 13l5-5 5 5"/><path d="M4 4h16"/></svg>
+          Restore
+        </button>
+        <button id="clearBtn" class="danger" title="Delete all recorded results">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>
+          Clear results
+        </button>
+      </div>
+    </div>
+    <p class="hint" id="startHint">Times are measured against this start. Editing it recalculates every result.</p>
+
+    <details class="help">
+      <summary>How does “Import participants” work?</summary>
+      <div class="help-body">
+        <p>
+          Importing a list lets Crono show each runner's <strong>name</strong> next to their
+          number — in the results table and in the exported CSV. It's optional: without it,
+          timing still works, you just see numbers only. Importing again adds to or updates
+          the existing list (it never deletes your recorded times).
+        </p>
+        <p>
+          Upload a <strong>.csv</strong> file with one participant per line. The columns are
+          <strong>number, name, sex, birth year</strong> — in that order:
+        </p>
+        <pre>number,name,sex,birth_year
+12,Ana Popescu,F,1998
+13,Mihai Ionescu,M,1986
+27,Andrei Georgescu,M,1971</pre>
+        <ul>
+          <li><strong>Sex</strong> and <strong>birth year</strong> are optional. Without them a
+              runner still gets timed, but only shows up in the “All” ranking — not in the
+              men/women or age-category rankings. You can fill them in later by tapping the
+              small <code>+ cat</code> chip next to a runner in the results.</li>
+          <li><code>sex</code> = <code>M</code> or <code>F</code> (also accepts
+              <code>male/female</code>, <code>masculin/feminin</code>).</li>
+          <li><code>birth_year</code> = a 4-digit year; Crono derives the athletics
+              age category (10-year brackets, e.g. <code>M30–39</code>).</li>
+          <li>A header row like <code>number,name,sex,birth_year</code> is detected and skipped.</li>
+          <li>Comma <code>,</code>, semicolon <code>;</code> and tab separators all work; wrap
+              names containing a comma in quotes, e.g. <code>"Popescu, Ana"</code>.</li>
+          <li>You can create the file in Excel / Google Sheets → <em>Save as / Download → CSV</em>.</li>
+        </ul>
+      </div>
+    </details>
+      </div>
+    </details>
+  </div>
+
+  <!-- Capture -->
+  <div class="panel capture-panel">
+    <button type="button" id="soundToggle" class="sound-toggle" title="Beep on record" aria-pressed="true"></button>
+    <form class="capture" id="captureForm" autocomplete="off">
+      <div class="field">
+        <label for="runnerNumber">Runner number — tap Record or press Enter to log the finish</label>
+        <input type="text" id="runnerNumber" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="0" aria-label="Runner number">
+      </div>
+      <button type="submit" class="primary" id="recordBtn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V4"/><path d="M6 5h12l-3 4 3 4H6"/></svg>
+        Record
+      </button>
+    </form>
+  </div>
+
+  <!-- Stats -->
+  <div class="panel stats">
+    <div class="stat"><span class="num" id="statCount">0</span><span class="lbl">Recorded</span></div>
+    <div class="stat"><span class="num" id="statParticipants">0</span><span class="lbl">Participants loaded</span></div>
+    <div class="stat"><span class="num" id="statDup">0</span><span class="lbl">Duplicates</span></div>
+  </div>
+
+  <!-- Results -->
+  <div class="panel">
+    <div class="results-head">
+      <div class="tabs" id="rankingTabs" role="tablist" aria-label="Ranking"></div>
+      <div class="result-search">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input type="search" id="resultSearch" placeholder="Search number or name…" aria-label="Search results">
+      </div>
+    </div>
+    <table id="result">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Obs.</th>
+          <th class="time">Time</th>
+          <th aria-label="Remove"></th>
+        </tr>
+      </thead>
+      <tbody id="resultBody"></tbody>
+    </table>
+    <div class="empty" id="emptyState">
+      <svg class="empty-art" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <circle cx="32" cy="32" r="24" stroke="currentColor" stroke-width="3" opacity=".22"/>
+        <path d="M32 8a24 24 0 0 1 22 14.7" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="32" r="4" fill="var(--primary)"/>
+      </svg>
+      <span id="emptyMsg">No results yet. Enter a runner number above and press Record as each finishes.</span>
+    </div>
+  </div>
+
+  <footer class="app">
+    Crono — runs fully offline in your browser. Data is stored locally on this device.
+    <div class="footer-links">
+      <a href="terms.html" data-doc="terms">Terms &amp; Conditions</a> · <a href="privacy.html" data-doc="privacy">Privacy Policy</a>
+    </div>
+    <a class="coffee-link" href="https://revolut.me/rungeorge" target="_blank" rel="noopener" title="Voluntary donation — not a payment for the app">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7.5 3c0 1-1 1.4-1 2.5M11 3c0 1-1 1.4-1 2.5"/></svg>
+      Buy me a coffee
+    </a>
+  </footer>
+</div>
+
+<!-- Participants management modal -->
+<div class="part-overlay" id="partModal" role="dialog" aria-modal="true" aria-labelledby="partTitle">
+  <div class="part-modal">
+    <div class="doc-modal-head">
+      <h2 id="partTitle">Participants</h2>
+      <button class="doc-close" id="partClose" title="Close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="part-toolbar">
+      <input type="search" id="partSearch" placeholder="Search number or name…" aria-label="Search participants">
+      <button id="partImport" title="Import a CSV (number, name, sex, birth year)">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>
+        Import CSV
+      </button>
+      <button id="partAdd" class="primary" title="Add a participant">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6v12"/><path d="M6 12h12"/></svg>
+        Add
+      </button>
+    </div>
+    <div class="part-body" id="partBody"></div>
+  </div>
+</div>
+
+<!-- Row edit modal -->
+<div class="row-overlay" id="rowModal" role="dialog" aria-modal="true" aria-labelledby="rowTitle">
+  <div class="row-modal">
+    <div class="doc-modal-head">
+      <h2 id="rowTitle">Edit result</h2>
+      <button class="doc-close" id="rowClose" title="Close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="row-form">
+      <label class="rf">Bib number <input id="rowNum" type="text" inputmode="numeric" autocomplete="off"></label>
+      <label class="rf">Finish time <input id="rowTime" type="text" inputmode="numeric" placeholder="H:MM:SS.cc" autocomplete="off"></label>
+      <div class="row-two">
+        <label class="rf">Sex
+          <select id="rowSex"><option value="">—</option><option value="M">M</option><option value="F">F</option></select>
+        </label>
+        <label class="rf">Birth year <input id="rowYear" type="text" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+      </div>
+      <label class="rf">Note <input id="rowNote" type="text" placeholder="add note…" autocomplete="off"></label>
+      <div class="row-actions">
+        <button id="rowDelete" class="danger">Delete</button>
+        <span class="spacer"></span>
+        <button id="rowCancel">Cancel</button>
+        <button id="rowSave" class="primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<!-- Print-only results layout (populated on Export PDF) -->
+<div id="printArea" aria-hidden="true"></div>
+
+<script src="assets/app.js"></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>

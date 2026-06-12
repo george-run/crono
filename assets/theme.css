@@ -1,0 +1,21 @@
+:root {
+  --bg: #0b0f14;
+  --panel: #141b24;
+  --panel-2: #1d2630;
+  --border: #28333f;
+  --text: #e6edf3;
+  --muted: #8b97a6;
+  --primary: #a3e635;        /* lime accent */
+  --primary-hover: #84cc16;
+  --on-accent: #0b0f14;      /* dark text on lime */
+  --danger: #f87171;
+  --danger-hover: #ef4444;
+  --ok: #a3e635;
+  --warn: #fbbf24;
+  --accent-2: #2dd4bf;       /* teal — map/route lines */
+  --accent-3: #fbbf24;       /* amber — illustration accent */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --font-ui: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-ui);
+}

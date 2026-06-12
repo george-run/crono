@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Crono — a fast, offline chronometer for small and in-house running competitions. Bib-by-bib timing, live rankings by sex and age, pace and CSV export.">
+<title>Crono — simple race timing</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#0b0f14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/site.css">
+<script>try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("js-anim");}catch(e){}</script>
+</head>
+<body>
+
+<div class="bg-motif" aria-hidden="true">
+  <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none">
+    <g stroke="var(--accent-2)" stroke-width="2" opacity=".06">
+      <ellipse cx="1060" cy="120" rx="120" ry="92"/>
+      <ellipse cx="1060" cy="120" rx="200" ry="152"/>
+      <ellipse cx="1060" cy="120" rx="290" ry="220"/>
+      <ellipse cx="120" cy="700" rx="120" ry="86"/>
+      <ellipse cx="120" cy="700" rx="210" ry="150"/>
+    </g>
+    <path d="M-30 600C 200 520 260 320 460 350S 720 560 900 450 1100 220 1260 270"
+          stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 15" opacity=".12"/>
+    <path id="heroRoute" d="M-30 600C 200 520 260 320 460 350S 720 560 900 450 1100 220 1260 270"
+          stroke="var(--primary)" stroke-width="3" stroke-linecap="round" fill="none" opacity=".28"/>
+    <circle cx="460" cy="350" r="5" fill="var(--primary)" opacity=".5"/>
+    <circle cx="900" cy="450" r="5" fill="var(--primary)" opacity=".5"/>
+  </svg>
+</div>
+
+<div class="wrap">
+  <header class="site">
+    <span class="brand">
+      <svg class="logo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+        <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
+      </svg>
+      Crono
+    </span>
+    <a class="btn" href="app.html">Open app</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="badge"><span class="badge-dot"></span> New — pace &amp; age-category rankings</span>
+        <h1>The fastest way to <span class="accent">time your race</span></h1>
+        <p class="lead">
+          Crono is a fast, fully offline chronometer for small and in-house running
+          competitions. Type a bib number, hit Record, and get live rankings, pace and a
+          clean CSV export — right in your browser. No account, no tracking.
+        </p>
+        <div class="cta">
+          <a class="btn primary lg" href="app.html">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V4"/><path d="M6 5h12l-3 4 3 4H6"/></svg>
+            Launch the timer
+          </a>
+          <a class="btn ghost lg" href="#features">See features</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <span class="blob"></span>
+        <img src="images/runner.png" alt="Illustration of a runner with bib number 247" width="1536" height="1024">
+        <div class="float-card" aria-hidden="true">
+          <span class="fc-place">1<sup>st</sup></span>
+          <span class="fc-mid"><strong>#247</strong><small id="demoClock">24:31.08</small></span>
+          <span class="fc-pace">4:32<small>/km</small></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-head">
+      <span class="eyebrow">Everything you need on race day</span>
+      <h2>Simple to run, serious about results</h2>
+    </div>
+    <div class="features">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6"/><path d="M12 4v3"/><circle cx="12" cy="14" r="8"/><path d="M12 14V10"/></svg></div>
+        <h3>Instant timing</h3>
+        <p>Enter a bib number and press Record (or Enter). Centisecond precision, even across midnight.</p>
+      </div>
+      <div class="card featured">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M8.5 13 7 22l5-3 5 3-1.5-9"/></svg></div>
+        <h3>Live rankings</h3>
+        <p>Filter results by overall, men, women and standard 10-year age categories with one tap.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4-3"/></svg></div>
+        <h3>Pace per km</h3>
+        <p>Add a distance and Crono shows each runner's pace in min/km, in the table and the export.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19a4 4 0 0 0-8 0"/><circle cx="12" cy="9" r="4"/></svg></div>
+        <h3>Participants</h3>
+        <p>Import a CSV (number, name, sex, birth year) to show names and power the categories.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg></div>
+        <h3>CSV export</h3>
+        <p>Download full results — place, category place, name, sex, category, time and pace.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/></svg></div>
+        <h3>Offline &amp; private</h3>
+        <p>Runs entirely on your device. No account, no tracking, no analytics — data stays local.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section steps">
+    <div class="section-head">
+      <span class="eyebrow">How it works</span>
+      <h2>From start line to results in three steps</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <span class="step-num">1</span>
+        <h3>Set the start</h3>
+        <p>Tap “Set start now” when the gun goes off, or type an exact start time.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <h3>Record finishers</h3>
+        <p>Type each bib number and hit Record (or Enter) as runners cross the line.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <h3>Rank &amp; export</h3>
+        <p>Switch ranking tabs, add a distance for pace, then export everything to CSV.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq">
+    <div class="section-head">
+      <span class="eyebrow">Good to know</span>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq-list">
+      <details><summary>Is Crono free?</summary><p>Yes — it’s completely free and open-source. No account, no paywall.</p></details>
+      <details><summary>Does it work offline?</summary><p>Yes. It runs entirely in your browser and your data is stored locally on your device. After the first load it keeps working without a connection.</p></details>
+      <details><summary>How accurate is the timing?</summary><p>Times are recorded to the centisecond using your device clock. It’s great for club and in-house races, but for official, certified events keep a backup timing method.</p></details>
+      <details><summary>How do the sex &amp; age categories work?</summary><p>Import a participant CSV with <code>number, name, sex, birth_year</code>. Crono derives standard 10-year athletics categories and lets you rank by them. You can also fill missing data inline.</p></details>
+      <details><summary>Can I export the results?</summary><p>Yes — one click downloads a CSV with place, category place, name, sex, category, time and pace.</p></details>
+      <details><summary>Where is my data stored?</summary><p>Only in your browser (localStorage). Nothing is sent to a server; the operator can’t see or recover it, so export anything important.</p></details>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <h2>Ready to time your next race?</h2>
+    <p class="cta-sub">No install, no sign-up — open it and start the clock.</p>
+    <a class="btn primary lg" href="app.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V4"/><path d="M6 5h12l-3 4 3 4H6"/></svg>
+      Launch the timer
+    </a>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="brand">
+        <svg class="logo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+          <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
+        </svg>
+        Crono
+      </span>
+      <p>A fast, offline chronometer for small and in-house running competitions.</p>
+      <a class="btn coffee" href="https://revolut.me/rungeorge" target="_blank" rel="noopener" title="Voluntary donation — not a payment for the app">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7.5 3c0 1-1 1.4-1 2.5M11 3c0 1-1 1.4-1 2.5"/></svg>
+        Buy me a coffee
+      </a>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="app.html">Open the app</a>
+      <a href="#features">Features</a>
+      <a href="#">How it works</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="terms.html">Terms &amp; Conditions</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+    <div class="footer-col">
+      <h4>Project</h4>
+      <a href="https://github.com/rungeorge/crono" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© <span id="yr"></span> Crono · runs fully offline in your browser.</div>
+</footer>
+
+<script src="assets/site.js"></script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>
