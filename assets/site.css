@@ -28,7 +28,10 @@
   .btn .icon { width: 1.15em; height: 1.15em; }
 
   /* hero */
-  .hero { text-align: center; padding: 64px 0 40px; }
+  .hero { text-align: center; padding: 64px 0 24px; }
+  /* Hero illustration blends seamlessly on the dark page (black areas drop out). */
+  .hero-illustration { max-width: 760px; margin: 0 auto 16px; }
+  .hero-illustration img { display: block; width: 100%; height: auto; mix-blend-mode: lighten; }
   .hero .eyebrow { display: inline-block; font-size: .8rem; font-weight: 700; letter-spacing: .8px;
     text-transform: uppercase; color: var(--primary); background: rgba(163,230,53,.1);
     border: 1px solid rgba(163,230,53,.25); padding: 5px 12px; border-radius: 999px; margin-bottom: 20px; }
