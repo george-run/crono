@@ -49,9 +49,6 @@
     margin-bottom: 16px;
   }
 
-  .controls {
-    display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
-  }
   .field { display: flex; flex-direction: column; gap: 4px; }
   .field label { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
 
@@ -82,6 +79,18 @@
 
   .spacer { flex: 1 1 auto; }
   .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+
+  /* Setup card: race row + helper text + labelled divider */
+  .setup-row { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; }
+  .setup-row .field { flex: 0 1 220px; }
+  .setup-row .field.grow { flex: 1 1 300px; }
+  .field-inline { display: flex; gap: 8px; align-items: center; }
+  .field-inline #startTime { flex: 1 1 auto; width: auto; min-width: 0; text-align: left; }
+  .field-inline #setStartNow { flex: 0 0 auto; white-space: nowrap; }
+  .field-help { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+  .setup-divider { display: flex; align-items: center; gap: 12px; margin: 22px 0 14px; }
+  .setup-divider::before, .setup-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+  .setup-divider span { font-size: .72rem; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 600; }
 
   /* Collapsible "Start time" setup card */
   .setup-summary { display: flex; align-items: center; gap: 12px; cursor: pointer; list-style: none; user-select: none; }
@@ -232,11 +241,9 @@
     header.app h1 { font-size: 1.6rem; }
     .panel { padding: 14px; }
 
-    /* Start row: keep the field + "now" button side by side on top. */
-    .controls { gap: 10px; }
-    .controls .field { flex: 1 1 auto; }
-    #startTime { width: 100%; }
-    .controls .spacer { flex-basis: 100%; height: 0; }
+    /* Setup fields stack full-width on phones. */
+    .setup-row { gap: 14px; }
+    .setup-row .field, .setup-row .field.grow { flex: 1 1 100%; }
     /* Action buttons stacked full-width — clean, no text wrapping, easy to tap. */
     .actions { width: 100%; flex-direction: column; gap: 8px; }
     .actions button { width: 100%; justify-content: center; padding: 12px; }

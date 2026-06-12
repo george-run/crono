@@ -181,81 +181,66 @@
         <svg class="setup-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </summary>
       <div class="setup-body">
-    <div class="controls">
-      <div class="field">
+    <div class="setup-row">
+      <div class="field grow">
         <label for="startTime">Start time</label>
-        <input type="text" id="startTime" inputmode="numeric" placeholder="HH:MM:SS" aria-describedby="startHint">
+        <div class="field-inline">
+          <input type="text" id="startTime" inputmode="numeric" placeholder="HH:MM:SS" aria-describedby="startHint">
+          <button id="setStartNow" title="Set the start time to the current moment">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+            Set now
+          </button>
+        </div>
+        <span class="field-help" id="startHint">When the race started — every result is timed from here. Editing it recalculates all times.</span>
       </div>
-      <button id="setStartNow" title="Set the start time to the current moment">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
-        Set start now
-      </button>
       <div class="field">
         <label for="distanceKm">Distance (km)</label>
-        <input type="text" id="distanceKm" inputmode="decimal" placeholder="optional" aria-label="Race distance in kilometres">
-      </div>
-      <div class="spacer"></div>
-      <div class="actions">
-        <input type="file" id="importFile" accept=".csv,text/csv,text/plain" class="visually-hidden">
-        <input type="file" id="restoreFile" accept=".json,application/json" class="visually-hidden">
-        <button id="partBtn" title="View, add and edit participants">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 19a4 4 0 0 0-8 0"/><circle cx="12" cy="9" r="3.2"/><path d="M5 19a3 3 0 0 1 4-2.8M19 19a3 3 0 0 0-4-2.8"/></svg>
-          Participants
-        </button>
-        <button id="exportBtn" class="primary" title="Download results as CSV">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
-          Export CSV
-        </button>
-        <button id="pdfBtn" title="Export results as PDF (via print)">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" transform="translate(-1 0)"/><path d="M13 3v5h5" transform="translate(-1 0)"/><path d="M8 14h8M8 17h5"/></svg>
-          Export PDF
-        </button>
-        <button id="backupBtn" title="Download a full backup (.json)">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
-          Backup
-        </button>
-        <button id="restoreBtn" title="Restore from a backup (.json)">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V8"/><path d="M7 13l5-5 5 5"/><path d="M4 4h16"/></svg>
-          Restore
-        </button>
-        <button id="clearBtn" class="danger" title="Delete all recorded results">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>
-          Clear results
-        </button>
+        <input type="text" id="distanceKm" inputmode="decimal" placeholder="optional" aria-describedby="distHint">
+        <span class="field-help" id="distHint">Optional — shows each finisher's pace (min/km).</span>
       </div>
     </div>
-    <p class="hint" id="startHint">Times are measured against this start. Editing it recalculates every result.</p>
+
+    <div class="setup-divider"><span>Participants &amp; data</span></div>
+
+    <div class="actions">
+      <input type="file" id="importFile" accept=".csv,text/csv,text/plain" class="visually-hidden">
+      <input type="file" id="restoreFile" accept=".json,application/json" class="visually-hidden">
+      <button id="partBtn" title="View, add and edit participants">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 19a4 4 0 0 0-8 0"/><circle cx="12" cy="9" r="3.2"/><path d="M5 19a3 3 0 0 1 4-2.8M19 19a3 3 0 0 0-4-2.8"/></svg>
+        Participants
+      </button>
+      <button id="exportBtn" class="primary" title="Download results as CSV">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+        Export CSV
+      </button>
+      <button id="pdfBtn" title="Export results as PDF (via print)">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" transform="translate(-1 0)"/><path d="M13 3v5h5" transform="translate(-1 0)"/><path d="M8 14h8M8 17h5"/></svg>
+        Export PDF
+      </button>
+      <button id="backupBtn" title="Download a full backup (.json)">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+        Backup
+      </button>
+      <button id="restoreBtn" title="Restore from a backup (.json)">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V8"/><path d="M7 13l5-5 5 5"/><path d="M4 4h16"/></svg>
+        Restore
+      </button>
+      <button id="clearBtn" class="danger" title="Delete all recorded results">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>
+        Clear results
+      </button>
+    </div>
 
     <details class="help">
-      <summary>How does “Import participants” work?</summary>
+      <summary>What do these buttons do?</summary>
       <div class="help-body">
-        <p>
-          Importing a list lets Crono show each runner's <strong>name</strong> next to their
-          number — in the results table and in the exported CSV. It's optional: without it,
-          timing still works, you just see numbers only. Importing again adds to or updates
-          the existing list (it never deletes your recorded times).
-        </p>
-        <p>
-          Upload a <strong>.csv</strong> file with one participant per line. The columns are
-          <strong>number, name, sex, birth year</strong> — in that order:
-        </p>
-        <pre>number,name,sex,birth_year
-12,Ana Popescu,F,1998
-13,Mihai Ionescu,M,1986
-27,Andrei Georgescu,M,1971</pre>
         <ul>
-          <li><strong>Sex</strong> and <strong>birth year</strong> are optional. Without them a
-              runner still gets timed, but only shows up in the “All” ranking — not in the
-              men/women or age-category rankings. You can fill them in later by tapping the
-              small <code>+ cat</code> chip next to a runner in the results.</li>
-          <li><code>sex</code> = <code>M</code> or <code>F</code> (also accepts
-              <code>male/female</code>, <code>masculin/feminin</code>).</li>
-          <li><code>birth_year</code> = a 4-digit year; Crono derives the athletics
-              age category (10-year brackets, e.g. <code>M30–39</code>).</li>
-          <li>A header row like <code>number,name,sex,birth_year</code> is detected and skipped.</li>
-          <li>Comma <code>,</code>, semicolon <code>;</code> and tab separators all work; wrap
-              names containing a comma in quotes, e.g. <code>"Popescu, Ana"</code>.</li>
-          <li>You can create the file in Excel / Google Sheets → <em>Save as / Download → CSV</em>.</li>
+          <li><strong>Participants</strong> — manage your start list (number, name, sex, birth year) or import a CSV (<code>number,name,sex,birth_year</code>). Names and sex/age categories then show up in the results.</li>
+          <li><strong>Export CSV</strong> — download all results as a spreadsheet (place, name, time, pace…).</li>
+          <li><strong>Export PDF</strong> — a clean, print-ready results sheet (your browser's “Save as PDF”).</li>
+          <li><strong>Backup</strong> — save the whole event (start time, results, participants) to a <code>.json</code> file.</li>
+          <li><strong>Restore</strong> — load an event back from a backup file (replaces current data).</li>
+          <li><strong>Clear results</strong> — delete all recorded finishers. Your start time and participant list stay.</li>
         </ul>
       </div>
     </details>
