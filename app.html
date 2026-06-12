@@ -261,10 +261,12 @@
 
   <!-- Capture -->
   <div class="panel capture-panel">
-    <button type="button" id="soundToggle" class="sound-toggle" title="Beep on record" aria-pressed="true"></button>
     <form class="capture" id="captureForm" autocomplete="off">
       <div class="field">
-        <label for="runnerNumber">Runner number — tap Record or press Enter to log the finish</label>
+        <div class="capture-label">
+          <label for="runnerNumber">Runner number — tap Record or press Enter to log the finish</label>
+          <button type="button" id="soundToggle" class="sound-toggle" title="Beep on record" aria-pressed="true"></button>
+        </div>
         <input type="text" id="runnerNumber" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="0" aria-label="Runner number">
       </div>
       <button type="submit" class="primary" id="recordBtn">
