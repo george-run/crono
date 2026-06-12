@@ -1,6 +1,12 @@
 (function () {
   "use strict";
 
+  // ----- Pure helpers (from assets/helpers.js, loaded before this script) ---
+  var H = (typeof CronoH !== "undefined") ? CronoH : {};
+  var pad = H.pad, formatElapsed = H.formatElapsed, formatPace = H.formatPace,
+      parseElapsedToMs = H.parseElapsedToMs, normalizeSex = H.normalizeSex,
+      AGE_BRACKETS = H.AGE_BRACKETS, bracketRange = H.bracketRange, csvCell = H.csvCell;
+
   // ----- Storage keys -------------------------------------------------------
   var KEY_START = "crono.startEpoch";
   var KEY_ENTRIES = "crono.entries";
@@ -76,36 +82,11 @@
 
   // ----- Time helpers -------------------------------------------------------
 
-  // Format an elapsed duration in ms as HH:MM:SS.cc (cc = centiseconds).
-  function formatElapsed(ms) {
-    if (ms == null || isNaN(ms)) return "--:--:--.--";
-    if (ms < 0) ms = 0;
-    var totalCs = Math.floor(ms / 10);          // centiseconds
-    var cs = totalCs % 100;
-    var totalSec = Math.floor(totalCs / 100);
-    var s = totalSec % 60;
-    var m = Math.floor(totalSec / 60) % 60;
-    var h = Math.floor(totalSec / 3600);
-    return pad(h) + ":" + pad(m) + ":" + pad(s) + "." + pad(cs);
-  }
-
   // Format an absolute epoch as a HH:MM:SS clock string.
   function formatClock(epoch) {
     var d = new Date(epoch);
     return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
   }
-
-  // Pace as M:SS per km, or "" when there is no usable distance/time.
-  function formatPace(elapsedMs, km) {
-    if (!km || km <= 0 || !(elapsedMs > 0)) return "";
-    var secPerKm = (elapsedMs / 1000) / km;
-    var m = Math.floor(secPerKm / 60);
-    var s = Math.round(secPerKm % 60);
-    if (s === 60) { m += 1; s = 0; }
-    return m + ":" + pad(s) + " /km";
-  }
-
-  function pad(n) { return (n < 10 ? "0" : "") + n; }
 
   // Parse a "HH:MM:SS" (optionally ".cc") clock string into an absolute epoch.
   // Interpreted as today; if that lands in the future (e.g. a race started
@@ -193,38 +174,9 @@
     $soundToggle.classList.toggle("off", !soundOn);
   }
 
-  // Parse an elapsed string (H:MM:SS(.cc) / MM:SS(.cc) / SS(.cc)) into ms, or null.
-  function parseElapsedToMs(str) {
-    str = String(str).trim();
-    var m = str.match(/^(?:(?:(\d+):)?(\d{1,2}):)?(\d{1,2})(?:[.,](\d{1,2}))?$/);
-    if (!m) return null;
-    var h = m[1] ? +m[1] : 0, mi = m[2] ? +m[2] : 0, s = +m[3];
-    var cs = m[4] ? +(m[4].length === 1 ? m[4] + "0" : m[4]) : 0;
-    if (mi > 59 || s > 59) return null;
-    return ((h * 3600 + mi * 60 + s) * 1000) + cs * 10;
-  }
-
   // ----- Participants & categories -----------------------------------------
 
   function participantName(num) { var p = participants[num]; return p ? (p.name || "") : ""; }
-
-  // Normalize a free-form sex value to "M" / "F" / "".
-  function normalizeSex(v) {
-    v = String(v || "").trim().toLowerCase();
-    if (!v) return "";
-    if (v[0] === "m" || v[0] === "b") return "M"; // m / male / masculin / b (bărbat)
-    if (v[0] === "f" || v[0] === "w") return "F"; // f / female / feminin / w
-    return "";
-  }
-
-  // Athletics 10-year brackets. The bracket's lower bound doubles as its id.
-  // The upper bound is one below the next bracket; the last one is open-ended.
-  var AGE_BRACKETS = [0, 20, 30, 40, 50, 60];
-  function bracketRange(lo) {
-    var idx = AGE_BRACKETS.indexOf(lo);
-    if (idx === AGE_BRACKETS.length - 1) return lo + "+";
-    return lo + "–" + (AGE_BRACKETS[idx + 1] - 1);
-  }
 
   // Compute the sex+age category for a participant, or null when data is missing.
   function ageCategory(p) {
@@ -521,12 +473,6 @@
     window.print();
   }
 
-  function csvCell(v) {
-    v = String(v);
-    if (/[",\r\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
-    return v;
-  }
-
   function download(filename, content, mime) {
     var blob = new Blob([content], { type: mime + ";charset=utf-8" });
     var url = URL.createObjectURL(blob);
@@ -674,9 +620,35 @@
     }).join("");
 
     var count = Object.keys(participants).length;
+    var addRow =
+      '<div class="part-row part-add">' +
+        '<input class="pa-num" inputmode="numeric" placeholder="number" aria-label="New number">' +
+        '<input class="pa-name" placeholder="name" aria-label="New name">' +
+        '<select class="pa-sex" aria-label="New sex"><option value="">—</option><option value="M">M</option><option value="F">F</option></select>' +
+        '<input class="pa-year" inputmode="numeric" maxlength="4" placeholder="year" aria-label="New birth year">' +
+        '<button type="button" class="pa-add" title="Add participant">' + svgIcon("check") + "</button>" +
+      "</div>";
     $partBody.innerHTML =
       '<div class="part-count">' + count + " participant(s)" + (q ? " · showing " + nums.length : "") + "</div>" +
-      head + (rows || '<div class="part-empty">No participants yet. Add one or import a CSV.</div>');
+      head + (rows || '<div class="part-empty">No participants yet — add one below or import a CSV.</div>') + addRow;
+
+    // The "add" row at the bottom.
+    var addEl = $partBody.querySelector(".part-add");
+    function commitAdd() {
+      var nn = addEl.querySelector(".pa-num").value.trim();
+      if (!nn) { addEl.querySelector(".pa-num").focus(); return; }
+      var y = parseInt(addEl.querySelector(".pa-year").value, 10);
+      participants[nn] = {
+        name: addEl.querySelector(".pa-name").value.trim(),
+        sex: normalizeSex(addEl.querySelector(".pa-sex").value),
+        birthYear: (y >= 1900 && y <= new Date().getFullYear()) ? y : null
+      };
+      save(); buildFilterOptions(); render(); renderParticipants();
+      var ni = $partBody.querySelector(".pa-num"); if (ni) ni.focus();
+    }
+    addEl.querySelector(".pa-add").addEventListener("click", commitAdd);
+    addEl.querySelector(".pa-year").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); commitAdd(); } });
+    addEl.querySelector(".pa-num").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); commitAdd(); } });
 
     // Wire each row.
     Array.prototype.forEach.call($partBody.querySelectorAll(".part-row[data-num]"), function (row) {
@@ -707,16 +679,8 @@
   }
 
   function addParticipant() {
-    var n = prompt("New participant number:");
-    if (n == null) return;
-    n = String(n).trim();
-    if (!n) return;
-    if (!participants[n]) participants[n] = { name: "", sex: "", birthYear: null };
-    save(); buildFilterOptions(); render();
-    $partSearch.value = "";
-    renderParticipants();
-    var inp = $partBody.querySelector('.part-row[data-num="' + (window.CSS && CSS.escape ? CSS.escape(n) : n) + '"] .p-name');
-    if (inp) inp.focus();
+    var inp = $partBody.querySelector(".pa-num");
+    if (inp) { inp.scrollIntoView({ block: "nearest" }); inp.focus(); }
   }
 
   // ----- Wire up ------------------------------------------------------------
@@ -826,6 +790,23 @@
     if (e.key !== "Escape") return;
     if ($docModal.classList.contains("show")) closeDoc();
     else if ($partModal.classList.contains("show")) closeParticipants();
+  });
+
+  // Keep keyboard focus inside the open modal (focus-trap).
+  var MODAL_SELS = [".confirm-overlay.show", ".row-overlay.show", ".doc-overlay.show",
+                    ".part-overlay.show", ".consent-overlay.show"];
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Tab") return;
+    var modal = null;
+    for (var i = 0; i < MODAL_SELS.length; i++) { modal = document.querySelector(MODAL_SELS[i]); if (modal) break; }
+    if (!modal) return;
+    var nodes = modal.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])');
+    var f = Array.prototype.filter.call(nodes, function (el) { return el.offsetParent !== null; });
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (!modal.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 
   // ----- Confirm modal ------------------------------------------------------
@@ -999,3 +980,11 @@
   if (hash === "terms" || hash === "privacy") openDoc(hash);
   if (!$consent.classList.contains("show") && !$docModal.classList.contains("show")) $runner.focus();
 })();
+
+// Register the service worker (kept here so the page needs no inline script → strict CSP).
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  });
+}
+

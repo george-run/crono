@@ -468,3 +468,9 @@
   footer.app .coffee-link { margin-top: 10px; }
   .header-coffee { flex: 0 0 auto; align-self: center; }
   @media (max-width: 560px) { .header-coffee { padding: 6px 10px; } .header-coffee span, .header-coffee { font-size: .8rem; } }
+
+  /* Participants: inline "add" row */
+  .part-add { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 12px; }
+  .part-add .pa-add { border: none; background: transparent; color: var(--ok); padding: 6px; }
+  .part-add .pa-add:hover { background: var(--ok); color: var(--on-accent); }
+  .part-add .pa-add .icon { width: 18px; height: 18px; }

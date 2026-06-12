@@ -27,8 +27,10 @@ manifest.webmanifest, sw.js   PWA (installable + offline)
 assets/
   theme.css   Shared design tokens (:root) — single source of truth
   app.css     App styles            app.js   App logic (IIFE)
-  site.css    Landing styles        site.js  Landing animations
-images/runner.png   Hero illustration
+  site.css    Landing styles        site.js  Landing animations + SW register
+  helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested
+  head.js     reduced-motion → adds .js-anim (runs in <head> before paint)
+test/helpers.test.js   Node tests (`npm test` → node --test). package.json (no deps).
 ```
 
 ## Hard rules (don't break)
@@ -38,8 +40,10 @@ images/runner.png   Hero illustration
 3. **Relative paths only** (served under `/crono/`): `assets/...`, `app.html`, never `/assets/...`.
 4. **Don't rename IDs/classes read by JS** when refactoring.
 5. **JS style:** ES5-ish, `"use strict"`, `var`, small helpers, `// ----- Section -----` comments,
-   no leaked globals. CSS/JS live in `assets/` — keep `app.html` free of inline `<style>`/`<script>`
-   (the tiny SW-register + reduced-motion toggle inline scripts are the only exceptions).
+   no leaked globals. CSS/JS live in `assets/`. **No inline `<style>`/`<script>`** in the pages
+   (a strict CSP `script-src 'self'` enforces this): the reduced-motion toggle is `head.js`,
+   SW registration lives at the end of `app.js`/`site.js`. Pure helpers go in `helpers.js` (tested).
+   A `<meta>` CSP is set on every page — if you add an external host, update it.
 6. **Design tokens once** in `theme.css`; reuse `var(--…)`. Dark theme, lime accent `--primary:#a3e635`.
 7. **No native confirm/alert for confirmations** — use `confirmModal()` (a single `prompt()` for one
    value is tolerated). Keep modern in-app UI.
@@ -70,9 +74,10 @@ Participants modal (`openParticipants`, `renderParticipants`, `addParticipant`) 
 Consent gate · Doc modal (`openDoc`) · Confirm modal (`confirmModal`) · Init.
 
 ## Patterns to follow (reuse these)
-- **Inline edit:** keep a state var (`editingNumberId`, `editingTimeId`, `editingNum`); in `render()`
-  branch to show an editor vs a value+pencil; commit → mutate model, clear state, `save()`, `render()`.
+- **Edit a result:** rows are click-to-edit → `openRowEdit(id)` opens `#rowModal` (number/time/sex/
+  year/note/delete). `editingRowId` holds the open entry; `saveRowEdit()` commits → `save()`, `render()`.
 - **`render()` rebuilds `#resultBody` from scratch** → (re)attach row listeners inside the loop.
+- **Modals are focus-trapped** (see the Tab handler) and close on ESC/backdrop.
 - **Modal recipe:** `.X-overlay` + `.show` class; on open set `document.body.style.overflow="hidden"`;
   on close restore it only if no other modal is open; support ESC + backdrop click. `confirmModal()`
   returns a `Promise<boolean>`. Stacking z-index: doc/participants 1100, confirm 1200.
