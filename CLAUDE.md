@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-12**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty.
-- **Service worker cache:** `CACHE = "crono-v33"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v34"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/rungeorge-crono-access-8k39na`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them.
@@ -122,10 +122,16 @@ Any change to a **cached** CSS file → bump `sw.js` `CACHE` and refresh the **S
 
 ## Service worker / cache (IMPORTANT)
 - `sw.js`: **network-first for HTML pages** (so deploys show immediately when online),
-  **cache-first for static assets** (css/js/images). Versioned name `CACHE = "crono-vN"`.
+  **stale-while-revalidate for static assets** (css/js/images) — served instantly from cache, then
+  refreshed in the background, so the cache self-heals on the next load. Versioned `CACHE = "crono-vN"`.
+- **Precache uses `fetch(…, {cache:"reload"})`** to bypass GitHub Pages' `max-age=600` HTTP cache, so a
+  fresh deploy never stores stale files. The SW main script is fetched from network by default
+  (`updateViaCache:"imported"`), so a `CACHE` bump propagates on the next navigation.
 - **Bump `CACHE` whenever any cached asset changes**, and keep the `ASSETS` precache list in sync.
-- SW runs only over http(s) (GitHub Pages), not `file://`. Returning users may still need one
-  reload for a new SW to activate.
+  (Bumping drops the old cache + forces a fresh precache; SWR covers you if you forget, one load later.)
+- SW runs only over http(s) (GitHub Pages), not `file://`. With SWR a returning user may still see the
+  previous asset for the current load; the next load is fresh. **Don't** auto-reload (bad mid-race);
+  prefer a dismissible "new version" toast if a nudge is ever wanted.
 
 ## Privacy / legal
 - Operator = **the Crono project**; contact via the GitHub repo. Governing law generic.

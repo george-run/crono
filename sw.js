@@ -1,5 +1,9 @@
-/* Crono service worker — offline cache (cache-first). Bump CACHE to invalidate. */
-var CACHE = "crono-v33";
+/* Crono service worker.
+   - HTML pages: network-first (deploys show immediately when online; cache is the offline fallback).
+   - Static assets: stale-while-revalidate (instant + offline, and the cache self-heals on the next
+     load even if CACHE wasn't bumped).
+   Bump CACHE to drop the old cache and force a fresh precache. Keep ASSETS in sync. */
+var CACHE = "crono-v34";
 var ASSETS = [
   "./",
   "index.html",
@@ -19,9 +23,13 @@ var ASSETS = [
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) {
-    // Don't fail the whole install if one asset 404s.
+    // Precache bypassing the HTTP cache so a fresh deploy never stores stale files
+    // (GitHub Pages serves assets with Cache-Control: max-age=600). Don't fail the whole
+    // install if one asset 404s.
     return Promise.all(ASSETS.map(function (u) {
-      return c.add(u).catch(function () {});
+      return fetch(new Request(u, { cache: "reload" }))
+        .then(function (res) { if (res && res.ok) return c.put(u, res); })
+        .catch(function () {});
     }));
   }).then(function () { return self.skipWaiting(); }));
 });
@@ -54,17 +62,17 @@ self.addEventListener("fetch", function (e) {
     return;
   }
 
-  // Cache-first for static assets (css/js/img).
+  // Static assets: stale-while-revalidate — serve cache instantly, refresh it in the background.
   e.respondWith(
     caches.match(req).then(function (cached) {
-      if (cached) return cached;
-      return fetch(req).then(function (res) {
+      var network = fetch(req).then(function (res) {
         if (res && res.ok) {
           var copy = res.clone();
           caches.open(CACHE).then(function (c) { c.put(req, copy); });
         }
         return res;
       }).catch(function () { return cached; });
+      return cached || network;
     })
   );
 });
