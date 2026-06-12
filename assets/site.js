@@ -91,10 +91,5 @@
   }
 })();
 
-// Register the service worker (kept here so the page needs no inline script → strict CSP).
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("sw.js").catch(function () {});
-  });
-}
+// Service worker registration + update toast live in assets/sw-register.js (shared with the app).
 

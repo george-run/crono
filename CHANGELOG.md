@@ -5,7 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
-- A dismissible "New version available — Reload" toast when a fresh deploy is detected (never auto-reloads, so it can't interrupt a live race).
+- A dismissible "New version available — Reload" toast when a fresh deploy is detected (never auto-reloads, so it can't interrupt a live race) — on both the app and the landing; SW registration is now a single shared `sw-register.js`.
 - Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly (with a stopwatch icon) in the card's summary line when it's collapsed.
 
 ### Changed
