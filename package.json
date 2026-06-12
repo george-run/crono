@@ -5,7 +5,7 @@
   "description": "Offline race chronometer — static, zero-build. Tests cover the pure helpers.",
   "scripts": {
     "test": "node --test",
-    "check": "node --check assets/app.js && node --check assets/site.js && node --check assets/helpers.js"
+    "check": "node --check assets/app.js && node --check assets/site.js && node --check assets/helpers.js && node --check assets/head.js && node --check assets/sw-register.js && node --check sw.js"
   },
   "license": "MIT"
 }
