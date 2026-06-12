@@ -86,7 +86,7 @@
   button.danger { background: transparent; border-color: var(--danger); color: #fca5a5; }
   button.danger:hover { background: var(--danger); color: #fff; }
 
-  .capture { display: flex; gap: 16px; align-items: stretch; flex-wrap: wrap; }
+  .capture { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; margin: 0; }
   .capture .field { flex: 1 1 320px; }
   #runnerNumber {
     font-size: clamp(2.5rem, 9vw, 4.5rem);
@@ -95,6 +95,7 @@
     letter-spacing: 4px;
     width: 100%;
   }
+  #recordBtn { font-size: 1.25rem; padding: 16px 28px; flex: 0 0 auto; }
   .hint { color: var(--muted); font-size: .85rem; }
 
   .stats { display: flex; gap: 24px; flex-wrap: wrap; }
@@ -194,6 +195,9 @@
 
     .stats { gap: 16px; }
     .stat .num { font-size: 1.3rem; }
+
+    /* Full-width, thumb-friendly Record button under the number field. */
+    #recordBtn { width: 100%; padding: 18px; font-size: 1.4rem; }
   }
 </style>
 </head>
@@ -223,12 +227,13 @@
 
   <!-- Capture -->
   <div class="panel">
-    <div class="capture">
+    <form class="capture" id="captureForm" autocomplete="off">
       <div class="field">
-        <label for="runnerNumber">Runner number — type it and press Enter to record the finish</label>
-        <input type="text" id="runnerNumber" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="Runner number">
+        <label for="runnerNumber">Runner number — tap Record or press Enter to log the finish</label>
+        <input type="text" id="runnerNumber" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="0" aria-label="Runner number">
       </div>
-    </div>
+      <button type="submit" class="primary" id="recordBtn">⏱ Record</button>
+    </form>
   </div>
 
   <!-- Stats -->
@@ -564,12 +569,14 @@
     render();
   });
 
-  $runner.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      recordFinish(this.value);
-      this.value = "";
-    }
+  // Submitting the form covers both the Record button and the keyboard's
+  // Enter / "Go" / "Done" key — the latter matters on mobile, where the
+  // numeric keypad often has no real Enter key.
+  document.getElementById("captureForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    recordFinish($runner.value);
+    $runner.value = "";
+    $runner.focus();
   });
 
   window.addEventListener("beforeunload", function (e) {
