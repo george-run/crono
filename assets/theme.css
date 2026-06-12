@@ -16,6 +16,6 @@
   --accent-3: #fbbf24;       /* amber — illustration accent */
   --radius: 14px;
   --radius-sm: 10px;
-  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-display: var(--font-ui);
+  --font-ui: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-ui);
 }
