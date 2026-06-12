@@ -501,3 +501,12 @@
   .demo-pl { font-family: var(--font-display); font-weight: 700; color: var(--primary); }
   .demo-bib { font-family: var(--font-display); font-weight: 700; }
   .demo-t { font-variant-numeric: tabular-nums; color: var(--muted); }
+
+  /* Header actions (View demo + Buy me a coffee) */
+  .header-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-end; }
+  .header-demo { font-size: .85rem; padding: 6px 14px; }
+  .header-demo .icon { width: 1em; height: 1em; }
+  @media (max-width: 560px) {
+    header.app { flex-wrap: wrap; gap: 10px; }
+    .header-actions { width: 100%; justify-content: flex-start; }
+  }
