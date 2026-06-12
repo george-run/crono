@@ -5,7 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
-- Declutter the “Start time” card: split race setup (start + distance, with inline explanations) from a labelled “Participants & data” action group, and a concise “What do these buttons do?” help.
+- Move data actions (Participants, Export CSV/PDF, Backup, Restore, Clear) into a separate collapsed “Options” card; the “Start time” card now holds only start + distance (with inline explanations).
 - Replaced the hero photo with an animated SVG map scene: a faint street grid + a self-drawing route + a map pin moving start→finish; live-clock card moved to the right. Same map+pin animation added to the app empty state. Removed images/runner.png.
 
 ### Added

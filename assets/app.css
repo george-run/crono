@@ -96,7 +96,7 @@
   .setup-summary { display: flex; align-items: center; gap: 12px; cursor: pointer; list-style: none; user-select: none; }
   .setup-summary::-webkit-details-marker { display: none; }
   .setup-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; }
-  .setup-preview { color: var(--text); font-size: .95rem; }
+  .setup-preview { color: var(--muted); font-size: .9rem; }
   .setup-preview strong { font-family: var(--font-display); font-variant-numeric: tabular-nums; color: var(--primary); }
   .setup-chevron { width: 20px; height: 20px; color: var(--muted); margin-left: auto; flex: 0 0 auto; transition: transform .15s ease; }
   .setup[open] .setup-chevron { transform: rotate(180deg); }
