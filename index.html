@@ -1,441 +1,526 @@
 <!DOCTYPE html>
-<html lang="en" class="js">
+<html lang="en">
 <head>
-
-<title>Crono</title>
 <meta charset="utf-8">
-<meta http-equiv="x-ua-compatible" content="ie=edge">
-<meta name="description" content="" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="author" content="george-run@users.noreply.github.com">
+<meta name="description" content="Crono — a simple, offline chronometer for small running and sport competitions.">
+<meta name="author" content="the Crono project">
+<title>Crono</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #1e293b;
+    --panel-2: #273449;
+    --border: #334155;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --danger: #dc2626;
+    --danger-hover: #b91c1c;
+    --ok: #16a34a;
+    --warn: #f59e0b;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 16px; }
 
-<link rel="stylesheet" href="dist/plugins/datetimepicker/bootstrap-datetimepicker.4.17.37.min.css">
+  header.app {
+    display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+    padding: 8px 0 16px;
+  }
+  header.app h1 { font-size: 1.5rem; margin: 0; letter-spacing: .5px; }
+  header.app .tagline { color: var(--muted); font-size: .9rem; }
 
-<!-- PHOTON main styles -->
-<link rel="stylesheet" href="dist/css/main_style.min.css" data-dependency-name="main_style">
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-116014405-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+  }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
 
-  gtag('config', 'UA-116014405-1');
-</script>
+  input[type="text"], input[type="time"] {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  input:focus { outline: 2px solid var(--primary); outline-offset: 0; border-color: var(--primary); }
 
-<!-- Hotjar Tracking Code for https://rungeorge.github.io/crono/ -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:819588,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
+  #startTime { width: 130px; text-align: center; font-size: 1.1rem; }
 
+  .spacer { flex: 1 1 auto; }
 
-<!--[if lt IE 9]>
-    <script src="dist/js/lib/html5shiv.min.js"></script>
-    <script src="dist/js/lib/respond.min.js"></script>
-<![endif]-->
+  button {
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: .95rem;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: background .12s ease, border-color .12s ease;
+  }
+  button:hover { background: #31415a; }
+  button.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+  button.primary:hover { background: var(--primary-hover); }
+  button.danger { background: transparent; border-color: var(--danger); color: #fca5a5; }
+  button.danger:hover { background: var(--danger); color: #fff; }
 
+  .capture { display: flex; gap: 16px; align-items: stretch; flex-wrap: wrap; }
+  .capture .field { flex: 1 1 320px; }
+  #runnerNumber {
+    font-size: clamp(2.5rem, 9vw, 4.5rem);
+    text-align: center;
+    padding: 12px;
+    letter-spacing: 4px;
+    width: 100%;
+  }
+  .hint { color: var(--muted); font-size: .85rem; }
+
+  .stats { display: flex; gap: 24px; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; }
+  .stat .num { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .lbl { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { font-size: .75rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; }
+  td.time, th.time { text-align: right; font-variant-numeric: tabular-nums; font-size: 1.15rem; white-space: nowrap; }
+  td.place { color: var(--muted); width: 56px; }
+  td.num { font-weight: 700; font-size: 1.15rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.name { color: var(--text); }
+  tr.new td { animation: flash 1s ease; }
+  @keyframes flash { from { background: rgba(37,99,235,.35); } to { background: transparent; } }
+
+  .tag {
+    display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 6px; margin-left: 6px; vertical-align: middle;
+  }
+  .tag.dup { background: var(--warn); color: #1f2937; }
+
+  .obs { width: 100%; min-width: 120px; background: transparent; border: 1px solid transparent; color: var(--text); border-radius: 6px; padding: 4px 6px; }
+  .obs:hover { border-color: var(--border); }
+  .obs:focus { border-color: var(--primary); background: var(--panel-2); }
+
+  .row-remove { background: transparent; border: none; color: var(--muted); font-size: 1.1rem; padding: 4px 8px; }
+  .row-remove:hover { color: var(--danger); background: transparent; }
+
+  .empty { text-align: center; color: var(--muted); padding: 24px; }
+
+  footer.app { color: var(--muted); font-size: .8rem; text-align: center; padding: 12px 0 24px; }
+  footer.app a { color: var(--muted); }
+
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
 </head>
- <!--[if lt IE 9]>
-<body class="lt-ie9">
-<![endif]-->
-<!--[if lt IE 9]><p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
-<!--[if gt IE 8]>
 <body>
-<![endif]-->
-<!--[if !IE]> -->
-<body>
-<!-- <![endif]-->
+<div class="wrap">
+  <header class="app">
+    <h1>⏱ Crono</h1>
+    <span class="tagline">Chronometer for small &amp; in-house sport competitions</span>
+  </header>
 
-<!-- PAGE:Start -->
-<div class="main-container" id="main-container"></div>
-        <!-- SIDEBAR:End -->
-        <!-- CONTENT:Start -->
-        <div class="main-content">
-            <div class="page-content">
-                <div class="panel panel-default">
-                    <div id="pannel_main">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-xs-2 col-sm-2 col-md-1 col-lg-1">
-                                    <div class="form-group">
-                                        <button id="start" class="btn btn-default">
-                                            <i class='fa fa-play'></i>
-                                            Set start now
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="col-xs-5 col-sm-5 col-md-3 col-lg-3">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="time" id="time" value="" placeholder="Select the start time">
-                                            <div class="input-group-addon cursor-pointer"><i class="fa fa-clock-o"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-5 col-sm-6 col-md-8 col-lg-8 text-right">
-                                    <div class="form-group">
-                                        <button class="btn btn-primary" id="excel">
-                                            <i class="fa fa-download"></i> Download
-                                        </button>
-                                        <button id="getSql" class="btn btn-default">
-                                            <i class='fa fa-plus'></i>
-                                            Get sql
-                                        </button>
-                                        <button id="reset" class="btn btn-default btn-danger">
-                                            <i class='fa fa-trash'></i>
-                                            Clear data
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                    <div class="form-group">
-                                        <input type="text" id="runnerNumber" name="runnerNumber" class="form-control input-lg" placeholder="Runner number" style="height: 100px;font-size: 66px;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <div class="well hidden" id="sql"></div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                    <table class="table table-striped table-hover font-size-200" id="result">
-                                         <thead>
-                                            <tr>
-                                                <th>Place</th>
-                                                <th>Runner number</th>
-                                                <th>Obs.</th>
-                                                <th class="text-right">Time</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr></tr>
-                                        </tbody>
-                                    </table>
-
-                                    <table class="hidden" id="resultExcel">
-                                         <thead>
-                                            <tr>
-                                                <th>Position</th>
-                                                <th>Runner number</th>
-                                                <th>Obs.</th>
-                                                <th>Time</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- CONTENT:End -->
+  <!-- Controls -->
+  <div class="panel">
+    <div class="controls">
+      <div class="field">
+        <label for="startTime">Start time</label>
+        <input type="text" id="startTime" inputmode="numeric" placeholder="HH:MM:SS" aria-describedby="startHint">
+      </div>
+      <button id="setStartNow" title="Set the start time to the current moment">▶ Set start now</button>
+      <div class="spacer"></div>
+      <button id="importBtn" title="Import a CSV list of participants (number,name)">⇪ Import participants</button>
+      <input type="file" id="importFile" accept=".csv,text/csv,text/plain" class="visually-hidden">
+      <button id="exportBtn" class="primary" title="Download results as CSV">⬇ Export CSV</button>
+      <button id="clearBtn" class="danger" title="Delete all recorded results">🗑 Clear results</button>
     </div>
+    <p class="hint" id="startHint">Times are measured against this start. Editing it recalculates every result.</p>
+  </div>
+
+  <!-- Capture -->
+  <div class="panel">
+    <div class="capture">
+      <div class="field">
+        <label for="runnerNumber">Runner number — type it and press Enter to record the finish</label>
+        <input type="text" id="runnerNumber" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="Runner number">
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="panel stats">
+    <div class="stat"><span class="num" id="statCount">0</span><span class="lbl">Recorded</span></div>
+    <div class="stat"><span class="num" id="statParticipants">0</span><span class="lbl">Participants loaded</span></div>
+    <div class="stat"><span class="num" id="statDup">0</span><span class="lbl">Duplicates</span></div>
+  </div>
+
+  <!-- Results -->
+  <div class="panel">
+    <table id="result">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Obs.</th>
+          <th class="time">Time</th>
+          <th aria-label="Remove"></th>
+        </tr>
+      </thead>
+      <tbody id="resultBody"></tbody>
+    </table>
+    <div class="empty" id="emptyState">No results yet. Enter a runner number above and press Enter as each finishes.</div>
+  </div>
+
+  <footer class="app">
+    Crono — runs fully offline in your browser. Data is stored locally on this device.
+  </footer>
 </div>
-<!-- PAGE:End -->
 
-<!-- POPUPS:Start -->
-<div id="pop_space"></div>
-<!-- POPUPS:End -->
+<script>
+(function () {
+  "use strict";
 
-<!-- SCRIPTS:Start -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>window.jQuery || document.write("<script src=\"dist/js/lib/jquery-1.11.3.min.js\">"+"<"+"/script>")</script>
-<script src="dist/plugins/numberformatter/jQuery.numberFormatter-1.0.0.js"></script>
-<script src="dist/plugins/datetimepicker/moment.2.10.6.min.js"></script>
-<script src="dist/plugins/datetimepicker/bootstrap-datetimepicker.4.17.37.min.js"></script>
-<script src="dist/plugins/datetimepicker/locales/bootstrap-datetimepicker.min.en.js"></script>
-<script src="table-to-csv.js"></script>
-<script src="dist/js/main_script.min.js"></script>
-<!-- SCRIPTS:End -->
+  // ----- Storage keys -------------------------------------------------------
+  var KEY_START = "crono.startEpoch";
+  var KEY_ENTRIES = "crono.entries";
+  var KEY_PARTICIPANTS = "crono.participants";
 
-<!-- DOCUMENT-READY:Start -->
-<script type="text/javascript">
-    $(document).ready(function () {
-        
-        /*
-        @todo
-            test app
-            add
-            edit
-            cahange order
-            api call
-        */
+  // ----- State --------------------------------------------------------------
+  var startEpoch = null;          // absolute ms timestamp of the race start
+  var entries = [];               // [{ id, runnerNumber, finishEpoch, details }]
+  var participants = {};          // { "<number>": "<name>" }
 
-        $( "#excel" ).on( "click", function() {
-            var info = JSON.parse(localStorage.getItem("info"));
-            exportData(info);
-            $('#resultExcel').tableToCSV();
-        });
+  // ----- Elements -----------------------------------------------------------
+  var $start = document.getElementById("startTime");
+  var $runner = document.getElementById("runnerNumber");
+  var $body = document.getElementById("resultBody");
+  var $empty = document.getElementById("emptyState");
+  var $statCount = document.getElementById("statCount");
+  var $statParticipants = document.getElementById("statParticipants");
+  var $statDup = document.getElementById("statDup");
+  var $importFile = document.getElementById("importFile");
 
-        //start format
-        window.onbeforeunload = confirmExit;
-        function confirmExit() {
-            return "You have attempted to leave this page. Are you sure?";
-        }
+  // ----- Time helpers -------------------------------------------------------
 
-        $('#time').datetimepicker({format : 'HH:mm:ss'})
-            .next().on('click', function() {
-                $(this).prev().focus();
-        });
+  // Format an elapsed duration in ms as HH:MM:SS.cc (cc = centiseconds).
+  function formatElapsed(ms) {
+    if (ms == null || isNaN(ms)) return "--:--:--.--";
+    if (ms < 0) ms = 0;
+    var totalCs = Math.floor(ms / 10);          // centiseconds
+    var cs = totalCs % 100;
+    var totalSec = Math.floor(totalCs / 100);
+    var s = totalSec % 60;
+    var m = Math.floor(totalSec / 60) % 60;
+    var h = Math.floor(totalSec / 3600);
+    return pad(h) + ":" + pad(m) + ":" + pad(s) + "." + pad(cs);
+  }
 
-        $("#runnerNumber").numberFormatter({
-            decimal_separator: "",
-            thousands_separator: "",
-            no_of_decimals: 0
-        });
-        $("#runnerNumber").focus();
-        //end format
+  // Format an absolute epoch as a HH:MM:SS clock string.
+  function formatClock(epoch) {
+    var d = new Date(epoch);
+    return pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+  }
 
-        if (typeof(Storage) === "undefined") {
-            alert("Sorry! No Web Storage support");
-        }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
 
-        if(localStorage.getItem("info") === null){
-            resetData();
-        }
+  // Parse a "HH:MM:SS" (optionally ".cc") clock string into an absolute epoch.
+  // Interpreted as today; if that lands in the future (e.g. a race started
+  // before midnight while recording happens after), it is treated as yesterday.
+  function clockStringToEpoch(str) {
+    var m = String(str).trim().match(/^(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?(?:[.,](\d{1,2}))?$/);
+    if (!m) return null;
+    var h = +m[1], mi = +m[2], s = m[3] ? +m[3] : 0;
+    if (h > 23 || mi > 59 || s > 59) return null;
+    var now = new Date();
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, mi, s, 0);
+    if (d.getTime() > now.getTime() + 1000) {
+      d.setDate(d.getDate() - 1); // start was yesterday (race crossed midnight)
+    }
+    return d.getTime();
+  }
 
-        if(localStorage.getItem("info") != null){
-            var info = JSON.parse(localStorage.getItem("info"));
-            addRunner(info);
-        }
-        
-        function resetData(){
-            $("#result tbody").html("<tr></tr>");
-            $("#runnerNumber").val('');
-            localStorage.clear();
-        }
+  // ----- Persistence --------------------------------------------------------
+  function save() {
+    try {
+      localStorage.setItem(KEY_START, String(startEpoch));
+      localStorage.setItem(KEY_ENTRIES, JSON.stringify(entries));
+      localStorage.setItem(KEY_PARTICIPANTS, JSON.stringify(participants));
+    } catch (e) {
+      console.warn("Could not persist data:", e);
+    }
+  }
 
-        $("body").delegate(".details", "keyup", function(e){
-            console.log($(this).val());
-            var order = $(this).data('details');
-            var details = $(this).val();
-            setDetails(order, details);
-        });
+  function load() {
+    if (typeof Storage === "undefined") {
+      alert("Sorry — your browser has no Web Storage support, so results cannot be saved.");
+      return;
+    }
+    var s = localStorage.getItem(KEY_START);
+    startEpoch = s != null && s !== "null" ? parseInt(s, 10) : Date.now();
 
-        $("body").delegate(".removeRunner", "click", function(e){
-            var order = $(this).data('order');
-            removeRunner(order);
-        });
+    try { entries = JSON.parse(localStorage.getItem(KEY_ENTRIES)) || []; }
+    catch (e) { entries = []; }
+    if (!Array.isArray(entries)) entries = [];
 
-        $("#getSql").on('click', function (e) {
-            var info = JSON.parse(localStorage.getItem("info"));
-            getSql(info);
-        });
-        
-        function secToTime (time) {
-            var time = parseInt(time, 10) / 1000;
-            var hours   = Math.floor(time / 3600);
-            var minutes = Math.floor((time - (hours * 3600)) / 60);
-            var seconds = time - (hours * 3600) - (minutes * 60);
+    try { participants = JSON.parse(localStorage.getItem(KEY_PARTICIPANTS)) || {}; }
+    catch (e) { participants = {}; }
+    if (typeof participants !== "object" || participants === null) participants = {};
+  }
 
-            if (hours   < 10) {hours   = "0"+hours;}
-            if (minutes < 10) {minutes = "0"+minutes;}
-            if (seconds < 10) {seconds = "0"+seconds;}
-            return hours+':'+minutes+':'+seconds;
-        }
+  // ----- Rendering ----------------------------------------------------------
 
-        $("#start").on('click', function (e) {
-            var now = new Date();
-            var hours = now.getHours();
-            var minutes = now.getMinutes();
-            var seconds = now.getSeconds();
-
-            if (hours   < 10) {hours   = "0"+hours;}
-            if (minutes < 10) {minutes = "0"+minutes;}
-            if (seconds < 10) {seconds = "0"+seconds;}
-
-            $('#time').val(hours+':'+minutes+':'+seconds);
-        });
-
-        $( "#start" ).trigger( "click" );
-
-        $("#reset").on('click', function (e) {
-            var result = confirm('All data will be deleted. Are you sure?');
-            if (result) {
-                resetData();
-            }
-        });
-
-        function addRunner(info){
-            
-            var length = info.length;
-
-            for (var i = 0; i < length; i++) {
-
-                var textDuplicate = (info[i].isDuplicate)?(' <span class="label label-danger">Duplicate</span>'):("");
-                var index = info[i].order + 1;
-                result = "<tr style='width:20px;'>" +
-                            "<td><small><i style='font-size:12px;'>" + index  + "</i></small></td>"+
-                            "<td>" + 
-                                info[i].runnerNumber + textDuplicate +
-                            "</td>" + 
-                            "<td>" + 
-                                "<input type='text' class='details' data-details='" + info[i].order + "' value='" + info[i].details + "'>" +
-                            "</td>" + 
-                            "<td class='text-right'>" +
-                                info[i].finalTime + 
-                                " <i class='fa fa-remove cursor-pointer removeRunner' data-order='" + info[i].order + "'></i>" + 
-                            "</td>" +
-                        "</tr>";
-
-                $('#result tbody').prepend(result);
-            }
-
-        }
-
-        function exportData(info){
-            if(info == null){
-                return;
-            }
-
-            var length = info.length;
-            $("#resultExcel tbody").html("");
-            result = "";
-            for (var i = 0; i < length; i++) {
-                var textDuplicate = (info[i].isDuplicate)?(' - Duplicate'):("");
-                var index = info[i].order + 1;
-                result += "<tr>" +
-                            "<td>" + index  + "</td>"+
-                            "<td>" + 
-                                info[i].runnerNumber + textDuplicate +
-                            "</td>" + 
-                            "<td>" + 
-                                "" + info[i].details + "" +
-                            "</td>" + 
-                            "<td>" +
-                                info[i].finalTime + 
-                            "</td>" +
-                        "</tr>";
-            }
-
-            $('#resultExcel tbody').html(result);
-        }
-
-
-        function removeRunner(order){
-            var info = JSON.parse(localStorage.getItem("info"));
-            var newInfo = [];
-            info.forEach(function(entry) {
-                if(entry.order !== order){
-                    newInfo.push(entry);
-                }
-            });
-            resetData();
-            localStorage.setItem("info", JSON.stringify(newInfo));
-            addRunner(newInfo);
-
-        }
-
-        function setDetails(order, details){
-            var info = JSON.parse(localStorage.getItem("info"));
-            var length = info.length;
-            for (var i = 0; i < length; i++) {
-                if(info[i].order == order){
-                   info[i].details = details;
-                }
-            }
-            console.log(info);
-            localStorage.setItem("info", JSON.stringify(info));
-
-        }
-
-        function isDuplicate(info, runnerNumber){
-            if(info == null){
-                return false;
-            } 
-            var length = info.length;
-            for (var i = 0; i < length; i++) {
-                if(info[i].runnerNumber == runnerNumber){
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function getSql(info){
-           
-            if(info == null){
-                $('#sql').html('No data.');
-            } else{
-                var length = info.length;
-                var sql = '';
-                for (var i = 0; i < length; i++) {
-                    var sql = sql + "<div>insert into result_stage set runner_number = " + info[i].runnerNumber + ", stage_final_time = '" + info[i].finalTime + "', stage_id = 3, position = 0; #" + info[i].details + "</div>";
-                }
-                $('#sql').html(sql);
-            }
-            $( "#sql" ).toggleClass('hidden');
-        }
-
-
-        $("#runnerNumber").on('keyup', function (e) {
-            e.preventDefault();
-            if (e.keyCode == 13) {
-
-                // calculate time
-                var startDate = $('#time').val().trim();
-                var now = new Date();
-                var endDate = new Date("1970-1-1 " +  now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds());
-                var diff = endDate - new Date("1970-1-1 " + startDate);
-                var finalTime = secToTime(diff);
-                //end time
-
-                
-                
-                var runnerNumber = $( this ).val().trim();
-                if(runnerNumber == ''){
-                    return false;
-                }
-                $(this).val('');
-                
-                if(
-                    localStorage.getItem("info") == null || 
-                    typeof JSON.parse(localStorage.getItem("info")) !== 'object'
-                    ){
-                    var info = [];
-                    var order = 0;
-                } else{
-                    var info = JSON.parse(localStorage.getItem("info"));
-                    var order = info.length;
-                }
-                
-                var newRunner = {
-                    'startDate':startDate,
-                    'endDate':endDate, 
-                    'runnerNumber':runnerNumber,
-                    'finalTime':finalTime,
-                    'isDuplicate':isDuplicate(info, runnerNumber),
-                    'order':order,
-                    'details':''
-                };
-                
-                info.push(newRunner);
-                localStorage.setItem("info", JSON.stringify(info));
-
-                addRunner([newRunner])
-
-            }
-        });
-
+  // Duplicate = same runner number recorded more than once.
+  function duplicateNumbers() {
+    var counts = {}, dups = {};
+    entries.forEach(function (e) {
+      counts[e.runnerNumber] = (counts[e.runnerNumber] || 0) + 1;
     });
+    Object.keys(counts).forEach(function (n) { if (counts[n] > 1) dups[n] = true; });
+    return dups;
+  }
+
+  function render(newId) {
+    var dups = duplicateNumbers();
+    var dupCount = 0;
+
+    // Most recent finisher on top.
+    var ordered = entries.slice().sort(function (a, b) { return b.finishEpoch - a.finishEpoch; });
+
+    $body.innerHTML = "";
+    ordered.forEach(function (e) {
+      var place = e.finishEpoch <= 0 ? "" :
+        entries.filter(function (x) { return x.finishEpoch <= e.finishEpoch; }).length;
+      var isDup = !!dups[e.runnerNumber];
+      if (isDup) dupCount++;
+
+      var tr = document.createElement("tr");
+      if (e.id === newId) tr.className = "new";
+
+      var name = participants[e.runnerNumber] || "";
+
+      tr.innerHTML =
+        '<td class="place">' + place + "</td>" +
+        '<td class="num">' + escapeHtml(e.runnerNumber) +
+          (isDup ? '<span class="tag dup">dup</span>' : "") + "</td>" +
+        '<td class="name">' + escapeHtml(name) + "</td>" +
+        '<td><input class="obs" type="text" value="' + escapeAttr(e.details || "") +
+          '" placeholder="add note…"></td>' +
+        '<td class="time">' + formatElapsed(e.finishEpoch - startEpoch) + "</td>" +
+        '<td><button class="row-remove" title="Remove this result">✕</button></td>';
+
+      tr.querySelector(".obs").addEventListener("input", function () {
+        e.details = this.value;
+        save();
+      });
+      tr.querySelector(".row-remove").addEventListener("click", function () {
+        if (confirm("Remove runner " + e.runnerNumber + "?")) {
+          entries = entries.filter(function (x) { return x.id !== e.id; });
+          save();
+          render();
+        }
+      });
+
+      $body.appendChild(tr);
+    });
+
+    $empty.style.display = entries.length ? "none" : "block";
+    $statCount.textContent = entries.length;
+    $statParticipants.textContent = Object.keys(participants).length;
+    $statDup.textContent = dupCount;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c];
+    });
+  }
+  function escapeAttr(s) {
+    return escapeHtml(s).replace(/"/g, "&quot;");
+  }
+
+  // ----- Actions ------------------------------------------------------------
+
+  function setStartNow() {
+    startEpoch = Date.now();
+    $start.value = formatClock(startEpoch);
+    save();
+    render();
+  }
+
+  function recordFinish(number) {
+    number = String(number).trim();
+    if (number === "") return;
+    entries.push({
+      id: Date.now() + "-" + Math.random().toString(36).slice(2, 8),
+      runnerNumber: number,
+      finishEpoch: Date.now(),
+      details: ""
+    });
+    save();
+    render(entries[entries.length - 1].id);
+  }
+
+  function clearResults() {
+    if (!entries.length || confirm("All recorded results will be deleted. Are you sure?")) {
+      entries = [];
+      save();
+      render();
+      $runner.focus();
+    }
+  }
+
+  // ----- CSV ----------------------------------------------------------------
+
+  function exportCSV() {
+    var rows = [["Place", "Runner number", "Name", "Obs.", "Time", "Duplicate"]];
+    var dups = duplicateNumbers();
+    var ordered = entries.slice().sort(function (a, b) { return a.finishEpoch - b.finishEpoch; });
+    ordered.forEach(function (e, i) {
+      rows.push([
+        i + 1,
+        e.runnerNumber,
+        participants[e.runnerNumber] || "",
+        e.details || "",
+        formatElapsed(e.finishEpoch - startEpoch),
+        dups[e.runnerNumber] ? "yes" : ""
+      ]);
+    });
+    var csv = rows.map(function (r) {
+      return r.map(csvCell).join(",");
+    }).join("\r\n");
+
+    var stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    download("crono-results-" + stamp + ".csv", "﻿" + csv, "text/csv");
+  }
+
+  function csvCell(v) {
+    v = String(v);
+    if (/[",\r\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
+    return v;
+  }
+
+  function download(filename, content, mime) {
+    var blob = new Blob([content], { type: mime + ";charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  // Parse a participant CSV. Accepts comma/semicolon/tab separators.
+  // First column = number, second = name. A header row is auto-skipped.
+  function importCSV(text) {
+    var added = 0;
+    text.replace(/\r\n?/g, "\n").split("\n").forEach(function (line, idx) {
+      if (!line.trim()) return;
+      var sep = line.indexOf(";") > -1 ? ";" : (line.indexOf("\t") > -1 ? "\t" : ",");
+      var cells = parseCsvLine(line, sep);
+      var num = (cells[0] || "").trim();
+      var name = (cells[1] || "").trim();
+      // Skip a header row like "number,name" / "nr,nume".
+      if (idx === 0 && num && !/^\d+$/.test(num)) return;
+      if (!num) return;
+      participants[num] = name;
+      added++;
+    });
+    save();
+    render();
+    alert(added ? added + " participant(s) loaded." : "No valid rows found. Expected: number,name");
+  }
+
+  function parseCsvLine(line, sep) {
+    var out = [], cur = "", inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (inQ) {
+        if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') inQ = false;
+        else cur += ch;
+      } else {
+        if (ch === '"') inQ = true;
+        else if (ch === sep) { out.push(cur); cur = ""; }
+        else cur += ch;
+      }
+    }
+    out.push(cur);
+    return out;
+  }
+
+  // ----- Wire up ------------------------------------------------------------
+
+  document.getElementById("setStartNow").addEventListener("click", setStartNow);
+  document.getElementById("exportBtn").addEventListener("click", exportCSV);
+  document.getElementById("clearBtn").addEventListener("click", clearResults);
+  document.getElementById("importBtn").addEventListener("click", function () { $importFile.click(); });
+
+  $importFile.addEventListener("change", function () {
+    var file = this.files && this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () { importCSV(String(reader.result)); };
+    reader.readAsText(file);
+    this.value = ""; // allow re-importing the same file
+  });
+
+  $start.addEventListener("change", function () {
+    var epoch = clockStringToEpoch(this.value);
+    if (epoch == null) {
+      alert("Please enter the start time as HH:MM:SS.");
+      this.value = formatClock(startEpoch);
+      return;
+    }
+    startEpoch = epoch;
+    this.value = formatClock(startEpoch);
+    save();
+    render();
+  });
+
+  $runner.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      recordFinish(this.value);
+      this.value = "";
+    }
+  });
+
+  window.addEventListener("beforeunload", function (e) {
+    if (entries.length) {
+      e.preventDefault();
+      e.returnValue = "";
+    }
+  });
+
+  // ----- Init ---------------------------------------------------------------
+  load();
+  $start.value = formatClock(startEpoch);
+  render();
+  $runner.focus();
+})();
 </script>
-<!-- DOCUMENT-READY:End -->
 </body>
 </html>
