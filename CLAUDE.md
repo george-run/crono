@@ -36,7 +36,7 @@ deploy**. When you add/rename/remove a file, bump the cache, or add a token, fix
   recompress images. Ask the user to provide optimized assets (PNG/WebP/SVG); they commit them.
 - **No browser/render tool**: you cannot run the page or take screenshots → cannot visually
   verify. Rely on `node --check` + small Node logic tests, and ask the user to eyeball the result.
-- Dev branch in use: `claude/rungeorge-crono-access-8k39na` (or whatever the task specifies).
+- Develop on the dev branch named in **Status** above — never push straight to `master`/`gh-pages`.
 
 ## Structure
 ```
