@@ -154,6 +154,13 @@ a { color: inherit; text-decoration: none; }
   .features { grid-template-columns: 1fr; }
   .steps-grid { grid-template-columns: 1fr; }
   .hero { padding: 28px 0 40px; }
+  /* Soften the background route so it doesn't cut across the hero buttons. */
+  .bg-motif { opacity: .35; }
+}
+@media (max-width: 560px) {
+  /* Tidy CTA stack: equal full-width buttons instead of ragged widths. */
+  .cta { flex-direction: column; align-items: stretch; }
+  .cta .btn { width: 100%; justify-content: center; }
 }
 @media (max-width: 480px) {
   .hero-scene { max-width: 300px; }
