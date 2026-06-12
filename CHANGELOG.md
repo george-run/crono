@@ -5,6 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
+- All action-button labels are now centred (Record + the Options actions), on desktop and mobile.
 - Refreshed icons: the "Record" button now uses a stopwatch (and its label is centred), "Export PDF" a clean document icon, and "Participants" the standard people icon.
 - Toned down the "Record" button: rounded-rectangle corners (matching the rest of the UI) instead of a full pill, and slightly less tall.
 - Decluttered the app header: logo on the left, the "View demo" and donation links are now compact icon-only buttons on the right, and the "Works offline" badge was removed from the header (the offline message still lives on the landing/FAQ).
