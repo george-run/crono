@@ -10,6 +10,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly (with a stopwatch icon) in the card's summary line when it's collapsed.
 
 ### Changed
+- Landing demo no longer makes the page jump: the finisher list now reserves space for its full set, so filling/resetting the auto-play loop doesn't grow/shrink the layout. Also fixed the orange "Generate bib numbers" button showing no label and the bib modal's logo field overflowing on iOS.
 - Standalone Terms/Privacy pages now load a shared `assets/legal.css` instead of an inline `<style>` (their CSP was tightened to drop `'unsafe-inline'`), bringing them in line with the no-inline-CSS rule.
 - Added `test/architecture.test.js` — automated guards (cache↔docs sync, precache list, no inline CSS/JS, relative paths) so the rules in CLAUDE.md can't silently drift.
 - Results performance: row clicks now use one delegated listener (instead of re-binding handlers on every row each render), and the results search is debounced — smoother with large fields. New tested `formatClockElapsed` helper backs the live stopwatch.
