@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-12**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty.
-- **Service worker cache:** `CACHE = "crono-v35"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v36"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/rungeorge-crono-access-8k39na`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them.
@@ -39,6 +39,7 @@ assets/
   site.css    Landing styles        site.js  Landing animations + SW register
   helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested
   head.js     reduced-motion → adds .js-anim (runs in <head> before paint)
+  sw-register.js  SW registration + "new version" update toast (shared by app + landing)
 test/helpers.test.js   Node tests (`npm test` → node --test). package.json (no deps).
 ```
 
@@ -51,7 +52,7 @@ test/helpers.test.js   Node tests (`npm test` → node --test). package.json (no
 5. **JS style:** ES5-ish, `"use strict"`, `var`, small helpers, `// ----- Section -----` comments,
    no leaked globals. CSS/JS live in `assets/`. **No inline `<style>`/`<script>`** in the pages
    (a strict CSP `script-src 'self'` enforces this): the reduced-motion toggle is `head.js`,
-   SW registration lives at the end of `app.js`/`site.js`. Pure helpers go in `helpers.js` (tested).
+   SW registration + update toast live in `sw-register.js` (shared). Pure helpers go in `helpers.js` (tested).
    A `<meta>` CSP is set on every page — if you add an external host, update it.
 6. **Design tokens once** in `theme.css`; reuse `var(--…)`. Dark theme, lime accent `--primary:#a3e635`.
    For translucent tints use the rgb tokens: `rgba(var(--primary-rgb), .1)` (also `--accent-2-rgb` teal,

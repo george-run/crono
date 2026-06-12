@@ -3,7 +3,7 @@
    - Static assets: stale-while-revalidate (instant + offline, and the cache self-heals on the next
      load even if CACHE wasn't bumped).
    Bump CACHE to drop the old cache and force a fresh precache. Keep ASSETS in sync. */
-var CACHE = "crono-v35";
+var CACHE = "crono-v36";
 var ASSETS = [
   "./",
   "index.html",
@@ -18,7 +18,8 @@ var ASSETS = [
   "assets/app.js",
   "assets/helpers.js",
   "assets/head.js",
-  "assets/site.js"
+  "assets/site.js",
+  "assets/sw-register.js"
 ];
 
 self.addEventListener("install", function (e) {
