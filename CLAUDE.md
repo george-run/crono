@@ -80,9 +80,11 @@ Consent gate · Doc modal (`openDoc`) · Confirm modal (`confirmModal`) · Init.
 - After changing categories/numbers, call `buildFilterOptions()` then `render()`.
 
 ## Service worker / cache (IMPORTANT)
-- `sw.js` is cache-first with a versioned name `CACHE = "crono-vN"`.
+- `sw.js`: **network-first for HTML pages** (so deploys show immediately when online),
+  **cache-first for static assets** (css/js/images). Versioned name `CACHE = "crono-vN"`.
 - **Bump `CACHE` whenever any cached asset changes**, and keep the `ASSETS` precache list in sync.
-- SW runs only over http(s) (GitHub Pages), not `file://`.
+- SW runs only over http(s) (GitHub Pages), not `file://`. Returning users may still need one
+  reload for a new SW to activate.
 
 ## Privacy / legal
 - Operator = **the Crono project**; contact via the GitHub repo. Governing law generic.
