@@ -36,7 +36,7 @@ manifest.webmanifest, sw.js   PWA (installable + offline)
 assets/
   theme.css   Shared design tokens (:root) — single source of truth
   app.css     App styles            app.js   App logic (IIFE)
-  site.css    Landing styles        site.js  Landing animations + SW register
+  site.css    Landing styles        site.js  Landing animations (reveal, demo loop)
   helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested
   head.js     reduced-motion → adds .js-anim (runs in <head> before paint)
   sw-register.js  SW registration + "new version" update toast (shared by app + landing)
@@ -46,7 +46,10 @@ test/helpers.test.js   Node tests (`npm test` → node --test). package.json (no
 ## Hard rules (don't break)
 1. **Zero-build, no dependencies / frameworks / bundlers.** Only vanilla HTML/CSS/JS. The one
    allowed external request is **Google Fonts** (Inter + Space Grotesk), disclosed in Privacy.
-2. **Offline-first** (PWA + localStorage). No server calls.
+2. **Offline-first is the whole point.** Open once online, then the entire app works with **no
+   connection**; all data lives in `localStorage` on the device. No servers, no accounts, no
+   analytics/tracking calls. **Never** add a feature that *requires* the network at race time, and
+   never make data loss possible on reload/offline (Backup/Restore is the only cross-device path).
 3. **Relative paths only** (served under `/crono/`): `assets/...`, `app.html`, never `/assets/...`.
 4. **Don't rename IDs/classes read by JS** when refactoring.
 5. **JS style:** ES5-ish, `"use strict"`, `var`, small helpers, `// ----- Section -----` comments,
@@ -75,24 +78,29 @@ backup JSON  = { app:"crono", v:1, exportedAt, startEpoch, distanceKm, entries, 
 `consent` = `{ v: CONSENT_VERSION, at }`. Backups do NOT include consent.
 
 ## Code map — `assets/app.js` (section comments in this order)
-Storage keys · State · Elements · Inline SVG icons (`ICONS`, `svgIcon`) · Time helpers
-(`formatElapsed`, `formatClock`, `formatPace`, `parseElapsedToMs`, `clockStringToEpoch`, `pad`) ·
-Persistence (`save`, `load`) · Sound (`beep`, `updateSoundToggle`) · Participants & categories
-(`participantName`, `normalizeSex`, `ageCategory`, `buildFilterOptions`, `matchesFilter`,
-`computePlaces`, cat editor) · Rendering (`render`, `escapeHtml/Attr`) · Actions (`setStartNow`,
-`recordFinish`, `clearResults`, `updateStartPreview`) · CSV/PDF (`exportCSV`, `exportPDF`,
-`download`) · `importCSV`/`parseCsvLine` · Backup/Restore (`exportBackup`, `importBackup`) ·
-Participants modal (`openParticipants`, `renderParticipants`, `addParticipant`) · Wire up ·
-Consent gate · Doc modal (`openDoc`) · Confirm modal (`confirmModal`) · Init.
+Storage keys · State · Elements · Inline SVG icons (`ICONS`, `svgIcon`) · Time helpers in app
+(`formatClock`, `clockStringToEpoch`, `escapeHtml/Attr`; the **pure** ones — `formatElapsed`,
+`formatClockElapsed`, `formatPace`, `parseElapsedToMs`, `pad` — live in `helpers.js` and are aliased
+at the top) · Persistence (`save`, `load`) · Sound (`beep`, `updateSoundToggle`) · Participants &
+categories (`participantName`, `normalizeSex`, `ageCategory`, `buildFilterOptions`, `matchesFilter`,
+`computePlaces`, cat editor) · Rendering (`render` — rows carry `data-id`, events delegated) · Actions
+(`setStartNow`, `recordFinish`, `clearResults`, `updateStartPreview`, `updateElapsed` = live stopwatch) ·
+CSV/PDF (`exportCSV`, `exportPDF`, `download`) · `importCSV`/`parseCsvLine` · Backup/Restore
+(`exportBackup`, `importBackup`) · Participants modal (`openParticipants`, `renderParticipants`,
+`addParticipant`) · Wire up (incl. delegated row listener + debounced search) · Consent gate ·
+Doc modal (`openDoc`) · Row edit modal (`openRowEdit`/`saveRowEdit`/`deleteRowEdit`, `#rowModal`) ·
+Toasts (`toast`) · Demo modal (`openDemo`/`closeDemo`) · Confirm modal (`confirmModal`) · Init.
+SW registration + update toast are **not** here — they live in `assets/sw-register.js`.
 
 ## Patterns to follow (reuse these)
 - **Edit a result:** rows are click-to-edit → `openRowEdit(id)` opens `#rowModal` (number/time/sex/
   year/note/delete). `editingRowId` holds the open entry; `saveRowEdit()` commits → `save()`, `render()`.
 - **`render()` rebuilds `#resultBody` from scratch**; each `<tr>` carries `data-id`. Row open/edit is handled by **one delegated click/keydown listener on `$body`** (no per-row handlers) → `openRowEdit(id)`. Results search is **debounced** (~120ms).
 - **Modals are focus-trapped** (see the Tab handler) and close on ESC/backdrop.
-- **Modal recipe:** `.X-overlay` + `.show` class; on open set `document.body.style.overflow="hidden"`;
-  on close restore it only if no other modal is open; support ESC + backdrop click. `confirmModal()`
-  returns a `Promise<boolean>`. Stacking z-index: doc/participants 1100, confirm 1200.
+- **Modal recipe:** `.X-overlay` + `.show` class (all five overlays share one base rule in `app.css`;
+  only `z-index` differs); on open set `document.body.style.overflow="hidden"`; on close restore it
+  only if no other modal is open; support ESC + backdrop click. `confirmModal()` returns a
+  `Promise<boolean>`. Stacking z-index: consent 1000, doc/participants/row 1100, confirm 1200, toasts 1300.
 - **Icons:** `svgIcon(name)` for JS-built markup; inline `<svg class="icon">` for static HTML buttons.
 - After changing categories/numbers, call `buildFilterOptions()` then `render()`.
 
@@ -155,9 +163,9 @@ git diff --stat origin/master origin/gh-pages
 ```
 
 ## Verify before deploy
-- `node --check assets/app.js assets/site.js`
-- Add a tiny Node test for new pure helpers (e.g. `parseElapsedToMs`, `formatPace`).
-- Confirm no inline `<style>`/IIFE crept back into `app.html`; relative paths only.
+- `node --check assets/app.js assets/site.js assets/sw-register.js sw.js`
+- `node --test` (all green). Add a tiny test for any new **pure** helper in `helpers.js`.
+- Confirm no inline `<style>`/`<script>` crept back into the pages; relative paths only.
 - **Update `CHANGELOG.md`** (under `[Unreleased]`) for any notable user-facing change.
 - **Refresh the `Status` block** (date + `CACHE` version) so the next session has an accurate handoff.
 
@@ -167,9 +175,12 @@ record on Enter/Record with **beep** (toggle), centiseconds, midnight-safe,
 duplicates, per-row notes, **inline edit of number & time**, sex/age-category rankings via **tabs**,
 **pace** (distance), **results search**, **participant manager** (add/edit/delete/search/CSV import),
 **CSV + PDF (print) export**, **backup/restore JSON**, consent + Terms/Privacy (modal in app,
-standalone pages from landing), **PWA** (installable/offline), animated landing.
+standalone pages from landing), **PWA** (installable/offline) with a dismissible **"new version"
+update toast** (never auto-reloads), animated landing.
 
 ## Known constraints / TODO ideas
 - `addParticipant()` uses a `prompt()` for the new number (could become an inline row).
 - iOS PWA icon is SVG; add a 512×512 PNG if the user provides one.
+- Perf bonus (not done): pause `updateElapsed` interval + the landing demo/clock on `visibilitychange`
+  (save battery when the tab is hidden).
 - Possible next: waves/net time, splits/laps, multiple events, team scoring, i18n (RO/EN).
