@@ -84,7 +84,7 @@
         <h3>Instant timing</h3>
         <p>Enter a bib number and press Record (or Enter). Centisecond precision, even across midnight.</p>
       </div>
-      <div class="card">
+      <div class="card featured">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M8.5 13 7 22l5-3 5 3-1.5-9"/></svg></div>
         <h3>Live rankings</h3>
         <p>Filter results by overall, men, women and standard 10-year age categories with one tap.</p>
@@ -112,6 +112,45 @@
     </div>
   </section>
 
+  <section class="section steps">
+    <div class="section-head">
+      <span class="eyebrow">How it works</span>
+      <h2>From start line to results in three steps</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <span class="step-num">1</span>
+        <h3>Set the start</h3>
+        <p>Tap “Set start now” when the gun goes off, or type an exact start time.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <h3>Record finishers</h3>
+        <p>Type each bib number and hit Record (or Enter) as runners cross the line.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <h3>Rank &amp; export</h3>
+        <p>Switch ranking tabs, add a distance for pace, then export everything to CSV.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq">
+    <div class="section-head">
+      <span class="eyebrow">Good to know</span>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq-list">
+      <details><summary>Is Crono free?</summary><p>Yes — it’s completely free and open-source. No account, no paywall.</p></details>
+      <details><summary>Does it work offline?</summary><p>Yes. It runs entirely in your browser and your data is stored locally on your device. After the first load it keeps working without a connection.</p></details>
+      <details><summary>How accurate is the timing?</summary><p>Times are recorded to the centisecond using your device clock. It’s great for club and in-house races, but for official, certified events keep a backup timing method.</p></details>
+      <details><summary>How do the sex &amp; age categories work?</summary><p>Import a participant CSV with <code>number, name, sex, birth_year</code>. Crono derives standard 10-year athletics categories and lets you rank by them. You can also fill missing data inline.</p></details>
+      <details><summary>Can I export the results?</summary><p>Yes — one click downloads a CSV with place, category place, name, sex, category, time and pace.</p></details>
+      <details><summary>Where is my data stored?</summary><p>Only in your browser (localStorage). Nothing is sent to a server; the operator can’t see or recover it, so export anything important.</p></details>
+    </div>
+  </section>
+
   <section class="cta-band">
     <h2>Ready to time your next race?</h2>
     <p class="cta-sub">No install, no sign-up — open it and start the clock.</p>
@@ -122,10 +161,37 @@
   </section>
 </div>
 
-<footer>
-  Crono — runs fully offline in your browser.
-  &nbsp;·&nbsp; <a href="app.html#terms">Terms &amp; Conditions</a>
-  &nbsp;·&nbsp; <a href="app.html#privacy">Privacy Policy</a>
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="brand">
+        <svg class="logo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+          <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
+        </svg>
+        Crono
+      </span>
+      <p>A fast, offline chronometer for small and in-house running competitions.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="app.html">Open the app</a>
+      <a href="#features">Features</a>
+      <a href="#">How it works</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="app.html#terms">Terms &amp; Conditions</a>
+      <a href="app.html#privacy">Privacy Policy</a>
+    </div>
+    <div class="footer-col">
+      <h4>Project</h4>
+      <a href="https://github.com/rungeorge/crono" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="footer-bottom">© <span id="yr"></span> Crono · runs fully offline in your browser.</div>
+  <script>document.getElementById("yr").textContent=new Date().getFullYear();</script>
 </footer>
 
 </body>
