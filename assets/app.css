@@ -113,7 +113,8 @@
   .setup[open] .setup-chevron { transform: rotate(180deg); }
   /* Elapsed in the summary shows only when the Start card is collapsed
      (the open card already has the big stopwatch in its body). */
-  .se-summary { color: var(--muted); }
+  .se-summary { color: var(--primary); white-space: nowrap; }
+  .se-icon { width: 14px; height: 14px; vertical-align: -2px; }
   .setup[open] .se-summary { display: none; }
   .setup-body { padding-top: 14px; }
 
