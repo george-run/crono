@@ -197,38 +197,6 @@
   }
   .tag.dup { background: var(--warn); color: #1f2937; }
 
-  /* Clickable category chip + inline sex/year editor in the Name cell. */
-  .cat-chip {
-    font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
-    vertical-align: middle; background: var(--panel-2); color: var(--muted);
-    border: 1px solid var(--border); font-variant-numeric: tabular-nums; cursor: pointer;
-    gap: 3px;
-  }
-  .cat-chip .icon { width: .9em; height: .9em; }
-  .cat-chip:hover { color: var(--text); border-color: var(--primary); background: var(--panel-2); }
-  .cat-chip.add { border-style: dashed; opacity: .8; }
-  .cat-editor { display: inline-flex; gap: 4px; align-items: center; vertical-align: middle; flex-wrap: wrap; }
-  .cat-editor .ed-sex { padding: 3px 4px; font-size: .85rem; }
-  .cat-editor .ed-year { width: 64px; padding: 3px 6px; font-size: .85rem; text-align: center; }
-  .cat-editor .ed-save, .cat-editor .ed-cancel { padding: 3px 8px; font-size: .85rem; }
-  .cat-editor .ed-save { color: var(--ok); border-color: var(--ok); }
-
-  /* Inline bib-number editor */
-  .num-edit { border: none; background: transparent; color: var(--muted); padding: 2px 5px; margin-left: 4px; vertical-align: middle; }
-  .num-edit:hover { color: var(--primary); background: transparent; }
-  .num-edit .icon { width: .82em; height: .82em; }
-  .num-editor { display: inline-flex; gap: 4px; align-items: center; vertical-align: middle; }
-  .num-editor .num-input { width: 92px; padding: 4px 6px; font-size: 1rem; font-variant-numeric: tabular-nums; }
-  .num-editor .num-save, .num-editor .num-cancel { padding: 4px 8px; }
-  .num-editor .num-save { color: var(--ok); border-color: var(--ok); }
-
-  .obs { width: 100%; min-width: 120px; background: transparent; border: 1px solid transparent; color: var(--text); border-radius: 6px; padding: 6px 8px; font-size: 1rem; }
-  .obs:hover { border-color: var(--border); }
-  .obs:focus { border-color: var(--primary); background: var(--panel-2); }
-
-  .row-remove { background: transparent; border: none; color: var(--muted); font-size: 1.1rem; padding: 4px 8px; }
-  .row-remove:hover { color: var(--danger); background: transparent; }
-
   .empty {
     display: flex; flex-direction: column; align-items: center; gap: 14px;
     text-align: center; color: var(--muted); padding: 40px 24px;
@@ -246,7 +214,6 @@
   /* Make tappable targets comfortable on touch devices. */
   @media (hover: none) and (pointer: coarse) {
     button { padding: 11px 16px; }
-    .row-remove { padding: 8px 12px; font-size: 1.25rem; }
   }
 
   /* ---- Tablet / small screens ---- */
@@ -302,22 +269,12 @@
     /* Make the headline cells stand out at the top of each card. */
     #result td.num { font-size: 1.4rem; }
     #result td.time { text-align: left; font-size: 1.6rem; font-weight: 700; }
-    #result td.obs { padding-top: 6px; }
-    .obs { border-color: var(--border); }
+    #result td.obs-cell { white-space: normal; max-width: none; }
 
-    /* Float the remove button to the card's top-right corner. */
-    #result td.remove-cell { position: absolute; top: 6px; right: 6px; padding: 0; width: auto; }
-    #result td.remove-cell::before { content: none; }
-
-    /* Inline editors: drop to a full-width row under the cell label, sized for touch. */
-    #result td .cat-editor, #result td .num-editor {
-      display: flex; width: 100%; margin-top: 6px; flex-wrap: wrap; gap: 6px; vertical-align: top;
-    }
-    #result td .cat-editor .ed-sex { flex: 0 0 auto; height: 38px; min-width: 64px; }
-    #result td .cat-editor .ed-year { flex: 1 1 90px; height: 38px; min-width: 0; }
-    #result td .cat-editor .ed-save, #result td .cat-editor .ed-cancel { height: 38px; padding: 0 14px; }
-    #result td .num-editor .num-input { flex: 1 1 auto; height: 38px; width: auto; }
-    #result td .num-editor .num-save, #result td .num-editor .num-cancel { height: 38px; padding: 0 14px; }
+    /* Float the edit affordance to the card's top-right corner. */
+    #result td.edit-cell { position: absolute; top: 8px; right: 8px; padding: 0; width: auto; }
+    #result td.edit-cell::before { content: none; }
+    .row-edit .icon { width: 1.2em; height: 1.2em; }
 
     .stats { gap: 10px; }
     .stat { flex: 1 1 28%; min-width: 0; padding: 10px 12px; }
@@ -416,14 +373,6 @@
   .result-search input { background: transparent; border: none; outline: none; color: var(--text);
     font-size: .9rem; width: 150px; padding: 4px 0; }
 
-  /* ---- Inline time editor ---- */
-  .time-edit { border: none; background: transparent; color: var(--muted); padding: 2px 5px; margin-left: 6px; vertical-align: middle; }
-  .time-edit:hover { color: var(--primary); background: transparent; }
-  .time-edit .icon { width: .8em; height: .8em; }
-  .time-editor { display: inline-flex; gap: 4px; align-items: center; }
-  .time-editor .time-input { width: 116px; padding: 4px 6px; font-size: .95rem; font-variant-numeric: tabular-nums; text-align: right; }
-  .time-editor .time-save, .time-editor .time-cancel { padding: 4px 8px; }
-  .time-editor .time-save { color: var(--ok); border-color: var(--ok); }
 
   /* ---- Participants modal ---- */
   .part-overlay { display: none; position: fixed; inset: 0; z-index: 1100;
@@ -453,3 +402,43 @@
     .result-search input { width: 100%; flex: 1 1 auto; }
     .part-row { grid-template-columns: 64px 1fr 52px 60px 32px; gap: 6px; }
   }
+
+  /* ---- Clickable result rows + edit affordance ---- */
+  .row-click { cursor: pointer; }
+  tbody tr.row-click:hover td { background: rgba(255,255,255,.03); }
+  .cat-tag { display: inline-block; font-size: .7rem; font-weight: 700; padding: 1px 7px; border-radius: 999px;
+    vertical-align: middle; margin-left: 6px; background: var(--panel-2); color: var(--muted);
+    border: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  td.obs-cell { color: var(--text); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .muted-dash { color: var(--muted); }
+  td.edit-cell { width: 40px; text-align: right; }
+  .row-edit { color: var(--muted); display: inline-grid; place-items: center; }
+  .row-edit .icon { width: 1em; height: 1em; }
+  tr.row-click:hover .row-edit { color: var(--primary); }
+
+  /* ---- Sticky capture (stays reachable while scrolling results) ---- */
+  .capture-panel { position: sticky; top: 10px; z-index: 5;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35), inset 0 0 0 1px rgba(163,230,53,.06); }
+
+  /* ---- Row edit modal ---- */
+  .row-overlay { display: none; position: fixed; inset: 0; z-index: 1100;
+    align-items: center; justify-content: center; padding: 20px;
+    background: rgba(5,8,12,.82); backdrop-filter: blur(4px); }
+  .row-overlay.show { display: flex; }
+  .row-modal { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 420px; }
+  .row-form { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
+  .row-form .rf { display: flex; flex-direction: column; gap: 5px; font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  .row-form .rf input, .row-form .rf select { text-transform: none; letter-spacing: normal; color: var(--text);
+    background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 10px; font-size: 1rem; }
+  .row-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row-actions { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .row-actions .spacer { flex: 1 1 auto; }
+
+  /* ---- Toasts ---- */
+  .toasts { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 1300;
+    display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; max-width: 92vw; }
+  .toast { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-left: 3px solid var(--primary);
+    border-radius: 10px; padding: 10px 16px; font-size: .92rem; box-shadow: 0 10px 30px rgba(0,0,0,.45);
+    opacity: 0; transform: translateY(10px); transition: opacity .25s ease, transform .25s ease; }
+  .toast.in { opacity: 1; transform: none; }
+  .toast.error { border-left-color: var(--danger); }

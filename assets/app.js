@@ -18,9 +18,7 @@
   var soundOn = true;             // beep on record
   var currentFilter = "all";      // active ranking filter: all | M | F | "M|30" ...
   var searchQuery = "";           // results search text
-  var editingNum = null;          // bib number whose sex/year is being edited inline
-  var editingNumberId = null;     // entry id whose bib number is being edited inline
-  var editingTimeId = null;       // entry id whose finish time is being edited inline
+  var editingRowId = null;        // entry id open in the row-edit modal
 
   // ----- Elements -----------------------------------------------------------
   var $start = document.getElementById("startTime");
@@ -41,6 +39,13 @@
   var $partModal = document.getElementById("partModal");
   var $partBody = document.getElementById("partBody");
   var $partSearch = document.getElementById("partSearch");
+  var $rowModal = document.getElementById("rowModal");
+  var $rowNum = document.getElementById("rowNum");
+  var $rowTime = document.getElementById("rowTime");
+  var $rowSex = document.getElementById("rowSex");
+  var $rowYear = document.getElementById("rowYear");
+  var $rowNote = document.getElementById("rowNote");
+  var $toasts = document.getElementById("toasts");
   var $printArea = document.getElementById("printArea");
   var $consent = document.getElementById("consent");
   var $consentCheck = document.getElementById("consentCheck");
@@ -290,43 +295,6 @@
     return places;
   }
 
-  // Inline editor (in the Name cell) to add/fix sex & birth year for a bib.
-  function catEditorHtml(p) {
-    var sex = p ? (p.sex || "") : "";
-    var year = p && p.birthYear ? p.birthYear : "";
-    return '<span class="cat-editor">' +
-      '<select class="ed-sex" aria-label="Sex">' +
-        '<option value=""' + (sex === "" ? " selected" : "") + '>—</option>' +
-        '<option value="M"' + (sex === "M" ? " selected" : "") + ">M</option>" +
-        '<option value="F"' + (sex === "F" ? " selected" : "") + ">F</option>" +
-      "</select>" +
-      '<input class="ed-year" type="text" inputmode="numeric" maxlength="4" placeholder="year" value="' +
-        escapeAttr(String(year)) + '" aria-label="Birth year">' +
-      '<button type="button" class="ed-save" title="Save">' + svgIcon("check") + "</button>" +
-      '<button type="button" class="ed-cancel" title="Cancel">' + svgIcon("x") + "</button>" +
-      "</span>";
-  }
-
-  function openCatEditor(num) {
-    editingNum = num;
-    render();
-    var sel = $body.querySelector(".cat-editor .ed-sex");
-    if (sel) sel.focus();
-  }
-
-  function commitCatEditor(num, editorEl) {
-    var sex = normalizeSex(editorEl.querySelector(".ed-sex").value);
-    var yr = parseInt(editorEl.querySelector(".ed-year").value, 10);
-    var thisYear = new Date().getFullYear();
-    var birthYear = (yr >= 1900 && yr <= thisYear) ? yr : null;
-    var prev = participants[num] || { name: "", sex: "", birthYear: null };
-    participants[num] = { name: prev.name || "", sex: sex, birthYear: birthYear };
-    editingNum = null;
-    save();
-    buildFilterOptions();
-    render();
-  }
-
   // ----- Rendering ----------------------------------------------------------
 
   // Duplicate = same runner number recorded more than once.
@@ -363,145 +331,30 @@
     $body.innerHTML = "";
     ordered.forEach(function (e) {
       var isDup = !!dups[e.runnerNumber];
-
-      var tr = document.createElement("tr");
-      if (e.id === newId) tr.className = "new";
-
       var name = participantName(e.runnerNumber);
       var cat = entryCategory(e);
-      var catHtml;
-      if (editingNum === e.runnerNumber) {
-        catHtml = catEditorHtml(participants[e.runnerNumber]);
-      } else if (cat) {
-        catHtml = '<button type="button" class="cat-chip" title="Edit sex / birth year">' +
-                  escapeHtml(cat.shortLabel) + "</button>";
-      } else {
-        catHtml = '<button type="button" class="cat-chip add" title="Add sex / birth year">' +
-                  svgIcon("plus") + "cat</button>";
-      }
-
       var place = places[e.id] || "";
       var elapsed = e.finishEpoch - startEpoch;
       var paceStr = formatPace(elapsed, distanceKm);
-      var numHtml;
-      if (editingNumberId === e.id) {
-        numHtml =
-          '<span class="num-editor">' +
-            '<input class="num-input" type="text" inputmode="numeric" value="' + escapeAttr(e.runnerNumber) + '" aria-label="Runner number">' +
-            '<button type="button" class="num-save" title="Save">' + svgIcon("check") + "</button>" +
-            '<button type="button" class="num-cancel" title="Cancel">' + svgIcon("x") + "</button>" +
-          "</span>";
-      } else {
-        numHtml = escapeHtml(e.runnerNumber) +
-          (isDup ? '<span class="tag dup">dup</span>' : "") +
-          '<button type="button" class="num-edit" title="Edit number">' + svgIcon("pencil") + "</button>";
-      }
-      var timeHtml;
-      if (editingTimeId === e.id) {
-        timeHtml =
-          '<span class="time-editor">' +
-            '<input class="time-input" type="text" inputmode="numeric" value="' + escapeAttr(formatElapsed(elapsed)) + '" aria-label="Finish time">' +
-            '<button type="button" class="time-save" title="Save">' + svgIcon("check") + "</button>" +
-            '<button type="button" class="time-cancel" title="Cancel">' + svgIcon("x") + "</button>" +
-          "</span>";
-      } else {
-        timeHtml = formatElapsed(elapsed) +
-          '<button type="button" class="time-edit" title="Edit time">' + svgIcon("pencil") + "</button>" +
-          (paceStr ? '<span class="pace">' + paceStr + "</span>" : "");
-      }
+
+      var tr = document.createElement("tr");
+      tr.className = "row-click" + (e.id === newId ? " new" : "");
+      tr.setAttribute("tabindex", "0");
       tr.innerHTML =
         '<td class="place' + (place === 1 ? " first" : "") + '" data-label="Place">' + place + "</td>" +
-        '<td class="num" data-label="Number">' + numHtml + "</td>" +
-        '<td class="name" data-label="Name">' +
-          (name ? escapeHtml(name) + " " : "") + catHtml + "</td>" +
-        '<td data-label="Obs."><input class="obs" type="text" value="' + escapeAttr(e.details || "") +
-          '" placeholder="add note…"></td>' +
-        '<td class="time" data-label="Time">' + timeHtml + "</td>" +
-        '<td class="remove-cell"><button class="row-remove" title="Remove this result">' + svgIcon("x") + "</button></td>";
+        '<td class="num" data-label="Number">' + escapeHtml(e.runnerNumber) +
+          (isDup ? '<span class="tag dup">dup</span>' : "") + "</td>" +
+        '<td class="name" data-label="Name">' + (name ? escapeHtml(name) + " " : "") +
+          (cat ? '<span class="cat-tag">' + escapeHtml(cat.shortLabel) + "</span>" : "") + "</td>" +
+        '<td class="obs-cell" data-label="Obs.">' +
+          (e.details ? escapeHtml(e.details) : '<span class="muted-dash">—</span>') + "</td>" +
+        '<td class="time" data-label="Time">' + formatElapsed(elapsed) +
+          (paceStr ? '<span class="pace">' + paceStr + "</span>" : "") + "</td>" +
+        '<td class="edit-cell"><span class="row-edit" title="Edit result" aria-hidden="true">' + svgIcon("pencil") + "</span></td>";
 
-      tr.querySelector(".obs").addEventListener("input", function () {
-        e.details = this.value;
-        save();
-      });
-
-      var numEdit = tr.querySelector(".num-edit");
-      if (numEdit) numEdit.addEventListener("click", function () {
-        editingNumberId = e.id; editingNum = null; render();
-        var inp = $body.querySelector(".num-editor .num-input");
-        if (inp) { inp.focus(); inp.select(); }
-      });
-      var numEditor = tr.querySelector(".num-editor");
-      if (numEditor) {
-        var commitNum = function () {
-          var val = numEditor.querySelector(".num-input").value.trim();
-          if (val) e.runnerNumber = val;     // ignore empty; keep previous
-          editingNumberId = null;
-          save();
-          buildFilterOptions();              // category may change with the number
-          render();
-        };
-        numEditor.querySelector(".num-save").addEventListener("click", commitNum);
-        numEditor.querySelector(".num-cancel").addEventListener("click", function () {
-          editingNumberId = null; render();
-        });
-        numEditor.querySelector(".num-input").addEventListener("keydown", function (ev) {
-          if (ev.key === "Enter") { ev.preventDefault(); commitNum(); }
-          else if (ev.key === "Escape") { ev.preventDefault(); editingNumberId = null; render(); }
-        });
-      }
-
-      var timeEdit = tr.querySelector(".time-edit");
-      if (timeEdit) timeEdit.addEventListener("click", function () {
-        editingTimeId = e.id; render();
-        var inp = $body.querySelector(".time-editor .time-input");
-        if (inp) { inp.focus(); inp.select(); }
-      });
-      var timeEditor = tr.querySelector(".time-editor");
-      if (timeEditor) {
-        var commitTime = function () {
-          var ms = parseElapsedToMs(timeEditor.querySelector(".time-input").value);
-          if (ms != null) e.finishEpoch = startEpoch + ms;
-          else alert("Enter the time as H:MM:SS, MM:SS or with .cc (e.g. 24:31.50).");
-          editingTimeId = null;
-          save();
-          render();
-        };
-        timeEditor.querySelector(".time-save").addEventListener("click", commitTime);
-        timeEditor.querySelector(".time-cancel").addEventListener("click", function () {
-          editingTimeId = null; render();
-        });
-        timeEditor.querySelector(".time-input").addEventListener("keydown", function (ev) {
-          if (ev.key === "Enter") { ev.preventDefault(); commitTime(); }
-          else if (ev.key === "Escape") { ev.preventDefault(); editingTimeId = null; render(); }
-        });
-      }
-
-      var chip = tr.querySelector(".cat-chip");
-      if (chip) chip.addEventListener("click", function () { openCatEditor(e.runnerNumber); });
-
-      var editor = tr.querySelector(".cat-editor");
-      if (editor) {
-        editor.querySelector(".ed-save").addEventListener("click", function () {
-          commitCatEditor(e.runnerNumber, editor);
-        });
-        editor.querySelector(".ed-cancel").addEventListener("click", function () {
-          editingNum = null; render();
-        });
-        editor.querySelector(".ed-year").addEventListener("keydown", function (ev) {
-          if (ev.key === "Enter") { ev.preventDefault(); commitCatEditor(e.runnerNumber, editor); }
-        });
-      }
-      tr.querySelector(".row-remove").addEventListener("click", function () {
-        confirmModal({
-          title: "Remove result",
-          message: "Remove runner " + e.runnerNumber + " from the results?",
-          confirmLabel: "Remove", danger: true
-        }).then(function (ok) {
-          if (!ok) return;
-          entries = entries.filter(function (x) { return x.id !== e.id; });
-          save();
-          render();
-        });
+      tr.addEventListener("click", function () { openRowEdit(e.id); });
+      tr.addEventListener("keydown", function (ev) {
+        if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openRowEdit(e.id); }
       });
 
       $body.appendChild(tr);
@@ -711,9 +564,9 @@
     buildFilterOptions();
     render();
     if ($partModal.classList.contains("show")) renderParticipants();
-    alert(added
-      ? added + " participant(s) loaded."
-      : "No valid rows found. Expected columns: number, name, sex, birth_year");
+    toast(added
+      ? added + " participant(s) loaded"
+      : "No valid rows found. Expected: number, name, sex, birth_year", added ? "" : "error");
   }
 
   function parseCsvLine(line, sep) {
@@ -744,13 +597,14 @@
     };
     var stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
     download("crono-backup-" + stamp + ".json", JSON.stringify(data, null, 2), "application/json");
+    toast("Backup downloaded");
   }
 
   function importBackup(text) {
     var data;
-    try { data = JSON.parse(text); } catch (e) { alert("That file isn't valid JSON."); return; }
+    try { data = JSON.parse(text); } catch (e) { toast("That file isn't valid JSON.", "error"); return; }
     if (!data || data.app !== "crono" || !Array.isArray(data.entries) || typeof data.participants !== "object") {
-      alert("That doesn't look like a Crono backup file.");
+      toast("That doesn't look like a Crono backup file.", "error");
       return;
     }
     confirmModal({
@@ -774,6 +628,7 @@
       updateStartPreview();
       buildFilterOptions();
       render();
+      toast("Backup restored");
     });
   }
 
@@ -1000,10 +855,83 @@
     if (e.key === "Escape" && $confirmModal.classList.contains("show")) closeConfirm(false);
   });
 
+  // ----- Toasts -------------------------------------------------------------
+  function toast(msg, type) {
+    if (!$toasts) return;
+    var el = document.createElement("div");
+    el.className = "toast" + (type ? " " + type : "");
+    el.textContent = msg;
+    $toasts.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add("in"); });
+    setTimeout(function () {
+      el.classList.remove("in");
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+    }, type === "error" ? 4200 : 2600);
+  }
+
+  // ----- Row edit modal (number / time / sex / year / note / delete) --------
+  function findEntry(id) { for (var i = 0; i < entries.length; i++) if (entries[i].id === id) return entries[i]; return null; }
+
+  function openRowEdit(id) {
+    var e = findEntry(id);
+    if (!e) return;
+    editingRowId = id;
+    var p = participants[e.runnerNumber] || { name: "", sex: "", birthYear: null };
+    $rowNum.value = e.runnerNumber;
+    $rowTime.value = formatElapsed(e.finishEpoch - startEpoch);
+    $rowSex.value = p.sex || "";
+    $rowYear.value = p.birthYear ? String(p.birthYear) : "";
+    $rowNote.value = e.details || "";
+    $rowModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+    $rowNum.focus();
+  }
+  function closeRowEdit() {
+    $rowModal.classList.remove("show");
+    editingRowId = null;
+    if (!$consent.classList.contains("show")) document.body.style.overflow = "";
+  }
+  function saveRowEdit() {
+    var e = findEntry(editingRowId);
+    if (!e) { closeRowEdit(); return; }
+    var ms = parseElapsedToMs($rowTime.value);
+    if (ms == null) { toast("Time must be H:MM:SS, MM:SS or with .cc", "error"); return; }
+    var num = $rowNum.value.trim() || e.runnerNumber;
+    e.runnerNumber = num;
+    e.finishEpoch = startEpoch + ms;
+    e.details = $rowNote.value;
+    var yr = parseInt($rowYear.value, 10);
+    var birthYear = (yr >= 1900 && yr <= new Date().getFullYear()) ? yr : null;
+    var prev = participants[num] || { name: "", sex: "", birthYear: null };
+    participants[num] = { name: prev.name || "", sex: normalizeSex($rowSex.value), birthYear: birthYear };
+    save(); buildFilterOptions(); render();
+    closeRowEdit();
+    toast("Result saved");
+  }
+  function deleteRowEdit() {
+    var id = editingRowId, e = findEntry(id);
+    if (!e) return;
+    confirmModal({ title: "Remove result", message: "Remove runner " + e.runnerNumber + " from the results?", confirmLabel: "Remove", danger: true })
+      .then(function (ok) {
+        if (!ok) return;
+        entries = entries.filter(function (x) { return x.id !== id; });
+        save(); render(); closeRowEdit(); toast("Result removed");
+      });
+  }
+  document.getElementById("rowClose").addEventListener("click", closeRowEdit);
+  document.getElementById("rowCancel").addEventListener("click", closeRowEdit);
+  document.getElementById("rowSave").addEventListener("click", saveRowEdit);
+  document.getElementById("rowDelete").addEventListener("click", deleteRowEdit);
+  $rowModal.addEventListener("click", function (e) { if (e.target === $rowModal) closeRowEdit(); });
+  $rowTime.addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); saveRowEdit(); } });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && $rowModal.classList.contains("show")) closeRowEdit();
+  });
+
   $start.addEventListener("change", function () {
     var epoch = clockStringToEpoch(this.value);
     if (epoch == null) {
-      alert("Please enter the start time as HH:MM:SS.");
+      toast("Enter the start time as HH:MM:SS", "error");
       this.value = formatClock(startEpoch);
       return;
     }
