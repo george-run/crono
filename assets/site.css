@@ -64,6 +64,12 @@ a { color: inherit; text-decoration: none; }
 .fc-mid small { color: var(--muted); font-size: .78rem; font-variant-numeric: tabular-nums; }
 .fc-pace { font-family: var(--font-display); font-weight: 700; color: var(--primary); font-size: 1rem; font-variant-numeric: tabular-nums; }
 .fc-pace small { color: var(--muted); font-weight: 500; font-size: .7em; }
+/* While chasing the pin (JS adds .chasing) the card is a touch more compact so it has room to
+   travel; it shrinks further on smaller scenes (see the media blocks) so the follow stays clear. */
+.float-card.chasing { padding: 8px 12px; gap: 10px; transition: transform .08s linear; }
+.float-card.chasing .fc-place { font-size: .82rem; padding: 5px 8px; }
+.float-card.chasing .fc-mid strong { font-size: .92rem; }
+.float-card.chasing .fc-pace { font-size: .92rem; }
 
 /* sections */
 .section { padding: 40px 0 8px; }
@@ -145,6 +151,12 @@ a { color: inherit; text-decoration: none; }
   .cta { justify-content: center; }
   .hero-art { order: -1; }
   .hero-scene { max-width: 360px; }
+  /* Smaller scene → shrink the chasing card so it still has room to travel. */
+  .float-card.chasing { padding: 6px 9px; gap: 8px; }
+  .float-card.chasing .fc-place { font-size: .74rem; padding: 4px 6px; }
+  .float-card.chasing .fc-mid strong { font-size: .82rem; }
+  .float-card.chasing .fc-mid small { font-size: .68rem; }
+  .float-card.chasing .fc-pace { font-size: .82rem; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-brand { grid-column: 1 / -1; }
 }
@@ -166,6 +178,12 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 480px) {
   .hero-scene { max-width: 300px; }
   .float-card { left: 0; bottom: 2%; padding: 8px 10px; gap: 9px; }
+  /* Tiny scene: shrink the chasing card hard so it reads as a small label trailing the pin. */
+  .float-card.chasing { padding: 5px 7px; gap: 6px; }
+  .float-card.chasing .fc-place { font-size: .66rem; padding: 3px 5px; }
+  .float-card.chasing .fc-mid strong { font-size: .74rem; }
+  .float-card.chasing .fc-mid small { font-size: .6rem; }
+  .float-card.chasing .fc-pace { font-size: .74rem; }
   /* Declutter the header — the orange band is the bib entry point on phones. */
   .nav-actions .btn.bib { display: none; }
 }
