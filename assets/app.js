@@ -3,8 +3,8 @@
 
   // ----- Pure helpers (from assets/helpers.js, loaded before this script) ---
   var H = (typeof CronoH !== "undefined") ? CronoH : {};
-  var pad = H.pad, formatElapsed = H.formatElapsed, formatPace = H.formatPace,
-      parseElapsedToMs = H.parseElapsedToMs, normalizeSex = H.normalizeSex,
+  var pad = H.pad, formatElapsed = H.formatElapsed, formatClockElapsed = H.formatClockElapsed,
+      formatPace = H.formatPace, parseElapsedToMs = H.parseElapsedToMs, normalizeSex = H.normalizeSex,
       AGE_BRACKETS = H.AGE_BRACKETS, bracketRange = H.bracketRange, csvCell = H.csvCell;
 
   // ----- Storage keys -------------------------------------------------------
@@ -295,6 +295,7 @@
       var tr = document.createElement("tr");
       tr.className = "row-click" + (e.id === newId ? " new" : "");
       tr.setAttribute("tabindex", "0");
+      tr.setAttribute("data-id", e.id);
       tr.innerHTML =
         '<td class="place' + (place === 1 ? " first" : "") + '" data-label="Place">' + place + "</td>" +
         '<td class="num" data-label="Number">' + escapeHtml(e.runnerNumber) +
@@ -307,11 +308,7 @@
           (paceStr ? '<span class="pace">' + paceStr + "</span>" : "") + "</td>" +
         '<td class="edit-cell"><span class="row-edit" title="Edit result" aria-hidden="true">' + svgIcon("pencil") + "</span></td>";
 
-      tr.addEventListener("click", function () { openRowEdit(e.id); });
-      tr.addEventListener("keydown", function (ev) {
-        if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); openRowEdit(e.id); }
-      });
-
+      // Row click/keydown handled by one delegated listener on $body (see wire-up).
       $body.appendChild(tr);
     });
 
@@ -369,9 +366,7 @@
 
   // Live stopwatch: how long since the start (ticks every second from init).
   function updateElapsed() {
-    var ms = Date.now() - startEpoch;
-    if (ms < 0) ms = 0;
-    var str = formatElapsed(ms).slice(0, -3); // drop ".cc" → HH:MM:SS
+    var str = formatClockElapsed(Date.now() - startEpoch); // HH:MM:SS (no centiseconds)
     if ($startElapsed) $startElapsed.textContent = str;
     if ($startElapsedMini) $startElapsedMini.textContent = str;
   }
@@ -718,8 +713,28 @@
     if (soundOn) beep();
   });
 
-  // Results search
-  $resultSearch.addEventListener("input", function () { searchQuery = this.value; render(); });
+  // Results search — debounced so we don't re-render on every keystroke.
+  var searchTimer = null;
+  $resultSearch.addEventListener("input", function () {
+    var v = this.value;
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(function () { searchQuery = v; render(); }, 120);
+  });
+
+  // Result rows: one delegated listener (rows carry data-id) instead of per-row handlers.
+  function rowIdFromEvent(ev) {
+    var tr = ev.target.closest ? ev.target.closest("tr[data-id]") : null;
+    return tr ? tr.getAttribute("data-id") : null;
+  }
+  $body.addEventListener("click", function (ev) {
+    var id = rowIdFromEvent(ev);
+    if (id) openRowEdit(id);
+  });
+  $body.addEventListener("keydown", function (ev) {
+    if (ev.key !== "Enter" && ev.key !== " ") return;
+    var id = rowIdFromEvent(ev);
+    if (id) { ev.preventDefault(); openRowEdit(id); }
+  });
 
   $importFile.addEventListener("change", function () {
     var file = this.files && this.files[0];

@@ -19,6 +19,15 @@
     return pad(h) + ":" + pad(m) + ":" + pad(s) + "." + pad(cs);
   }
 
+  // Elapsed ms → HH:MM:SS (no centiseconds) — for a live "time since start" clock.
+  function formatClockElapsed(ms) {
+    if (ms == null || isNaN(ms)) return "--:--:--";
+    if (ms < 0) ms = 0;
+    var totalSec = Math.floor(ms / 1000), s = totalSec % 60,
+        m = Math.floor(totalSec / 60) % 60, h = Math.floor(totalSec / 3600);
+    return pad(h) + ":" + pad(m) + ":" + pad(s);
+  }
+
   // Pace as M:SS /km, or "" when distance/time is unusable.
   function formatPace(elapsedMs, km) {
     if (!km || km <= 0 || !(elapsedMs > 0)) return "";
@@ -68,6 +77,7 @@
   return {
     pad: pad,
     formatElapsed: formatElapsed,
+    formatClockElapsed: formatClockElapsed,
     formatPace: formatPace,
     parseElapsedToMs: parseElapsedToMs,
     normalizeSex: normalizeSex,

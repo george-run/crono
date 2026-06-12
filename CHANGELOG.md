@@ -9,6 +9,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly (with a stopwatch icon) in the card's summary line when it's collapsed.
 
 ### Changed
+- Results performance: row clicks now use one delegated listener (instead of re-binding handlers on every row each render), and the results search is debounced — smoother with large fields. New tested `formatClockElapsed` helper backs the live stopwatch.
 - Service worker: static assets now use stale-while-revalidate (instant load + the cache self-heals on the next visit), and the precache bypasses GitHub Pages' HTTP cache so a fresh deploy never stores stale files — fewer "hard refresh to see the update" moments.
 - CSS housekeeping (no visual change): lime/teal/amber tints now route through rgb tokens (`--primary-rgb`, etc.) and modal backdrops through `--overlay`, so the accent is truly single-source; the five modal overlays share one base rule; removed dead/duplicate rules and a print-selector typo. Extended the token set to cover form-field radius, button padding, transitions and shadows so app/landing stay in sync from one place.
 - "Record" now sits on its own full-width row with the label truly centred (the stopwatch icon is pinned to the left), so it reads as centred at every width.
