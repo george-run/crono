@@ -154,8 +154,10 @@
     width: 100%;
     border-radius: var(--radius);
   }
-  #recordBtn { font-size: 1.15rem; padding: 14px 28px; flex: 0 0 auto; border-radius: var(--radius); justify-content: center; }
-  #recordBtn .icon { width: 1.25em; height: 1.25em; }
+  /* Record sits on its own full-width row; icon pinned left so the label is dead-centre. */
+  #recordBtn { font-size: 1.15rem; padding: 14px 28px; flex: 1 1 100%; border-radius: var(--radius);
+    justify-content: center; position: relative; }
+  #recordBtn .icon { width: 1.25em; height: 1.25em; position: absolute; left: 1.4rem; top: 50%; transform: translateY(-50%); }
   .hint { color: var(--muted); font-size: .85rem; }
 
   .help { margin-top: 10px; font-size: .9rem; }
