@@ -11,9 +11,9 @@ assets changed. There is **no network, no image tooling and no browser/render to
 
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
-- **Live & in sync** as of **2026-06-12**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty.
-- **Service worker cache:** `CACHE = "crono-v38"` in `sw.js` — bump it next time any cached asset changes.
-- **Dev branch:** `claude/rungeorge-crono-access-8k39na`.
+- **Live & in sync** as of **2026-06-12**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Latest deploy added the **bib-number generator** on the landing (see `CHANGELOG [Unreleased]`).
+- **Service worker cache:** `CACHE = "crono-v39"` in `sw.js` — bump it next time any cached asset changes.
+- **Dev branch:** `claude/contest-number-generation-fecx8e`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them.
 
@@ -48,9 +48,9 @@ manifest.webmanifest, sw.js   PWA (installable + offline)
 assets/
   theme.css   Shared design tokens (:root) — single source of truth
   app.css     App styles            app.js   App logic (IIFE)
-  site.css    Landing styles        site.js  Landing animations (reveal, demo loop)
+  site.css    Landing styles        site.js  Landing animations (reveal, demo loop) + bib-number generator (separate IIFE, runs even under reduced-motion)
   legal.css   Styles for the standalone terms.html / privacy.html pages
-  helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested
+  helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested; loaded by app.html AND index.html (landing uses `bibRange`)
   head.js     reduced-motion → adds .js-anim (runs in <head> before paint)
   sw-register.js  SW registration + "new version" update toast (shared by app + landing)
 test/helpers.test.js        Node unit tests for pure helpers
@@ -190,7 +190,9 @@ duplicates, per-row notes, **inline edit of number & time**, sex/age-category ra
 **pace** (distance), **results search**, **participant manager** (add/edit/delete/search/CSV import),
 **CSV + PDF (print) export**, **backup/restore JSON**, consent + Terms/Privacy (modal in app,
 standalone pages from landing), **PWA** (installable/offline) with a dismissible **"new version"
-update toast** (never auto-reloads), animated landing.
+update toast** (never auto-reloads), animated landing, **bib-number generator** on the landing
+(modal → event name/date + number range + colour theme + optional in-browser logo → print-ready PDF,
+2 bibs per A4 page; built in `#printArea` + `@media print` in `site.css`, logic in `site.js`).
 
 ## Known constraints / TODO ideas
 - `addParticipant()` uses a `prompt()` for the new number (could become an inline row).

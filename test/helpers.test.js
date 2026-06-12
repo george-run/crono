@@ -45,6 +45,17 @@ test("bracketRange", () => {
   assert.equal(H.bracketRange(60), "60+");
 });
 
+test("bibRange", () => {
+  assert.deepEqual(H.bibRange(1, 5), [1, 2, 3, 4, 5]);
+  assert.deepEqual(H.bibRange(10, 10), [10]);
+  assert.equal(H.bibRange(5, 1), null);        // from > to
+  assert.equal(H.bibRange(-1, 5), null);       // negative
+  assert.equal(H.bibRange(1.5, 5), null);      // non-integer
+  assert.equal(H.bibRange("a", 5), null);      // non-numeric
+  assert.equal(H.bibRange(1, 100, 50), null);  // exceeds max count
+  assert.deepEqual(H.bibRange(1, 3, 50), [1, 2, 3]); // within max
+});
+
 test("csvCell escapes and guards formula injection", () => {
   assert.equal(H.csvCell("Ana"), "Ana");
   assert.equal(H.csvCell("Popescu, Ana"), '"Popescu, Ana"');
