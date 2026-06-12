@@ -6,6 +6,7 @@
   var KEY_ENTRIES = "crono.entries";
   var KEY_PARTICIPANTS = "crono.participants";
   var KEY_DISTANCE = "crono.distanceKm";
+  var KEY_SOUND = "crono.sound";
   var KEY_CONSENT = "crono.consent";
   var CONSENT_VERSION = 1;        // bump to re-prompt if the terms change
 
@@ -14,9 +15,12 @@
   var entries = [];               // [{ id, runnerNumber, finishEpoch, details }]
   var participants = {};          // { "<number>": { name, sex, birthYear } }
   var distanceKm = null;          // optional race distance for pace
+  var soundOn = true;             // beep on record
   var currentFilter = "all";      // active ranking filter: all | M | F | "M|30" ...
+  var searchQuery = "";           // results search text
   var editingNum = null;          // bib number whose sex/year is being edited inline
   var editingNumberId = null;     // entry id whose bib number is being edited inline
+  var editingTimeId = null;       // entry id whose finish time is being edited inline
 
   // ----- Elements -----------------------------------------------------------
   var $start = document.getElementById("startTime");
@@ -30,7 +34,13 @@
   var $statParticipants = document.getElementById("statParticipants");
   var $statDup = document.getElementById("statDup");
   var $importFile = document.getElementById("importFile");
+  var $restoreFile = document.getElementById("restoreFile");
   var $tabs = document.getElementById("rankingTabs");
+  var $resultSearch = document.getElementById("resultSearch");
+  var $soundToggle = document.getElementById("soundToggle");
+  var $partModal = document.getElementById("partModal");
+  var $partBody = document.getElementById("partBody");
+  var $partSearch = document.getElementById("partSearch");
   var $printArea = document.getElementById("printArea");
   var $consent = document.getElementById("consent");
   var $consentCheck = document.getElementById("consentCheck");
@@ -49,7 +59,9 @@
     x: '<path d="M6 6l12 12"/><path d="M18 6L6 18"/>',
     check: '<path d="M5 13l4 4L19 7"/>',
     plus: '<path d="M12 6v12"/><path d="M6 12h12"/>',
-    pencil: '<path d="M14.5 5.5l4 4"/><path d="M4 20l1-4L16 5a2 2 0 0 1 3 3L8 19z"/>'
+    pencil: '<path d="M14.5 5.5l4 4"/><path d="M4 20l1-4L16 5a2 2 0 0 1 3 3L8 19z"/>',
+    volume: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8a5 5 0 0 1 0 8"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>',
+    mute: '<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/>'
   };
   function svgIcon(name) {
     return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
@@ -112,6 +124,7 @@
       localStorage.setItem(KEY_ENTRIES, JSON.stringify(entries));
       localStorage.setItem(KEY_PARTICIPANTS, JSON.stringify(participants));
       localStorage.setItem(KEY_DISTANCE, distanceKm == null ? "" : String(distanceKm));
+      localStorage.setItem(KEY_SOUND, soundOn ? "1" : "0");
     } catch (e) {
       console.warn("Could not persist data:", e);
     }
@@ -145,6 +158,44 @@
 
     var d = parseFloat(localStorage.getItem(KEY_DISTANCE));
     distanceKm = (d > 0) ? d : null;
+
+    soundOn = localStorage.getItem(KEY_SOUND) !== "0"; // default on
+  }
+
+  // ----- Sound (Web Audio beep, no file) ------------------------------------
+  var audioCtx = null;
+  function beep() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = "sine"; o.frequency.value = 1180;
+      var t = audioCtx.currentTime;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.25, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + 0.13);
+    } catch (e) { /* ignore */ }
+  }
+  function updateSoundToggle() {
+    $soundToggle.innerHTML = svgIcon(soundOn ? "volume" : "mute");
+    $soundToggle.setAttribute("aria-pressed", soundOn ? "true" : "false");
+    $soundToggle.title = soundOn ? "Beep on record: on" : "Beep on record: off";
+    $soundToggle.classList.toggle("off", !soundOn);
+  }
+
+  // Parse an elapsed string (H:MM:SS(.cc) / MM:SS(.cc) / SS(.cc)) into ms, or null.
+  function parseElapsedToMs(str) {
+    str = String(str).trim();
+    var m = str.match(/^(?:(?:(\d+):)?(\d{1,2}):)?(\d{1,2})(?:[.,](\d{1,2}))?$/);
+    if (!m) return null;
+    var h = m[1] ? +m[1] : 0, mi = m[2] ? +m[2] : 0, s = +m[3];
+    var cs = m[4] ? +(m[4].length === 1 ? m[4] + "0" : m[4]) : 0;
+    if (mi > 59 || s > 59) return null;
+    return ((h * 3600 + mi * 60 + s) * 1000) + cs * 10;
   }
 
   // ----- Participants & categories -----------------------------------------
@@ -291,13 +342,20 @@
   function render(newId) {
     var dups = duplicateNumbers();
 
-    // Entries shown depend on the active ranking filter.
+    // Entries shown depend on the active ranking filter…
     var visible = entries.filter(function (e) { return matchesFilter(e, currentFilter); });
-    var places = computePlaces(visible); // place within the current ranking
+    var places = computePlaces(visible); // place within the current ranking (unaffected by search)
+
+    // …then narrowed by the search box (number or name), without renumbering places.
+    var q = searchQuery.trim().toLowerCase();
+    var shown = q ? visible.filter(function (e) {
+      return e.runnerNumber.toLowerCase().indexOf(q) > -1 ||
+             participantName(e.runnerNumber).toLowerCase().indexOf(q) > -1;
+    }) : visible;
 
     // "All" keeps the most-recent finisher on top (handy during live timing);
     // any specific ranking is sorted by time so it reads 1, 2, 3…
-    var ordered = visible.slice().sort(function (a, b) {
+    var ordered = shown.slice().sort(function (a, b) {
       return currentFilter === "all" ? b.finishEpoch - a.finishEpoch
                                      : a.finishEpoch - b.finishEpoch;
     });
@@ -338,6 +396,19 @@
           (isDup ? '<span class="tag dup">dup</span>' : "") +
           '<button type="button" class="num-edit" title="Edit number">' + svgIcon("pencil") + "</button>";
       }
+      var timeHtml;
+      if (editingTimeId === e.id) {
+        timeHtml =
+          '<span class="time-editor">' +
+            '<input class="time-input" type="text" inputmode="numeric" value="' + escapeAttr(formatElapsed(elapsed)) + '" aria-label="Finish time">' +
+            '<button type="button" class="time-save" title="Save">' + svgIcon("check") + "</button>" +
+            '<button type="button" class="time-cancel" title="Cancel">' + svgIcon("x") + "</button>" +
+          "</span>";
+      } else {
+        timeHtml = formatElapsed(elapsed) +
+          '<button type="button" class="time-edit" title="Edit time">' + svgIcon("pencil") + "</button>" +
+          (paceStr ? '<span class="pace">' + paceStr + "</span>" : "");
+      }
       tr.innerHTML =
         '<td class="place' + (place === 1 ? " first" : "") + '" data-label="Place">' + place + "</td>" +
         '<td class="num" data-label="Number">' + numHtml + "</td>" +
@@ -345,8 +416,7 @@
           (name ? escapeHtml(name) + " " : "") + catHtml + "</td>" +
         '<td data-label="Obs."><input class="obs" type="text" value="' + escapeAttr(e.details || "") +
           '" placeholder="add note…"></td>' +
-        '<td class="time" data-label="Time">' + formatElapsed(elapsed) +
-          (paceStr ? '<span class="pace">' + paceStr + "</span>" : "") + "</td>" +
+        '<td class="time" data-label="Time">' + timeHtml + "</td>" +
         '<td class="remove-cell"><button class="row-remove" title="Remove this result">' + svgIcon("x") + "</button></td>";
 
       tr.querySelector(".obs").addEventListener("input", function () {
@@ -377,6 +447,32 @@
         numEditor.querySelector(".num-input").addEventListener("keydown", function (ev) {
           if (ev.key === "Enter") { ev.preventDefault(); commitNum(); }
           else if (ev.key === "Escape") { ev.preventDefault(); editingNumberId = null; render(); }
+        });
+      }
+
+      var timeEdit = tr.querySelector(".time-edit");
+      if (timeEdit) timeEdit.addEventListener("click", function () {
+        editingTimeId = e.id; render();
+        var inp = $body.querySelector(".time-editor .time-input");
+        if (inp) { inp.focus(); inp.select(); }
+      });
+      var timeEditor = tr.querySelector(".time-editor");
+      if (timeEditor) {
+        var commitTime = function () {
+          var ms = parseElapsedToMs(timeEditor.querySelector(".time-input").value);
+          if (ms != null) e.finishEpoch = startEpoch + ms;
+          else alert("Enter the time as H:MM:SS, MM:SS or with .cc (e.g. 24:31.50).");
+          editingTimeId = null;
+          save();
+          render();
+        };
+        timeEditor.querySelector(".time-save").addEventListener("click", commitTime);
+        timeEditor.querySelector(".time-cancel").addEventListener("click", function () {
+          editingTimeId = null; render();
+        });
+        timeEditor.querySelector(".time-input").addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter") { ev.preventDefault(); commitTime(); }
+          else if (ev.key === "Escape") { ev.preventDefault(); editingTimeId = null; render(); }
         });
       }
 
@@ -411,14 +507,16 @@
       $body.appendChild(tr);
     });
 
-    // Empty state: distinguish "nothing recorded" from "nothing in this ranking".
-    if (visible.length) {
+    // Empty state: distinguish "nothing recorded" / "nothing in ranking" / "no search match".
+    if (shown.length) {
       $empty.style.display = "none";
     } else {
       $empty.style.display = "flex";
-      $emptyMsg.textContent = entries.length
-        ? "No finishers in this ranking yet."
-        : "No results yet. Enter a runner number above and press Record as each finishes.";
+      $emptyMsg.textContent = q
+        ? "No results match your search."
+        : (entries.length
+            ? "No finishers in this ranking yet."
+            : "No results yet. Enter a runner number above and press Record as each finishes.");
     }
 
     $statCount.textContent = entries.length;
@@ -469,6 +567,7 @@
       finishEpoch: Date.now(),
       details: ""
     });
+    if (soundOn) beep();
     save();
     render(entries[entries.length - 1].id);
   }
@@ -611,6 +710,7 @@
     save();
     buildFilterOptions();
     render();
+    if ($partModal.classList.contains("show")) renderParticipants();
     alert(added
       ? added + " participant(s) loaded."
       : "No valid rows found. Expected columns: number, name, sex, birth_year");
@@ -634,13 +734,160 @@
     return out;
   }
 
+  // ----- Backup / Restore (full JSON) ---------------------------------------
+
+  function exportBackup() {
+    var data = {
+      app: "crono", v: 1, exportedAt: new Date().toISOString(),
+      startEpoch: startEpoch, distanceKm: distanceKm,
+      entries: entries, participants: participants
+    };
+    var stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    download("crono-backup-" + stamp + ".json", JSON.stringify(data, null, 2), "application/json");
+  }
+
+  function importBackup(text) {
+    var data;
+    try { data = JSON.parse(text); } catch (e) { alert("That file isn't valid JSON."); return; }
+    if (!data || data.app !== "crono" || !Array.isArray(data.entries) || typeof data.participants !== "object") {
+      alert("That doesn't look like a Crono backup file.");
+      return;
+    }
+    confirmModal({
+      title: "Restore backup?",
+      message: "This replaces the current start time, " + entries.length +
+               " result(s) and the participant list with the backup's contents.",
+      confirmLabel: "Restore", danger: true
+    }).then(function (ok) {
+      if (!ok) return;
+      startEpoch = parseInt(data.startEpoch, 10) || Date.now();
+      distanceKm = (data.distanceKm > 0) ? data.distanceKm : null;
+      entries = data.entries.filter(function (e) { return e && e.id && e.runnerNumber != null; });
+      participants = {};
+      Object.keys(data.participants || {}).forEach(function (num) {
+        var p = data.participants[num] || {};
+        participants[num] = { name: p.name || "", sex: normalizeSex(p.sex), birthYear: (p.birthYear > 0 ? p.birthYear : null) };
+      });
+      save();
+      $start.value = formatClock(startEpoch);
+      $distance.value = distanceKm == null ? "" : String(distanceKm);
+      updateStartPreview();
+      buildFilterOptions();
+      render();
+    });
+  }
+
+  // ----- Participants management modal --------------------------------------
+
+  function openParticipants() {
+    $partSearch.value = "";
+    renderParticipants();
+    $partModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+  function closeParticipants() {
+    $partModal.classList.remove("show");
+    if (!$consent.classList.contains("show")) document.body.style.overflow = "";
+  }
+
+  function renderParticipants() {
+    var q = $partSearch.value.trim().toLowerCase();
+    var nums = Object.keys(participants).sort(function (a, b) {
+      var na = parseInt(a, 10), nb = parseInt(b, 10);
+      if (!isNaN(na) && !isNaN(nb) && na !== nb) return na - nb;
+      return a < b ? -1 : a > b ? 1 : 0;
+    });
+    if (q) nums = nums.filter(function (n) {
+      return n.toLowerCase().indexOf(q) > -1 || (participants[n].name || "").toLowerCase().indexOf(q) > -1;
+    });
+
+    var head = '<div class="part-row part-head"><span>Number</span><span>Name</span><span>Sex</span><span>Year</span><span></span></div>';
+    var rows = nums.map(function (n) {
+      var p = participants[n];
+      return '<div class="part-row" data-num="' + escapeAttr(n) + '">' +
+        '<input class="p-num" value="' + escapeAttr(n) + '" inputmode="numeric" aria-label="Number">' +
+        '<input class="p-name" value="' + escapeAttr(p.name || "") + '" placeholder="name" aria-label="Name">' +
+        '<select class="p-sex" aria-label="Sex">' +
+          '<option value=""' + (!p.sex ? " selected" : "") + '>—</option>' +
+          '<option value="M"' + (p.sex === "M" ? " selected" : "") + ">M</option>" +
+          '<option value="F"' + (p.sex === "F" ? " selected" : "") + ">F</option>" +
+        "</select>" +
+        '<input class="p-year" value="' + escapeAttr(p.birthYear ? String(p.birthYear) : "") + '" inputmode="numeric" maxlength="4" placeholder="year" aria-label="Birth year">' +
+        '<button type="button" class="p-del" title="Delete participant">' + svgIcon("x") + "</button>" +
+      "</div>";
+    }).join("");
+
+    var count = Object.keys(participants).length;
+    $partBody.innerHTML =
+      '<div class="part-count">' + count + " participant(s)" + (q ? " · showing " + nums.length : "") + "</div>" +
+      head + (rows || '<div class="part-empty">No participants yet. Add one or import a CSV.</div>');
+
+    // Wire each row.
+    Array.prototype.forEach.call($partBody.querySelectorAll(".part-row[data-num]"), function (row) {
+      var orig = row.getAttribute("data-num");
+      row.querySelector(".p-name").addEventListener("input", function () {
+        participants[orig].name = this.value; save(); render();
+      });
+      row.querySelector(".p-sex").addEventListener("change", function () {
+        participants[orig].sex = normalizeSex(this.value); save(); buildFilterOptions(); render();
+      });
+      row.querySelector(".p-year").addEventListener("change", function () {
+        var y = parseInt(this.value, 10);
+        participants[orig].birthYear = (y >= 1900 && y <= new Date().getFullYear()) ? y : null;
+        save(); buildFilterOptions(); render();
+      });
+      row.querySelector(".p-num").addEventListener("change", function () {
+        var nn = this.value.trim();
+        if (!nn || nn === orig) { this.value = orig; return; }
+        participants[nn] = participants[orig];
+        delete participants[orig];
+        save(); buildFilterOptions(); render(); renderParticipants();
+      });
+      row.querySelector(".p-del").addEventListener("click", function () {
+        confirmModal({ title: "Delete participant", message: "Remove participant " + orig + " from the roster?", confirmLabel: "Delete", danger: true })
+          .then(function (ok) { if (!ok) return; delete participants[orig]; save(); buildFilterOptions(); render(); renderParticipants(); });
+      });
+    });
+  }
+
+  function addParticipant() {
+    var n = prompt("New participant number:");
+    if (n == null) return;
+    n = String(n).trim();
+    if (!n) return;
+    if (!participants[n]) participants[n] = { name: "", sex: "", birthYear: null };
+    save(); buildFilterOptions(); render();
+    $partSearch.value = "";
+    renderParticipants();
+    var inp = $partBody.querySelector('.part-row[data-num="' + (window.CSS && CSS.escape ? CSS.escape(n) : n) + '"] .p-name');
+    if (inp) inp.focus();
+  }
+
   // ----- Wire up ------------------------------------------------------------
 
   document.getElementById("setStartNow").addEventListener("click", setStartNow);
   document.getElementById("exportBtn").addEventListener("click", exportCSV);
   document.getElementById("pdfBtn").addEventListener("click", exportPDF);
   document.getElementById("clearBtn").addEventListener("click", clearResults);
-  document.getElementById("importBtn").addEventListener("click", function () { $importFile.click(); });
+  document.getElementById("backupBtn").addEventListener("click", exportBackup);
+  document.getElementById("restoreBtn").addEventListener("click", function () { $restoreFile.click(); });
+
+  // Participants modal
+  document.getElementById("partBtn").addEventListener("click", openParticipants);
+  document.getElementById("partClose").addEventListener("click", closeParticipants);
+  document.getElementById("partImport").addEventListener("click", function () { $importFile.click(); });
+  document.getElementById("partAdd").addEventListener("click", addParticipant);
+  $partSearch.addEventListener("input", renderParticipants);
+  $partModal.addEventListener("click", function (e) { if (e.target === $partModal) closeParticipants(); });
+
+  // Sound toggle
+  $soundToggle.addEventListener("click", function () {
+    soundOn = !soundOn; save(); updateSoundToggle();
+    if (soundOn) beep();
+  });
+
+  // Results search
+  $resultSearch.addEventListener("input", function () { searchQuery = this.value; render(); });
 
   $importFile.addEventListener("change", function () {
     var file = this.files && this.files[0];
@@ -649,6 +896,15 @@
     reader.onload = function () { importCSV(String(reader.result)); };
     reader.readAsText(file);
     this.value = ""; // allow re-importing the same file
+  });
+
+  $restoreFile.addEventListener("change", function () {
+    var file = this.files && this.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () { importBackup(String(reader.result)); };
+    reader.readAsText(file);
+    this.value = "";
   });
 
   $tabs.addEventListener("click", function (e) {
@@ -711,7 +967,9 @@
   document.getElementById("docClose").addEventListener("click", closeDoc);
   $docModal.addEventListener("click", function (e) { if (e.target === $docModal) closeDoc(); });
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && $docModal.classList.contains("show")) closeDoc();
+    if (e.key !== "Escape") return;
+    if ($docModal.classList.contains("show")) closeDoc();
+    else if ($partModal.classList.contains("show")) closeParticipants();
   });
 
   // ----- Confirm modal ------------------------------------------------------
@@ -787,6 +1045,7 @@
   $start.value = formatClock(startEpoch);
   $distance.value = distanceKm == null ? "" : String(distanceKm);
   updateStartPreview();
+  updateSoundToggle();
   buildFilterOptions();
   render();
   initConsent();
