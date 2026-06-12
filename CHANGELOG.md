@@ -9,6 +9,9 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - A dismissible "New version available — Reload" toast when a fresh deploy is detected (never auto-reloads, so it can't interrupt a live race) — on both the app and the landing; SW registration is now a single shared `sw-register.js`.
 - Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly (with a stopwatch icon) in the card's summary line when it's collapsed.
 
+### Added
+- Landing "Install it like an app" section + an FAQ entry: step-by-step PWA install guides for iPhone/iPad (Safari → Share → Add to Home Screen), Android (Chrome menu → Install app) and desktop (address-bar install icon).
+
 ### Changed
 - Hero animation: the floating result card no longer bobs in place — it now trails the moving pin along the route (driven in JS off the same path), so it reads as a live result following the runner.
 - Typography: display font (headings + big race/bib numbers) switched from Space Grotesk to **Oswald** — a condensed, athletic face that suits race numbers; body stays Inter. The landing "how it works" demo now also shows the start time and distance being filled in before the timing starts, so the full flow is clear.
