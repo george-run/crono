@@ -46,10 +46,15 @@
     }, 70);
   }
 
-  // "How it works" demo: type a bib, hit Record, a finisher appears — on loop.
+  // "How it works" demo: fill the start time + distance, then type a bib, hit
+  // Record and a finisher appears — on loop.
   var demoNum = document.getElementById("demoNum");
   var demoList = document.getElementById("demoList");
   var demoRec = document.querySelector(".demo-rec");
+  var demoStart = document.getElementById("demoStart");
+  var demoDist = document.getElementById("demoDist");
+  var demoStartField = document.getElementById("demoStartField");
+  var demoDistField = document.getElementById("demoDistField");
   if (demoNum && demoList && demoRec) {
     var DEMO = [
       { n: "247", t: "24:31" }, { n: "183", t: "25:08" },
@@ -60,7 +65,27 @@
     function demoReset() {
       demoList.innerHTML = ""; demoNum.textContent = "0";
       di = 0; recorded = 0;
-      setTimeout(demoType, 900);
+      fillSetup();
+    }
+    // Show the start time then the distance being entered before the timing starts.
+    function fillSetup() {
+      if (demoStart) demoStart.textContent = "--:--:--";
+      if (demoDist) demoDist.textContent = "—";
+      if (demoStartField) demoStartField.classList.remove("set");
+      if (demoDistField) demoDistField.classList.remove("set");
+      setTimeout(function () {
+        if (demoStart) demoStart.textContent = "10:00:00";
+        if (demoStartField) demoStartField.classList.add("set", "just-set");
+        setTimeout(function () {
+          if (demoStartField) demoStartField.classList.remove("just-set");
+          if (demoDist) demoDist.textContent = "5 km";
+          if (demoDistField) demoDistField.classList.add("set", "just-set");
+          setTimeout(function () {
+            if (demoDistField) demoDistField.classList.remove("just-set");
+            setTimeout(demoType, 600);
+          }, 650);
+        }, 750);
+      }, 650);
     }
     function demoType() {
       if (di >= DEMO.length) { setTimeout(demoReset, 2400); return; }

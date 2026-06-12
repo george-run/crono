@@ -38,7 +38,7 @@ a { color: inherit; text-decoration: none; }
 .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px rgba(var(--primary-rgb),.18); }
 
 .hero h1 { font-family: var(--font-display); font-weight: 700;
-  font-size: clamp(2.4rem, 5.2vw, 3.8rem); line-height: 1.05; margin: 0 0 18px; letter-spacing: -1.5px; }
+  font-size: clamp(2.4rem, 5.2vw, 3.8rem); line-height: 1.05; margin: 0 0 18px; letter-spacing: -.5px; }
 .hero h1 .accent { color: var(--primary); }
 .hero .lead { margin: 0 0 30px; color: var(--muted); font-size: 1.12rem; }
 .cta { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -228,7 +228,11 @@ a { color: inherit; text-decoration: none; }
 .demo-caption { text-align: center; color: var(--muted); font-size: .88rem; margin: 14px auto 0; max-width: 420px; }
 .demo { pointer-events: none; user-select: none; text-align: left; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
 .demo-setup { display: flex; gap: 10px; margin-bottom: 12px; }
-.demo-field { flex: 1; background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+.demo-field { flex: 1; background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px;
+  transition: border-color .25s ease, background .25s ease, box-shadow .25s ease; }
+/* brief highlight as each setup field is "filled" in the demo loop */
+.demo-field.just-set { border-color: var(--primary); background: rgba(var(--primary-rgb),.12);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.16); }
 .demo-k { display: block; font-size: .62rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
 .demo-v { font-family: var(--font-display); font-variant-numeric: tabular-nums; }
 .demo-capture { display: flex; align-items: center; gap: 10px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; margin-bottom: 12px; }

@@ -12,7 +12,7 @@
 <meta name="theme-color" content="#0b0f14">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/theme.css">
 <link rel="stylesheet" href="assets/site.css">
 <script src="assets/head.js"></script>
@@ -150,8 +150,8 @@
       <span class="demo-badge"><span class="demo-badge-dot"></span> Live demo — plays by itself</span>
       <div class="demo" id="demo" aria-hidden="true">
         <div class="demo-setup">
-          <div class="demo-field"><span class="demo-k">Start</span><span class="demo-v">10:00:00</span></div>
-          <div class="demo-field"><span class="demo-k">Distance</span><span class="demo-v">5 km</span></div>
+          <div class="demo-field" id="demoStartField"><span class="demo-k">Start</span><span class="demo-v" id="demoStart">10:00:00</span></div>
+          <div class="demo-field" id="demoDistField"><span class="demo-k">Distance</span><span class="demo-v" id="demoDist">5 km</span></div>
         </div>
         <div class="demo-capture">
           <span class="demo-num" id="demoNum">247</span>
