@@ -1,5 +1,5 @@
 /* Crono service worker — offline cache (cache-first). Bump CACHE to invalidate. */
-var CACHE = "crono-v21";
+var CACHE = "crono-v22";
 var ASSETS = [
   "./",
   "index.html",

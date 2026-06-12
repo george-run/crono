@@ -231,3 +231,9 @@ a { color: inherit; text-decoration: none; }
 .demo-pl { font-family: var(--font-display); font-weight: 700; color: var(--muted); }
 .demo-bib { font-family: var(--font-display); font-weight: 700; }
 .demo-t { font-variant-numeric: tabular-nums; color: var(--muted); }
+
+/* DEMO watermark tag on the mock */
+.demo { position: relative; }
+.demo::before { content: "DEMO"; position: absolute; top: 8px; right: 12px;
+  font-size: .6rem; font-weight: 700; letter-spacing: 1.5px; color: var(--muted);
+  opacity: .55; pointer-events: none; }
