@@ -197,5 +197,6 @@ a { color: inherit; text-decoration: none; }
 @keyframes dotPing { 0%, 100% { box-shadow: 0 0 0 4px rgba(163,230,53,.18); } 50% { box-shadow: 0 0 0 7px rgba(163,230,53,.05); } }
 
 /* Buy me a coffee (donation) button */
-.btn.coffee { margin-top: 14px; border-color: rgba(251,191,36,.5); color: var(--accent-3); }
+.btn.coffee { border-color: rgba(251,191,36,.5); color: var(--accent-3); }
 .btn.coffee:hover { background: var(--accent-3); border-color: var(--accent-3); color: var(--on-accent); }
+.footer-brand .btn.coffee { margin-top: 14px; }
