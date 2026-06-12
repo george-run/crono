@@ -65,6 +65,21 @@
     return lo + "–" + (AGE_BRACKETS[idx + 1] - 1);
   }
 
+  // Inclusive integer range from..to for printable bib numbers. Returns an array
+  // of numbers, or null when the input is unusable: non-integers, negatives,
+  // from > to, or a count larger than `max` (guards against a runaway print job).
+  function bibRange(from, to, max) {
+    from = Number(from); to = Number(to);
+    if (!isFinite(from) || !isFinite(to)) return null;
+    if (from % 1 !== 0 || to % 1 !== 0) return null;
+    if (from < 0 || to < 0 || from > to) return null;
+    var count = to - from + 1;
+    if (max && count > max) return null;
+    var out = [];
+    for (var n = from; n <= to; n++) out.push(n);
+    return out;
+  }
+
   // CSV cell: neutralise spreadsheet formula injection (=,+,-,@,tab,CR lead),
   // then quote/escape as needed.
   function csvCell(v) {
@@ -83,6 +98,7 @@
     normalizeSex: normalizeSex,
     AGE_BRACKETS: AGE_BRACKETS,
     bracketRange: bracketRange,
+    bibRange: bibRange,
     csvCell: csvCell
   };
 });

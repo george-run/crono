@@ -5,6 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
+- **Bib number generator** on the landing page (separate from timing, for use before race day): an orange, animated section + a header button open a modal where you set the event name, date, a number range and a colour theme (orange / lime / blue / black & white), and optionally upload a logo. It builds a clean, print-ready sheet (2 bibs per A4 page — big number, event name/date and logo) and opens the browser's print/"Save as PDF" dialog. Runs fully offline; the logo stays in memory and is never uploaded. New tested `bibRange` helper backs the range validation.
 - A dismissible "New version available — Reload" toast when a fresh deploy is detected (never auto-reloads, so it can't interrupt a live race) — on both the app and the landing; SW registration is now a single shared `sw-register.js`.
 - Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly (with a stopwatch icon) in the card's summary line when it's collapsed.
 
