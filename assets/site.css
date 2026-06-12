@@ -157,3 +157,41 @@ a { color: inherit; text-decoration: none; }
   .hero-art img { max-width: 280px; }
   .float-card { left: 0; bottom: 2%; padding: 8px 10px; gap: 9px; }
 }
+
+/* ===== Animations (only when .js-anim is set; respects reduced-motion) ===== */
+.js-anim .hero-copy, .js-anim .hero-art, .js-anim .section-head,
+.js-anim .faq-list, .js-anim .cta-band,
+.js-anim .features .card, .js-anim .steps-grid .step {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.js-anim .hero-copy.is-in, .js-anim .hero-art.is-in, .js-anim .section-head.is-in,
+.js-anim .faq-list.is-in, .js-anim .cta-band.is-in,
+.js-anim .features.is-in .card, .js-anim .steps-grid.is-in .step {
+  opacity: 1; transform: none;
+}
+/* staggered children */
+.js-anim .features.is-in .card:nth-child(2) { transition-delay: .07s; }
+.js-anim .features.is-in .card:nth-child(3) { transition-delay: .14s; }
+.js-anim .features.is-in .card:nth-child(4) { transition-delay: .21s; }
+.js-anim .features.is-in .card:nth-child(5) { transition-delay: .28s; }
+.js-anim .features.is-in .card:nth-child(6) { transition-delay: .35s; }
+.js-anim .steps-grid.is-in .step:nth-child(2) { transition-delay: .1s; }
+.js-anim .steps-grid.is-in .step:nth-child(3) { transition-delay: .2s; }
+
+/* hero illustration comes in a touch later for a layered feel */
+.js-anim .hero-art { transition-delay: .12s; }
+
+/* self-drawing running route in the backdrop */
+.js-anim #heroRoute { stroke-dasharray: 3000; stroke-dashoffset: 3000; animation: routeDraw 2.6s ease .2s forwards; }
+@keyframes routeDraw { to { stroke-dashoffset: 0; } }
+
+/* gentle life: floating result card + breathing blob */
+.js-anim .float-card { animation: floatBob 3.6s ease-in-out infinite; }
+@keyframes floatBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.js-anim .hero-art .blob { animation: blobPulse 5.5s ease-in-out infinite; }
+@keyframes blobPulse { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.06); opacity: 1; } }
+
+/* badge dot ping */
+.js-anim .badge-dot { animation: dotPing 2.2s ease-in-out infinite; }
+@keyframes dotPing { 0%, 100% { box-shadow: 0 0 0 4px rgba(163,230,53,.18); } 50% { box-shadow: 0 0 0 7px rgba(163,230,53,.05); } }

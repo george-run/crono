@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/theme.css">
 <link rel="stylesheet" href="assets/site.css">
+<script>try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("js-anim");}catch(e){}</script>
 </head>
 <body>
 
@@ -27,7 +28,9 @@
       <ellipse cx="120" cy="700" rx="210" ry="150"/>
     </g>
     <path d="M-30 600C 200 520 260 320 460 350S 720 560 900 450 1100 220 1260 270"
-          stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 15" opacity=".16"/>
+          stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 15" opacity=".12"/>
+    <path id="heroRoute" d="M-30 600C 200 520 260 320 460 350S 720 560 900 450 1100 220 1260 270"
+          stroke="var(--primary)" stroke-width="3" stroke-linecap="round" fill="none" opacity=".28"/>
     <circle cx="460" cy="350" r="5" fill="var(--primary)" opacity=".5"/>
     <circle cx="900" cy="450" r="5" fill="var(--primary)" opacity=".5"/>
   </svg>
@@ -69,7 +72,7 @@
         <img src="images/runner.png" alt="Illustration of a runner with bib number 247" width="1536" height="1024">
         <div class="float-card" aria-hidden="true">
           <span class="fc-place">1<sup>st</sup></span>
-          <span class="fc-mid"><strong>#247</strong><small>00:24:31</small></span>
+          <span class="fc-mid"><strong>#247</strong><small id="demoClock">24:31.08</small></span>
           <span class="fc-pace">4:32<small>/km</small></span>
         </div>
       </div>
@@ -194,9 +197,9 @@
     </div>
   </div>
   <div class="footer-bottom">© <span id="yr"></span> Crono · runs fully offline in your browser.</div>
-  <script>document.getElementById("yr").textContent=new Date().getFullYear();</script>
 </footer>
 
+<script src="assets/site.js"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>
 </html>
