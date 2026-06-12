@@ -95,6 +95,31 @@ Consent gate · Doc modal (`openDoc`) · Confirm modal (`confirmModal`) · Init.
 - **Icons:** `svgIcon(name)` for JS-built markup; inline `<svg class="icon">` for static HTML buttons.
 - After changing categories/numbers, call `buildFilterOptions()` then `render()`.
 
+## CSS — architecture & rules
+**Files (load order):** `theme.css` (tokens — shared, loaded on every page) → the page file
+(`app.css` *or* `site.css`). `app.html` loads theme + app; `index.html`/`terms`/`privacy` load
+theme + site. Splitting page CSS means each page ships only what it needs **and** an edit touches
+one small file (cheaper to read/modify).
+
+**Golden rule — tokens are the contract, not shared rule-blocks.** The app and landing deliberately
+use different selectors (`button` vs `.btn`, `.icon` vs `.btn .icon`, …), so you usually *can't*
+share a rule. Prevent drift by putting every **shared design decision** in `theme.css` as a token
+and having both files consume it. If a value should look the same on both pages (a colour, the
+accent, a radius, a shadow, a spacing step) it lives as `var(--…)` — **never** copy a literal into
+both files. Even when selectors differ, both referencing the same token keeps them from diverging.
+
+- Colours/tints: use the tokens — `--primary`, `rgba(var(--primary-rgb), …)` (also `--accent-2-rgb`,
+  `--accent-3-rgb`), `--overlay`. Never hardcode `rgba(163,230,53,…)` or a hex that duplicates a token.
+- Radii: reuse `--radius` / `--radius-sm`. (Inputs still use a one-off `8px` — fold into a token if you touch them.)
+- The moment you're about to write the same literal in both `app.css` and `site.css`, stop and add a token instead.
+- A genuinely-identical primitive needed on both pages (reset, base element)? Put it in the shared layer,
+  not in both page files. Today only `theme.css` is shared; if that set grows, add a small `base.css`
+  loaded before the page file — and update **Structure** above.
+
+**Hygiene:** one rule per selector (merge, don't re-declare it elsewhere); one `@media` block per
+breakpoint (don't scatter several `560px` blocks); no inline `<style>` (CSP); no dead/duplicate rules.
+Any change to a **cached** CSS file → bump `sw.js` `CACHE` and refresh the **Status** block.
+
 ## Service worker / cache (IMPORTANT)
 - `sw.js`: **network-first for HTML pages** (so deploys show immediately when online),
   **cache-first for static assets** (css/js/images). Versioned name `CACHE = "crono-vN"`.
