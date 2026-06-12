@@ -98,6 +98,25 @@
   #recordBtn { font-size: 1.25rem; padding: 16px 28px; flex: 0 0 auto; }
   .hint { color: var(--muted); font-size: .85rem; }
 
+  .help { margin-top: 10px; font-size: .9rem; }
+  .help > summary {
+    cursor: pointer; color: var(--primary); width: fit-content;
+    list-style: none; user-select: none;
+  }
+  .help > summary::before { content: "▸ "; }
+  .help[open] > summary::before { content: "▾ "; }
+  .help > summary:hover { color: var(--primary-hover); }
+  .help-body { color: var(--muted); margin-top: 8px; }
+  .help-body p { margin: 6px 0; }
+  .help-body ul { margin: 6px 0; padding-left: 20px; }
+  .help-body li { margin: 3px 0; }
+  .help-body code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; color: var(--text); }
+  .help-body pre {
+    background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; overflow-x: auto; color: var(--text);
+    font-size: .85rem; line-height: 1.45; margin: 8px 0;
+  }
+
   .stats { display: flex; gap: 24px; flex-wrap: wrap; }
   .stat { display: flex; flex-direction: column; }
   .stat .num { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -223,6 +242,32 @@
       <button id="clearBtn" class="danger" title="Delete all recorded results">🗑 Clear results</button>
     </div>
     <p class="hint" id="startHint">Times are measured against this start. Editing it recalculates every result.</p>
+
+    <details class="help">
+      <summary>How does “Import participants” work?</summary>
+      <div class="help-body">
+        <p>
+          Importing a list lets Crono show each runner's <strong>name</strong> next to their
+          number — in the results table and in the exported CSV. It's optional: without it,
+          timing still works, you just see numbers only. Importing again adds to or updates
+          the existing list (it never deletes your recorded times).
+        </p>
+        <p>
+          Upload a <strong>.csv</strong> file with one participant per line. The
+          <strong>first column is the bib number</strong>, the <strong>second is the name</strong>:
+        </p>
+        <pre>number,name
+12,Ana Popescu
+13,Mihai Ionescu
+27,Andrei Georgescu</pre>
+        <ul>
+          <li>A header row like <code>number,name</code> is detected and skipped automatically.</li>
+          <li>Comma <code>,</code>, semicolon <code>;</code> and tab separators all work.</li>
+          <li>Names with commas or quotes are fine if wrapped in quotes, e.g. <code>"Popescu, Ana"</code>.</li>
+          <li>You can create the file in Excel / Google Sheets → <em>Save as / Download → CSV</em>.</li>
+        </ul>
+      </div>
+    </details>
   </div>
 
   <!-- Capture -->
