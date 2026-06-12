@@ -286,5 +286,34 @@
   elGen.addEventListener("click", generate);
 })();
 
+// ----- One-click PWA install (Android / desktop Chromium); iOS uses the on-page steps -----
+(function () {
+  "use strict";
+  var btn = document.getElementById("installBtn");
+  if (!btn) return;
+  var deferred = null;
+
+  function isStandalone() {
+    try { return matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
+    catch (e) { return false; }
+  }
+
+  // Chromium fires this when the app is installable; stash it and reveal the button.
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferred = e;
+    if (!isStandalone()) btn.hidden = false;
+  });
+
+  btn.addEventListener("click", function () {
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.then(function () { deferred = null; btn.hidden = true; });
+  });
+
+  // Once installed, drop the prompt and hide the button.
+  window.addEventListener("appinstalled", function () { deferred = null; btn.hidden = true; });
+})();
+
 // Service worker registration + update toast live in assets/sw-register.js (shared with the app).
 

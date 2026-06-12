@@ -82,7 +82,8 @@ a { color: inherit; text-decoration: none; }
 /* Install / PWA tutorial section */
 .install-lead { margin: 12px 0 0; color: var(--muted); }
 .install-grid .card p strong { color: var(--text); }
-.install-note { text-align: center; color: var(--muted); font-size: .9rem; margin: 20px auto 0; max-width: 560px; }
+.install-cta { text-align: center; margin-top: 24px; }   /* one-click install button (shown only when installable) */
+.install-note { text-align: center; color: var(--muted); font-size: .9rem; margin: 14px auto 0; max-width: 560px; }
 
 /* features */
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
