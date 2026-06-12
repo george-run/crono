@@ -344,6 +344,38 @@
   </div>
 </div>
 
+<!-- Row edit modal -->
+<div class="row-overlay" id="rowModal" role="dialog" aria-modal="true" aria-labelledby="rowTitle">
+  <div class="row-modal">
+    <div class="doc-modal-head">
+      <h2 id="rowTitle">Edit result</h2>
+      <button class="doc-close" id="rowClose" title="Close" aria-label="Close">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="row-form">
+      <label class="rf">Bib number <input id="rowNum" type="text" inputmode="numeric" autocomplete="off"></label>
+      <label class="rf">Finish time <input id="rowTime" type="text" inputmode="numeric" placeholder="H:MM:SS.cc" autocomplete="off"></label>
+      <div class="row-two">
+        <label class="rf">Sex
+          <select id="rowSex"><option value="">—</option><option value="M">M</option><option value="F">F</option></select>
+        </label>
+        <label class="rf">Birth year <input id="rowYear" type="text" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+      </div>
+      <label class="rf">Note <input id="rowNote" type="text" placeholder="add note…" autocomplete="off"></label>
+      <div class="row-actions">
+        <button id="rowDelete" class="danger">Delete</button>
+        <span class="spacer"></span>
+        <button id="rowCancel">Cancel</button>
+        <button id="rowSave" class="primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
 <!-- Print-only results layout (populated on Export PDF) -->
 <div id="printArea" aria-hidden="true"></div>
 

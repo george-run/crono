@@ -4,7 +4,15 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
-- _Nothing yet._
+### Added
+- `CHANGELOG.md` and a richer `CLAUDE.md` (data model, code map, env constraints, deploy commands).
+- Landing animations (scroll-reveal, self-drawing route, live demo clock) — respects reduced-motion.
+- **Sticky capture bar** — the number input + Record stay reachable while scrolling results.
+- **Toast notifications** replacing blocking `alert()`s (import, restore, errors, saves).
+
+### Changed
+- Result rows are now click-to-edit: tapping a row opens a single **Edit result** modal
+  (number, finish time, sex, birth year, note, delete), replacing the inline per-cell editors.
 
 ## [0.1.0] — 2026-06-12
 First modernized release — a full rewrite from the original jQuery/Bootstrap template into a
