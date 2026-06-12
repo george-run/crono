@@ -6,9 +6,6 @@
 <meta name="description" content="Crono — a simple, offline chronometer for small running and sport competitions.">
 <meta name="author" content="the Crono project">
 <title>Crono</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0b0f14;
@@ -26,8 +23,9 @@
     --warn: #fbbf24;
     --radius: 14px;
     --radius-sm: 10px;
-    --font-ui: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-display: 'Space Grotesk', var(--font-ui);
+    /* Self-contained, no external font request — fully offline & privacy-clean. */
+    --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-display: var(--font-ui);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -291,9 +289,54 @@
     .results-head .field { flex: 1 1 auto; width: 100%; }
     #rankingFilter { width: 100%; }
   }
+
+  /* ---- Consent / Terms gate ---- */
+  .consent-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    align-items: center; justify-content: center; padding: 20px;
+    background: rgba(5, 8, 12, .82); backdrop-filter: blur(4px);
+  }
+  .consent-overlay.show { display: flex; }
+  .consent-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    max-width: 460px; width: 100%; padding: 28px;
+    display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;
+  }
+  .consent-card .consent-mark { width: 48px; height: 48px; color: var(--primary); }
+  .consent-card h2 { margin: 0; font-size: 1.45rem; font-family: var(--font-display); }
+  .consent-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .consent-check {
+    display: flex; gap: 10px; align-items: flex-start; text-align: left;
+    font-size: .9rem; color: var(--text); cursor: pointer;
+  }
+  .consent-check input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--primary); flex: 0 0 auto; }
+  .consent-card a { color: var(--primary); }
+  #consentAccept { width: 100%; padding: 12px; margin-top: 4px; }
+  #consentAccept:disabled { opacity: .45; cursor: not-allowed; }
 </style>
 </head>
 <body>
+
+<!-- Consent / Terms gate -->
+<div class="consent-overlay" id="consent" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
+  <div class="consent-card">
+    <svg class="consent-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+      <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
+    </svg>
+    <h2 id="consentTitle">Welcome to Crono</h2>
+    <p>Crono keeps your timing data locally on this device only — no tracking, no advertising or analytics cookies. To continue, please review and accept the documents below.</p>
+    <label class="consent-check">
+      <input type="checkbox" id="consentCheck">
+      <span>I have read and accept the
+        <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and the
+        <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+    </label>
+    <button id="consentAccept" class="primary" disabled>Accept &amp; continue</button>
+  </div>
+</div>
+
 <div class="wrap">
   <header class="app">
     <div class="hero-text">
@@ -437,6 +480,8 @@
   var KEY_START = "crono.startEpoch";
   var KEY_ENTRIES = "crono.entries";
   var KEY_PARTICIPANTS = "crono.participants";
+  var KEY_CONSENT = "crono.consent";
+  var CONSENT_VERSION = 1;        // bump to re-prompt if the terms change
 
   // ----- State --------------------------------------------------------------
   var startEpoch = null;          // absolute ms timestamp of the race start
@@ -456,6 +501,9 @@
   var $statDup = document.getElementById("statDup");
   var $importFile = document.getElementById("importFile");
   var $filter = document.getElementById("rankingFilter");
+  var $consent = document.getElementById("consent");
+  var $consentCheck = document.getElementById("consentCheck");
+  var $consentAccept = document.getElementById("consentAccept");
 
   // ----- Inline SVG icons (stroke-based, scale with text) -------------------
   var ICONS = {
@@ -951,6 +999,31 @@
     render();
   });
 
+  // ----- Consent / Terms gate ----------------------------------------------
+  function consentAccepted() {
+    try {
+      var c = JSON.parse(localStorage.getItem(KEY_CONSENT) || "null");
+      return !!c && c.v >= CONSENT_VERSION;
+    } catch (e) { return false; }
+  }
+  function initConsent() {
+    if (consentAccepted()) return;
+    $consentCheck.checked = false;
+    $consentAccept.disabled = true;
+    $consent.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+  $consentCheck.addEventListener("change", function () {
+    $consentAccept.disabled = !this.checked;
+  });
+  $consentAccept.addEventListener("click", function () {
+    if (!$consentCheck.checked) return;
+    try { localStorage.setItem(KEY_CONSENT, JSON.stringify({ v: CONSENT_VERSION, at: Date.now() })); } catch (e) {}
+    $consent.classList.remove("show");
+    document.body.style.overflow = "";
+    $runner.focus();
+  });
+
   $start.addEventListener("change", function () {
     var epoch = clockStringToEpoch(this.value);
     if (epoch == null) {
@@ -987,7 +1060,8 @@
   $start.value = formatClock(startEpoch);
   buildFilterOptions();
   render();
-  $runner.focus();
+  initConsent();
+  if (!$consent.classList.contains("show")) $runner.focus();
 })();
 </script>
 </body>
