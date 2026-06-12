@@ -148,6 +148,20 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* Clickable category chip + inline sex/year editor in the Name cell. */
+  .cat-chip {
+    font-size: .7rem; font-weight: 700; padding: 1px 7px; border-radius: 6px;
+    vertical-align: middle; background: var(--panel-2); color: var(--muted);
+    border: 1px solid var(--border); font-variant-numeric: tabular-nums; cursor: pointer;
+  }
+  .cat-chip:hover { color: var(--text); border-color: var(--primary); background: var(--panel-2); }
+  .cat-chip.add { border-style: dashed; opacity: .8; }
+  .cat-editor { display: inline-flex; gap: 4px; align-items: center; vertical-align: middle; flex-wrap: wrap; }
+  .cat-editor .ed-sex { padding: 3px 4px; font-size: .85rem; }
+  .cat-editor .ed-year { width: 64px; padding: 3px 6px; font-size: .85rem; text-align: center; }
+  .cat-editor .ed-save, .cat-editor .ed-cancel { padding: 3px 8px; font-size: .85rem; }
+  .cat-editor .ed-save { color: var(--ok); border-color: var(--ok); }
+
   .obs { width: 100%; min-width: 120px; background: transparent; border: 1px solid transparent; color: var(--text); border-radius: 6px; padding: 6px 8px; font-size: 1rem; }
   .obs:hover { border-color: var(--border); }
   .obs:focus { border-color: var(--primary); background: var(--panel-2); }
@@ -277,7 +291,8 @@
         <ul>
           <li><strong>Sex</strong> and <strong>birth year</strong> are optional. Without them a
               runner still gets timed, but only shows up in the “All” ranking — not in the
-              men/women or age-category rankings.</li>
+              men/women or age-category rankings. You can fill them in later by tapping the
+              small <code>+ cat</code> chip next to a runner in the results.</li>
           <li><code>sex</code> = <code>M</code> or <code>F</code> (also accepts
               <code>male/female</code>, <code>masculin/feminin</code>).</li>
           <li><code>birth_year</code> = a 4-digit year; Crono derives the athletics
@@ -352,6 +367,7 @@
   var entries = [];               // [{ id, runnerNumber, finishEpoch, details }]
   var participants = {};          // { "<number>": { name, sex, birthYear } }
   var currentFilter = "all";      // active ranking filter: all | M | F | "M|30" ...
+  var editingNum = null;          // bib number whose sex/year is being edited inline
 
   // ----- Elements -----------------------------------------------------------
   var $start = document.getElementById("startTime");
@@ -530,6 +546,43 @@
     return places;
   }
 
+  // Inline editor (in the Name cell) to add/fix sex & birth year for a bib.
+  function catEditorHtml(p) {
+    var sex = p ? (p.sex || "") : "";
+    var year = p && p.birthYear ? p.birthYear : "";
+    return '<span class="cat-editor">' +
+      '<select class="ed-sex" aria-label="Sex">' +
+        '<option value=""' + (sex === "" ? " selected" : "") + '>—</option>' +
+        '<option value="M"' + (sex === "M" ? " selected" : "") + ">M</option>" +
+        '<option value="F"' + (sex === "F" ? " selected" : "") + ">F</option>" +
+      "</select>" +
+      '<input class="ed-year" type="text" inputmode="numeric" maxlength="4" placeholder="year" value="' +
+        escapeAttr(String(year)) + '" aria-label="Birth year">' +
+      '<button type="button" class="ed-save" title="Save">✓</button>' +
+      '<button type="button" class="ed-cancel" title="Cancel">✕</button>' +
+      "</span>";
+  }
+
+  function openCatEditor(num) {
+    editingNum = num;
+    render();
+    var sel = $body.querySelector(".cat-editor .ed-sex");
+    if (sel) sel.focus();
+  }
+
+  function commitCatEditor(num, editorEl) {
+    var sex = normalizeSex(editorEl.querySelector(".ed-sex").value);
+    var yr = parseInt(editorEl.querySelector(".ed-year").value, 10);
+    var thisYear = new Date().getFullYear();
+    var birthYear = (yr >= 1900 && yr <= thisYear) ? yr : null;
+    var prev = participants[num] || { name: "", sex: "", birthYear: null };
+    participants[num] = { name: prev.name || "", sex: sex, birthYear: birthYear };
+    editingNum = null;
+    save();
+    buildFilterOptions();
+    render();
+  }
+
   // ----- Rendering ----------------------------------------------------------
 
   // Duplicate = same runner number recorded more than once.
@@ -565,13 +618,22 @@
 
       var name = participantName(e.runnerNumber);
       var cat = entryCategory(e);
-      var catTag = cat ? '<span class="cat-tag">' + escapeHtml(cat.shortLabel) + "</span>" : "";
+      var catHtml;
+      if (editingNum === e.runnerNumber) {
+        catHtml = catEditorHtml(participants[e.runnerNumber]);
+      } else if (cat) {
+        catHtml = '<button type="button" class="cat-chip" title="Edit sex / birth year">' +
+                  escapeHtml(cat.shortLabel) + "</button>";
+      } else {
+        catHtml = '<button type="button" class="cat-chip add" title="Add sex / birth year">+ cat</button>';
+      }
 
       tr.innerHTML =
         '<td class="place" data-label="Place">' + (places[e.id] || "") + "</td>" +
         '<td class="num" data-label="Number">' + escapeHtml(e.runnerNumber) +
           (isDup ? '<span class="tag dup">dup</span>' : "") + "</td>" +
-        '<td class="name" data-label="Name">' + escapeHtml(name) + catTag + "</td>" +
+        '<td class="name" data-label="Name">' +
+          (name ? escapeHtml(name) + " " : "") + catHtml + "</td>" +
         '<td data-label="Obs."><input class="obs" type="text" value="' + escapeAttr(e.details || "") +
           '" placeholder="add note…"></td>' +
         '<td class="time" data-label="Time">' + formatElapsed(e.finishEpoch - startEpoch) + "</td>" +
@@ -581,6 +643,22 @@
         e.details = this.value;
         save();
       });
+
+      var chip = tr.querySelector(".cat-chip");
+      if (chip) chip.addEventListener("click", function () { openCatEditor(e.runnerNumber); });
+
+      var editor = tr.querySelector(".cat-editor");
+      if (editor) {
+        editor.querySelector(".ed-save").addEventListener("click", function () {
+          commitCatEditor(e.runnerNumber, editor);
+        });
+        editor.querySelector(".ed-cancel").addEventListener("click", function () {
+          editingNum = null; render();
+        });
+        editor.querySelector(".ed-year").addEventListener("keydown", function (ev) {
+          if (ev.key === "Enter") { ev.preventDefault(); commitCatEditor(e.runnerNumber, editor); }
+        });
+      }
       tr.querySelector(".row-remove").addEventListener("click", function () {
         if (confirm("Remove runner " + e.runnerNumber + "?")) {
           entries = entries.filter(function (x) { return x.id !== e.id; });
