@@ -197,6 +197,10 @@
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
           Export CSV
         </button>
+        <button id="pdfBtn" title="Export results as PDF (via print)">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l4 4v14H7z" transform="translate(-1 0)"/><path d="M13 3v5h5" transform="translate(-1 0)"/><path d="M8 14h8M8 17h5"/></svg>
+          Export PDF
+        </button>
         <button id="clearBtn" class="danger" title="Delete all recorded results">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>
           Clear results
@@ -298,6 +302,9 @@
     </div>
   </footer>
 </div>
+
+<!-- Print-only results layout (populated on Export PDF) -->
+<div id="printArea" aria-hidden="true"></div>
 
 <script src="assets/app.js"></script>
 </body>

@@ -382,3 +382,18 @@
   .doc-modal-body code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; }
   .doc-modal-body .muted { color: var(--muted); }
   .doc-updated { color: var(--muted); font-size: .85rem; margin-bottom: 8px; }
+  /* ---- Print / PDF export ---- */
+  #printArea { display: none; }
+  @media print {
+    @page { margin: 16mm; }
+    body { background: #fff !important; }
+    body > *:not(#printArea) { display: none !important; }
+    #printArea { display: block !important; color: #111; font-family: var(--font-ui); }
+    #printArea .print-head h1 { font-size: 20pt; margin: 0 0 2px; }
+    #printArea .print-meta { color: #666; font-size: 10pt; margin-bottom: 14px; }
+    #printArea table { width: 100%; border-collapse: collapse; font-size: 11pt; }
+    #printArea th, #printArea td { border-bottom: 1px solid #ccc; padding: 6px 8px; text-align: left; }
+    #printArea th { font-size: 8.5pt; text-transform: uppercase; letter-spacing: .5px; color: #444; }
+    #printArea td.r, #printArea th.r { text-align: right; font-variant-numeric: tabular-nums; }
+    #printArea tr, #printArea tr { page-break-inside: avoid; }
+  }

@@ -31,6 +31,7 @@
   var $statDup = document.getElementById("statDup");
   var $importFile = document.getElementById("importFile");
   var $tabs = document.getElementById("rankingTabs");
+  var $printArea = document.getElementById("printArea");
   var $consent = document.getElementById("consent");
   var $consentCheck = document.getElementById("consentCheck");
   var $consentAccept = document.getElementById("consentAccept");
@@ -530,6 +531,43 @@
     download("crono-results-" + stamp + ".csv", "﻿" + csv, "text/csv");
   }
 
+  // Build a clean printable layout for the current ranking and open the print
+  // dialog (where the user can "Save as PDF") — no external libraries needed.
+  function exportPDF() {
+    var visible = entries.filter(function (e) { return matchesFilter(e, currentFilter); });
+    var ordered = visible.slice().sort(function (a, b) { return a.finishEpoch - b.finishEpoch; });
+    var places = computePlaces(visible);
+    var activeTab = $tabs.querySelector(".tab.active");
+    var rankLabel = activeTab ? activeTab.textContent : "All";
+
+    var body = ordered.map(function (e) {
+      var c = entryCategory(e);
+      var pace = formatPace(e.finishEpoch - startEpoch, distanceKm);
+      return "<tr>" +
+        "<td>" + (places[e.id] || "") + "</td>" +
+        "<td>" + escapeHtml(e.runnerNumber) + "</td>" +
+        "<td>" + escapeHtml(participantName(e.runnerNumber)) + "</td>" +
+        "<td>" + (c ? escapeHtml(c.shortLabel) : "") + "</td>" +
+        '<td class="r">' + formatElapsed(e.finishEpoch - startEpoch) + "</td>" +
+        '<td class="r">' + (pace || "") + "</td>" +
+        "</tr>";
+    }).join("");
+
+    var meta = "Ranking: " + escapeHtml(rankLabel) +
+      " · " + ordered.length + " finisher(s)" +
+      (distanceKm ? " · " + distanceKm + " km" : "") +
+      " · " + new Date().toLocaleString();
+
+    $printArea.innerHTML =
+      '<div class="print-head"><h1>Crono — Results</h1>' +
+      '<div class="print-meta">' + meta + "</div></div>" +
+      '<table><thead><tr><th>Place</th><th>Number</th><th>Name</th><th>Cat.</th>' +
+      '<th class="r">Time</th><th class="r">Pace</th></tr></thead><tbody>' +
+      (body || '<tr><td colspan="6">No results.</td></tr>') + "</tbody></table>";
+
+    window.print();
+  }
+
   function csvCell(v) {
     v = String(v);
     if (/[",\r\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
@@ -600,6 +638,7 @@
 
   document.getElementById("setStartNow").addEventListener("click", setStartNow);
   document.getElementById("exportBtn").addEventListener("click", exportCSV);
+  document.getElementById("pdfBtn").addEventListener("click", exportPDF);
   document.getElementById("clearBtn").addEventListener("click", clearResults);
   document.getElementById("importBtn").addEventListener("click", function () { $importFile.click(); });
 
