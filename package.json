@@ -1,0 +1,11 @@
+{
+  "name": "crono",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline race chronometer — static, zero-build. Tests cover the pure helpers.",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check assets/app.js && node --check assets/site.js && node --check assets/helpers.js"
+  },
+  "license": "MIT"
+}
