@@ -5,6 +5,9 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
+- Copy: emphasise offline use (open once online, then works with no connection) and that data is saved on the device and not lost; new "Will I lose my data?" FAQ.
+
+### Changed
 - Spacing fixes: the sound toggle no longer overlaps the capture label (now inline); more breathing room between stacked setup fields on mobile.
 - Remember each collapsible card (Start time / Options) open-or-closed state in localStorage.
 - Move data actions (Participants, Export CSV/PDF, Backup, Restore, Clear) into a separate collapsed “Options” card; the “Start time” card now holds only start + distance (with inline explanations).
