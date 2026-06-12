@@ -5,7 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
-- Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly in the card's summary line when it's collapsed.
+- Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly (with a stopwatch icon) in the card's summary line when it's collapsed.
 
 ### Changed
 - "Record" now sits on its own full-width row with the label truly centred (the stopwatch icon is pinned to the left), so it reads as centred at every width.
