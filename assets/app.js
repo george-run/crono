@@ -30,6 +30,7 @@
   // ----- Elements -----------------------------------------------------------
   var $start = document.getElementById("startTime");
   var $startPreview = document.getElementById("startPreview");
+  var $startElapsed = document.getElementById("startElapsed");
   var $distance = document.getElementById("distanceKm");
   var $runner = document.getElementById("runnerNumber");
   var $body = document.getElementById("resultBody");
@@ -362,6 +363,15 @@
 
   function updateStartPreview() {
     $startPreview.textContent = formatClock(startEpoch);
+    updateElapsed();
+  }
+
+  // Live stopwatch: how long since the start (ticks every second from init).
+  function updateElapsed() {
+    if (!$startElapsed) return;
+    var ms = Date.now() - startEpoch;
+    if (ms < 0) ms = 0;
+    $startElapsed.textContent = formatElapsed(ms).slice(0, -3); // drop ".cc"
   }
 
   function recordFinish(number) {
@@ -1029,6 +1039,7 @@
   $start.value = formatClock(startEpoch);
   $distance.value = distanceKm == null ? "" : String(distanceKm);
   updateStartPreview();
+  setInterval(updateElapsed, 1000);
   updateSoundToggle();
   initCards();
   buildFilterOptions();
