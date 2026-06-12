@@ -31,6 +31,7 @@
   var $start = document.getElementById("startTime");
   var $startPreview = document.getElementById("startPreview");
   var $startElapsed = document.getElementById("startElapsed");
+  var $startElapsedMini = document.getElementById("startElapsedMini");
   var $distance = document.getElementById("distanceKm");
   var $runner = document.getElementById("runnerNumber");
   var $body = document.getElementById("resultBody");
@@ -368,10 +369,11 @@
 
   // Live stopwatch: how long since the start (ticks every second from init).
   function updateElapsed() {
-    if (!$startElapsed) return;
     var ms = Date.now() - startEpoch;
     if (ms < 0) ms = 0;
-    $startElapsed.textContent = formatElapsed(ms).slice(0, -3); // drop ".cc"
+    var str = formatElapsed(ms).slice(0, -3); // drop ".cc" → HH:MM:SS
+    if ($startElapsed) $startElapsed.textContent = str;
+    if ($startElapsedMini) $startElapsedMini.textContent = str;
   }
 
   function recordFinish(number) {
