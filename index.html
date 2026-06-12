@@ -46,18 +46,19 @@
   }
 
   /* ---- Hero header ---- */
-  header.app {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-    padding: 6px 0 22px;
+  header.app { position: relative; padding: 10px 0 22px; }
+  header.app::before {
+    content: ""; position: absolute; top: -48px; left: -70px; width: 300px; height: 210px;
+    background: radial-gradient(closest-side, rgba(163,230,53,.12), transparent 70%);
+    pointer-events: none;
   }
-  header.app .hero-text { display: flex; flex-direction: column; gap: 2px; }
+  header.app .hero-text { display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 1; }
   header.app h1 {
-    font-size: 1.9rem; margin: 0; letter-spacing: -.5px; font-weight: 700;
-    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 2rem; margin: 0; letter-spacing: -.5px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 12px;
   }
-  header.app h1 .logo { color: var(--primary); width: 1.1em; height: 1.1em; }
-  header.app .tagline { color: var(--muted); font-size: .92rem; }
-  header.app .hero-art { flex: 0 0 auto; width: 132px; height: 84px; color: var(--primary); }
+  header.app h1 .logo { color: var(--primary); width: 1.15em; height: 1.15em; }
+  header.app .tagline { color: var(--muted); font-size: .95rem; }
 
   .panel {
     background: var(--panel);
@@ -229,8 +230,7 @@
   @media (max-width: 720px) {
     .wrap { padding: 14px 12px 28px; }
     header.app { padding: 4px 0 14px; }
-    header.app h1 { font-size: 1.5rem; }
-    header.app .hero-art { width: 96px; height: 62px; }
+    header.app h1 { font-size: 1.6rem; }
     .panel { padding: 14px; }
 
     /* Start row: keep the field + "now" button side by side on top. */
@@ -280,7 +280,6 @@
     #result td.remove-cell { position: absolute; top: 6px; right: 6px; padding: 0; width: auto; }
     #result td.remove-cell::before { content: none; }
 
-    header.app .hero-art { display: none; }
     .stats { gap: 10px; }
     .stat { flex: 1 1 28%; min-width: 0; padding: 10px 12px; }
     .stat .num { font-size: 1.4rem; }
@@ -299,24 +298,15 @@
   <header class="app">
     <div class="hero-text">
       <h1>
-        <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M9 2h6"/><path d="M12 4v3"/><circle cx="12" cy="14" r="8"/><path d="M12 14V9.5"/><path d="M18.5 7.5 20 6"/>
+        <svg class="logo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+          <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
         </svg>
         Crono
       </h1>
       <span class="tagline">Chronometer for small &amp; in-house sport competitions</span>
     </div>
-    <svg class="hero-art" viewBox="0 0 132 84" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <line x1="4"  y1="30" x2="36" y2="30" stroke-width="3" opacity=".55"/>
-      <line x1="0"  y1="44" x2="28" y2="44" stroke-width="3" opacity=".30"/>
-      <line x1="8"  y1="58" x2="32" y2="58" stroke-width="3" opacity=".40"/>
-      <circle cx="88" cy="46" r="28" stroke-width="4"/>
-      <path d="M88 46V28" stroke-width="4"/>
-      <path d="M88 46l13 6" stroke-width="4"/>
-      <path d="M80 8h16" stroke-width="4"/>
-      <path d="M88 8v9" stroke-width="4"/>
-      <path d="M112 22l6-6" stroke-width="4"/>
-    </svg>
   </header>
 
   <!-- Controls -->
@@ -425,13 +415,10 @@
       <tbody id="resultBody"></tbody>
     </table>
     <div class="empty" id="emptyState">
-      <svg class="empty-art" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M26 6h12" stroke="var(--primary)"/>
-        <path d="M32 10v5"/>
-        <circle cx="32" cy="38" r="20"/>
-        <path d="M32 38V26" stroke="var(--primary)"/>
-        <path d="M32 38l9 6"/>
-        <path d="M51 19l4-4"/>
+      <svg class="empty-art" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <circle cx="32" cy="32" r="24" stroke="currentColor" stroke-width="3" opacity=".22"/>
+        <path d="M32 8a24 24 0 0 1 22 14.7" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="32" r="4" fill="var(--primary)"/>
       </svg>
       <span id="emptyMsg">No results yet. Enter a runner number above and press Record as each finishes.</span>
     </div>
