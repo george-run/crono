@@ -49,7 +49,7 @@ images/runner.png   Hero illustration
 
 ## Data model (localStorage)
 Keys: `crono.startEpoch`, `crono.entries`, `crono.participants`, `crono.distanceKm`,
-`crono.sound`, `crono.consent`.
+`crono.sound`, `crono.cards`, `crono.consent`.
 ```
 entry        = { id, runnerNumber: string, finishEpoch: ms, details: string }
 participants = { "<number>": { name: string, sex: "M"|"F"|"", birthYear: number|null } }
