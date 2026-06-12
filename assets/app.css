@@ -444,8 +444,11 @@
   .toast.error { border-left-color: var(--danger); }
 
   /* Buy me a coffee (donation) link */
-  .coffee-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+  .coffee-link { display: inline-flex; align-items: center; gap: 6px;
     color: var(--accent-3); border: 1px solid rgba(251,191,36,.45); border-radius: 999px;
-    padding: 5px 12px; font-size: .82rem; text-decoration: none; }
+    padding: 6px 14px; font-size: .85rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
   .coffee-link:hover { background: var(--accent-3); color: var(--on-accent); border-color: var(--accent-3); }
   .coffee-link .icon { width: 1em; height: 1em; }
+  footer.app .coffee-link { margin-top: 10px; }
+  .header-coffee { flex: 0 0 auto; align-self: center; }
+  @media (max-width: 560px) { .header-coffee { padding: 6px 10px; } .header-coffee span, .header-coffee { font-size: .8rem; } }

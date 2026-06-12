@@ -9,7 +9,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Landing animations (scroll-reveal, self-drawing route, live demo clock) — respects reduced-motion.
 - **Sticky capture bar** — the number input + Record stay reachable while scrolling results.
 - **Toast notifications** replacing blocking `alert()`s (import, restore, errors, saves).
-- "Buy me a coffee" donation link (Revolut) in the landing footer and the app footer.
+- "Buy me a coffee" donation link (Revolut) in landing hero + footer and the app header + footer.
 
 ### Changed
 - Result rows are now click-to-edit: tapping a row opens a single **Edit result** modal
