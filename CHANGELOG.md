@@ -5,6 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
+- "Record" now sits on its own full-width row with the label truly centred (the stopwatch icon is pinned to the left), so it reads as centred at every width.
 - Landing on mobile: hero CTAs now stack as equal full-width buttons (instead of ragged widths), the decorative background route is softened so it no longer cuts across them, and "Launch the timer" uses the same stopwatch icon as the app.
 - All action-button labels are now centred (Record + the Options actions), on desktop and mobile.
 - Refreshed icons: the "Record" button now uses a stopwatch (and its label is centred), "Export PDF" a clean document icon, and "Participants" the standard people icon.
