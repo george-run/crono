@@ -787,6 +787,13 @@
   // ----- Actions ------------------------------------------------------------
 
   function setStartNow() {
+    // Resetting the start recalculates every recorded time — confirm first
+    // once there are results, so an accidental tap can't wreck the rankings.
+    if (entries.length &&
+        !confirm("Set the start to now? This recalculates the time of all " +
+                 entries.length + " recorded finisher(s).")) {
+      return;
+    }
     startEpoch = Date.now();
     $start.value = formatClock(startEpoch);
     save();
