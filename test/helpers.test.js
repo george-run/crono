@@ -19,6 +19,14 @@ test("formatElapsed", () => {
   assert.equal(H.formatElapsed(null), "--:--:--.--");
 });
 
+test("formatClockElapsed", () => {
+  assert.equal(H.formatClockElapsed(1471500), "00:24:31");   // truncates centiseconds
+  assert.equal(H.formatClockElapsed(0), "00:00:00");
+  assert.equal(H.formatClockElapsed(-5000), "00:00:00");     // negative clamps to zero
+  assert.equal(H.formatClockElapsed(3723000), "01:02:03");
+  assert.equal(H.formatClockElapsed(null), "--:--:--");
+});
+
 test("formatPace", () => {
   assert.equal(H.formatPace(1500000, 5), "5:00 /km");
   assert.equal(H.formatPace(0, 5), "");

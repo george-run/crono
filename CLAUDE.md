@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-12**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty.
-- **Service worker cache:** `CACHE = "crono-v36"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v37"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/rungeorge-crono-access-8k39na`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them.
@@ -88,7 +88,7 @@ Consent gate · Doc modal (`openDoc`) · Confirm modal (`confirmModal`) · Init.
 ## Patterns to follow (reuse these)
 - **Edit a result:** rows are click-to-edit → `openRowEdit(id)` opens `#rowModal` (number/time/sex/
   year/note/delete). `editingRowId` holds the open entry; `saveRowEdit()` commits → `save()`, `render()`.
-- **`render()` rebuilds `#resultBody` from scratch** → (re)attach row listeners inside the loop.
+- **`render()` rebuilds `#resultBody` from scratch**; each `<tr>` carries `data-id`. Row open/edit is handled by **one delegated click/keydown listener on `$body`** (no per-row handlers) → `openRowEdit(id)`. Results search is **debounced** (~120ms).
 - **Modals are focus-trapped** (see the Tab handler) and close on ESC/backdrop.
 - **Modal recipe:** `.X-overlay` + `.show` class; on open set `document.body.style.overflow="hidden"`;
   on close restore it only if no other modal is open; support ESC + backdrop click. `confirmModal()`
