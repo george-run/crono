@@ -46,10 +46,6 @@
     var bcx = bb.x + bb.width / 2, bcy = bb.y + bb.height / 2;
     var ampX = bb.width / 2, ampY = bb.height / 2;
     var scale, sceneX, sceneY, sceneW, sceneH, cardW, cardH;
-    // The card only chases the pin on the wide (two-column) layout, where the scene is large
-    // enough. On mobile the scene is small and the card would crowd it, so the card stays put
-    // in its corner there (the pin still runs the route on every size).
-    var followMQ = matchMedia("(min-width: 821px)");
 
     function measureHero() {
       var s = scene.getBoundingClientRect(), a = heroArt.getBoundingClientRect();
@@ -58,10 +54,7 @@
       scale = s.width / 460;
       cardW = card.offsetWidth; cardH = card.offsetHeight;
     }
-    function resetCard() {
-      card.style.transform = ""; card.style.left = ""; card.style.top = "";
-      card.style.right = ""; card.style.bottom = "";
-    }
+    card.classList.add("chasing");          // compacts the card (smaller on mobile) — see site.css
     measureHero();
     window.addEventListener("resize", measureHero);
 
@@ -71,22 +64,17 @@
       var t = ((ts - heroStart) % LOOP) / LOOP;
       var ct = (t - TRAIL + 1) % 1;
       var pPin = heroPath.getPointAtLength(t * PATH_LEN);
-      // Pin rides the actual route on every screen size.
+      var pCard = heroPath.getPointAtLength(ct * PATH_LEN);
+      // Pin rides the actual route; the card drifts from the scene centre toward the (trailing)
+      // pin position, amplitude damped so the card always stays in frame on any screen size.
       pinG.setAttribute("transform", "translate(" + pPin.x.toFixed(1) + "," + pPin.y.toFixed(1) + ")");
-      if (followMQ.matches) {
-        var pCard = heroPath.getPointAtLength(ct * PATH_LEN);
-        // The card drifts from the scene centre toward the (trailing) pin position, amplitude
-        // damped so the wide card always stays in frame.
-        var halfX = Math.max(0, (sceneW - cardW) / 2), halfY = Math.max(0, (sceneH - cardH) / 2);
-        var kX = ampX > 0 ? Math.min(1, halfX / (ampX * scale)) : 0;
-        var kY = ampY > 0 ? Math.min(1, halfY / (ampY * scale)) : 0;
-        var ccx = sceneX + sceneW / 2 + (pCard.x - bcx) * scale * kX;
-        var ccy = sceneY + sceneH / 2 + (pCard.y - bcy) * scale * kY;
-        card.style.right = "auto"; card.style.bottom = "auto"; card.style.left = "0"; card.style.top = "0";
-        card.style.transform = "translate(" + (ccx - cardW / 2).toFixed(1) + "px," + (ccy - cardH / 2).toFixed(1) + "px)";
-      } else if (card.style.transform) {
-        resetCard();                        // back to the CSS corner position on mobile
-      }
+      var halfX = Math.max(0, (sceneW - cardW) / 2), halfY = Math.max(0, (sceneH - cardH) / 2);
+      var kX = ampX > 0 ? Math.min(1, halfX / (ampX * scale)) : 0;
+      var kY = ampY > 0 ? Math.min(1, halfY / (ampY * scale)) : 0;
+      var ccx = sceneX + sceneW / 2 + (pCard.x - bcx) * scale * kX;
+      var ccy = sceneY + sceneH / 2 + (pCard.y - bcy) * scale * kY;
+      card.style.right = "auto"; card.style.bottom = "auto"; card.style.left = "0"; card.style.top = "0";
+      card.style.transform = "translate(" + (ccx - cardW / 2).toFixed(1) + "px," + (ccy - cardH / 2).toFixed(1) + "px)";
       requestAnimationFrame(heroTick);
     }
     requestAnimationFrame(heroTick);
