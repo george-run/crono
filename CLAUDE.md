@@ -12,10 +12,22 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-12**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty.
-- **Service worker cache:** `CACHE = "crono-v37"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v38"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/rungeorge-crono-access-8k39na`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them.
+
+## Keeping this file honest (run the audit)
+Prose drifts when it relies on memory, so the invariants are now **tests**. `npm test`
+(= `node --test`) runs `test/architecture.test.js` alongside the helper unit tests and fails loudly on:
+- the `sw.js` `CACHE` version not mirrored in the **Status** block,
+- a `sw.js` `ASSETS` path that doesn't exist, or an `assets/*` file missing from **Structure**,
+- an `assets/*.js` no page loads, an inline `<style>`/`<script>`, or an absolute `/assets/…` path.
+
+**Ritual (the "periodic check"):** run `npm test` at the **start** of a session and again **before every
+deploy**. When you add/rename/remove a file, bump the cache, or add a token, fix the matching prose
+**in the same commit** — the audit will catch you if you forget. Add a new guard to
+`test/architecture.test.js` whenever a fresh invariant is worth protecting.
 
 ## This sandbox's constraints (important)
 - **No outbound network**: cannot fetch fonts/images/CDNs or `npm install`. (Google Fonts works
@@ -37,10 +49,12 @@ assets/
   theme.css   Shared design tokens (:root) — single source of truth
   app.css     App styles            app.js   App logic (IIFE)
   site.css    Landing styles        site.js  Landing animations (reveal, demo loop)
+  legal.css   Styles for the standalone terms.html / privacy.html pages
   helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested
   head.js     reduced-motion → adds .js-anim (runs in <head> before paint)
   sw-register.js  SW registration + "new version" update toast (shared by app + landing)
-test/helpers.test.js   Node tests (`npm test` → node --test). package.json (no deps).
+test/helpers.test.js        Node unit tests for pure helpers
+test/architecture.test.js   Guards (cache↔Status, ASSETS exist, no inline CSS/JS, …) — `npm test` runs both. package.json (no deps).
 ```
 
 ## Hard rules (don't break)

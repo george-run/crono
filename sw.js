@@ -3,7 +3,7 @@
    - Static assets: stale-while-revalidate (instant + offline, and the cache self-heals on the next
      load even if CACHE wasn't bumped).
    Bump CACHE to drop the old cache and force a fresh precache. Keep ASSETS in sync. */
-var CACHE = "crono-v37";
+var CACHE = "crono-v38";
 var ASSETS = [
   "./",
   "index.html",
@@ -15,6 +15,7 @@ var ASSETS = [
   "assets/theme.css",
   "assets/app.css",
   "assets/site.css",
+  "assets/legal.css",
   "assets/app.js",
   "assets/helpers.js",
   "assets/head.js",
