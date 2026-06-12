@@ -25,11 +25,54 @@
     Array.prototype.forEach.call(targets, function (t) { t.classList.add("is-in"); });
   }
 
-  // Start the hero scene's moving runner (SMIL motion along the route).
+  // Hero scene: the pin rides the route and the result card trails just behind it
+  // (instead of bobbing in place), so the card reads as "following the runner".
+  // We drive both in JS off the same path so they stay in sync; the SVG uses the
+  // default preserveAspectRatio (xMidYMid meet) and height:auto, so the scale is
+  // uniform and an SVG point maps cleanly to a pixel offset inside .hero-art.
   var scene = document.getElementById("heroScene");
-  if (scene) {
-    var motions = scene.querySelectorAll("animateMotion");
-    Array.prototype.forEach.call(motions, function (m) { try { m.beginElement(); } catch (e) {} });
+  var heroPath = document.getElementById("heroPath");
+  var pinG = scene && scene.querySelector(".map-pin");
+  var card = document.querySelector(".float-card");
+  var heroArt = document.querySelector(".hero-art");
+  if (scene && heroPath && pinG && card && heroArt && heroPath.getTotalLength) {
+    // The pin used a SMIL animateMotion; drop it so JS drives the pin in lock-step with the card.
+    var smil = pinG.querySelector("animateMotion");
+    if (smil && smil.parentNode) smil.parentNode.removeChild(smil);
+
+    var PATH_LEN = heroPath.getTotalLength();
+    var VB_W = 460, VB_H = 380, LOOP = 6200, TRAIL = 0.16; // card sits 16% of the loop behind the pin
+    var scale, originX, originY, sceneX, sceneY, sceneW, sceneH, cardW, cardH;
+
+    function measureHero() {
+      var s = scene.getBoundingClientRect(), a = heroArt.getBoundingClientRect();
+      scale = Math.min(s.width / VB_W, s.height / VB_H);
+      sceneX = s.left - a.left; sceneY = s.top - a.top; sceneW = s.width; sceneH = s.height;
+      originX = sceneX + (s.width - VB_W * scale) / 2;
+      originY = sceneY + (s.height - VB_H * scale) / 2;
+      cardW = card.offsetWidth; cardH = card.offsetHeight;
+    }
+    measureHero();
+    window.addEventListener("resize", measureHero);
+
+    var heroStart = null;
+    function heroTick(ts) {
+      if (heroStart == null) heroStart = ts;
+      var t = ((ts - heroStart) % LOOP) / LOOP;
+      var ct = (t - TRAIL + 1) % 1;
+      var pPin = heroPath.getPointAtLength(t * PATH_LEN);
+      var pCard = heroPath.getPointAtLength(ct * PATH_LEN);
+      pinG.setAttribute("transform", "translate(" + pPin.x.toFixed(1) + "," + pPin.y.toFixed(1) + ")");
+      // Centre the card on its (trailing) path point, then keep it within the scene box.
+      var cx = originX + pCard.x * scale - cardW / 2;
+      var cy = originY + pCard.y * scale - cardH / 2;
+      cx = Math.max(sceneX, Math.min(sceneX + sceneW - cardW, cx));
+      cy = Math.max(sceneY, Math.min(sceneY + sceneH - cardH, cy));
+      card.style.right = "auto"; card.style.bottom = "auto"; card.style.left = "0"; card.style.top = "0";
+      card.style.transform = "translate(" + cx.toFixed(1) + "px," + cy.toFixed(1) + "px)";
+      requestAnimationFrame(heroTick);
+    }
+    requestAnimationFrame(heroTick);
   }
 
   // Live stopwatch in the hero result card — conveys "live timing".

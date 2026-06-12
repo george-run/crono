@@ -198,8 +198,8 @@ a { color: inherit; text-decoration: none; }
 .js-anim #heroRoute { stroke-dasharray: 3000; stroke-dashoffset: 3000; animation: routeDraw 2.6s ease .2s forwards; }
 @keyframes routeDraw { to { stroke-dashoffset: 0; } }
 
-/* gentle life: floating result card + breathing blob */
-.js-anim .float-card { animation: floatBob 3.6s ease-in-out infinite; }
+/* gentle life: breathing blob (the result card now trails the pin along the route — see site.js).
+   floatBob is kept for the bib-section icon. */
 @keyframes floatBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 .js-anim .hero-art .blob { animation: blobPulse 5.5s ease-in-out infinite; }
 @keyframes blobPulse { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.06); opacity: 1; } }

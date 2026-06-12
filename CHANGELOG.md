@@ -10,6 +10,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Live "time since start" stopwatch in the Start card — shows how long the race has been running (ticks every second, updates instantly when you change the start time). Also shown compactly (with a stopwatch icon) in the card's summary line when it's collapsed.
 
 ### Changed
+- Hero animation: the floating result card no longer bobs in place — it now trails the moving pin along the route (driven in JS off the same path), so it reads as a live result following the runner.
 - Typography: display font (headings + big race/bib numbers) switched from Space Grotesk to **Oswald** — a condensed, athletic face that suits race numbers; body stays Inter. The landing "how it works" demo now also shows the start time and distance being filled in before the timing starts, so the full flow is clear.
 - Landing demo no longer makes the page jump: the finisher list now reserves space for its full set, so filling/resetting the auto-play loop doesn't grow/shrink the layout. Also fixed the orange "Generate bib numbers" button showing no label and the bib modal's logo field overflowing on iOS.
 - Standalone Terms/Privacy pages now load a shared `assets/legal.css` instead of an inline `<style>` (their CSP was tightened to drop `'unsafe-inline'`), bringing them in line with the no-inline-CSS rule.
