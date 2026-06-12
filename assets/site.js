@@ -41,15 +41,17 @@
     if (smil && smil.parentNode) smil.parentNode.removeChild(smil);
 
     var PATH_LEN = heroPath.getTotalLength();
-    var VB_W = 460, VB_H = 380, LOOP = 6200, TRAIL = 0.16; // card sits 16% of the loop behind the pin
-    var scale, originX, originY, sceneX, sceneY, sceneW, sceneH, cardW, cardH;
+    var LOOP = 6200, TRAIL = 0.16;          // card sits 16% of the loop behind the pin
+    var bb = heroPath.getBBox();            // route bounds, in viewBox units
+    var bcx = bb.x + bb.width / 2, bcy = bb.y + bb.height / 2;
+    var ampX = bb.width / 2, ampY = bb.height / 2;
+    var scale, sceneX, sceneY, sceneW, sceneH, cardW, cardH;
 
     function measureHero() {
       var s = scene.getBoundingClientRect(), a = heroArt.getBoundingClientRect();
-      scale = Math.min(s.width / VB_W, s.height / VB_H);
       sceneX = s.left - a.left; sceneY = s.top - a.top; sceneW = s.width; sceneH = s.height;
-      originX = sceneX + (s.width - VB_W * scale) / 2;
-      originY = sceneY + (s.height - VB_H * scale) / 2;
+      // uniform scale (default preserveAspectRatio + height:auto), so one factor maps both axes
+      scale = s.width / 460;
       cardW = card.offsetWidth; cardH = card.offsetHeight;
     }
     measureHero();
@@ -62,14 +64,17 @@
       var ct = (t - TRAIL + 1) % 1;
       var pPin = heroPath.getPointAtLength(t * PATH_LEN);
       var pCard = heroPath.getPointAtLength(ct * PATH_LEN);
+      // Pin rides the actual route.
       pinG.setAttribute("transform", "translate(" + pPin.x.toFixed(1) + "," + pPin.y.toFixed(1) + ")");
-      // Centre the card on its (trailing) path point, then keep it within the scene box.
-      var cx = originX + pCard.x * scale - cardW / 2;
-      var cy = originY + pCard.y * scale - cardH / 2;
-      cx = Math.max(sceneX, Math.min(sceneX + sceneW - cardW, cx));
-      cy = Math.max(sceneY, Math.min(sceneY + sceneH - cardH, cy));
+      // The card drifts from the scene centre toward the (trailing) pin position, with the
+      // amplitude damped so the card — which is wider than the route — always stays in frame.
+      var halfX = Math.max(0, (sceneW - cardW) / 2), halfY = Math.max(0, (sceneH - cardH) / 2);
+      var kX = ampX > 0 ? Math.min(1, halfX / (ampX * scale)) : 0;
+      var kY = ampY > 0 ? Math.min(1, halfY / (ampY * scale)) : 0;
+      var ccx = sceneX + sceneW / 2 + (pCard.x - bcx) * scale * kX;
+      var ccy = sceneY + sceneH / 2 + (pCard.y - bcy) * scale * kY;
       card.style.right = "auto"; card.style.bottom = "auto"; card.style.left = "0"; card.style.top = "0";
-      card.style.transform = "translate(" + cx.toFixed(1) + "px," + cy.toFixed(1) + "px)";
+      card.style.transform = "translate(" + (ccx - cardW / 2).toFixed(1) + "px," + (ccy - cardH / 2).toFixed(1) + "px)";
       requestAnimationFrame(heroTick);
     }
     requestAnimationFrame(heroTick);
