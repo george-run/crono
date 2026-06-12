@@ -107,6 +107,7 @@ git diff --stat origin/master origin/gh-pages
 - `node --check assets/app.js assets/site.js`
 - Add a tiny Node test for new pure helpers (e.g. `parseElapsedToMs`, `formatPace`).
 - Confirm no inline `<style>`/IIFE crept back into `app.html`; relative paths only.
+- **Update `CHANGELOG.md`** (under `[Unreleased]`) for any notable user-facing change.
 
 ## Current features (don't re-implement)
 Start time (+confirm), record on Enter/Record with **beep** (toggle), centiseconds, midnight-safe,
