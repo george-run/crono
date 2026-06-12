@@ -10,6 +10,7 @@
   --primary-rgb: 163, 230, 53;   /* lime, for rgba() tints — keep in sync with --primary */
   --accent-2-rgb: 45, 212, 191;  /* teal */
   --accent-3-rgb: 251, 191, 36;  /* amber */
+  --accent-4-rgb: 249, 115, 22;  /* orange — bib generator accent */
   --on-accent: #0b0f14;      /* dark text on lime */
   --danger: #f87171;
   --danger-hover: #ef4444;
@@ -17,6 +18,7 @@
   --warn: #fbbf24;
   --accent-2: #2dd4bf;       /* teal — map/route lines */
   --accent-3: #fbbf24;       /* amber — illustration accent */
+  --accent-4: #f97316;       /* orange — bib number generator */
   --overlay: rgba(5, 8, 12, .82);   /* modal/scrim backdrop */
   --radius: 14px;
   --radius-sm: 10px;
