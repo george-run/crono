@@ -5,6 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
+- Toned down the "Record" button: rounded-rectangle corners (matching the rest of the UI) instead of a full pill, and slightly less tall.
 - Decluttered the app header: logo on the left, the "View demo" and donation links are now compact icon-only buttons on the right, and the "Works offline" badge was removed from the header (the offline message still lives on the landing/FAQ).
 - The demo mocks (landing + in-app) use a grey palette and show a small "DEMO" watermark so they read clearly as illustrations, not live UI.
 
