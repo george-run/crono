@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'">
+<meta name="description" content="Free race bib-number generator — print a range of numbered bibs with your event name, race, date, logo and colour, 2 per A4 page. Runs in your browser.">
+<title>Print race bib numbers — Crono</title>
+<link rel="canonical" href="https://crono.run/bibs.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Crono">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="Print race bib numbers — Crono">
+<meta property="og:description" content="Generate and print numbered race bibs with your event name, race, date, logo and colour — 2 per A4 page.">
+<meta property="og:url" content="https://crono.run/bibs.html">
+<meta property="og:image" content="https://crono.run/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Print race bib numbers — Crono">
+<meta name="twitter:description" content="Generate and print numbered race bibs with your event name, race, date, logo and colour — 2 per A4 page.">
+<meta name="twitter:image" content="https://crono.run/assets/og-image.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta name="theme-color" content="#0b0f14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/bibs.css">
+<script src="assets/head.js"></script>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="bibs-head">
+    <a class="brand" href="index.html" title="Home" aria-label="Crono — home">
+      <svg class="logo" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+        <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
+      </svg>
+      Crono
+    </a>
+    <a class="btn" href="index.html">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      Back to home
+    </a>
+  </header>
+
+  <section class="bibs-intro">
+    <span class="eyebrow">Before race day</span>
+    <h1>Print your race bib numbers</h1>
+    <p>Generate a range of numbered bibs with your event name, race, date, logo and colour — a clean, print-ready sheet, 2 per A4 page. No timing needed; do it days before the race.</p>
+  </section>
+
+  <div class="bib-layout">
+    <form class="bib-form" autocomplete="off">
+      <div class="bib-row">
+        <label class="bf grow">Event name <input id="bibEvent" type="text" maxlength="60" placeholder="e.g. Spring City Run"></label>
+        <label class="bf">Date <input id="bibDate" type="text" maxlength="30" placeholder="e.g. 12 June 2026"></label>
+      </div>
+      <label class="bf grow">Race / event <input id="bibRace" type="text" maxlength="40" placeholder="e.g. 10K — optional"></label>
+      <div class="bib-row">
+        <label class="bf">From <input id="bibFrom" type="text" inputmode="numeric" value="1"></label>
+        <label class="bf">To <input id="bibTo" type="text" inputmode="numeric" value="100"></label>
+      </div>
+      <div class="bf">Colour
+        <div class="bib-color-row">
+          <div class="bib-swatches" id="bibPresets" role="group" aria-label="Colour presets">
+            <button type="button" class="bib-sw sw-orange is-on" data-color="#ea580c" aria-pressed="true" title="Orange" aria-label="Orange"></button>
+            <button type="button" class="bib-sw sw-lime" data-color="#4d7c0f" aria-pressed="false" title="Lime" aria-label="Lime"></button>
+            <button type="button" class="bib-sw sw-blue" data-color="#1d4ed8" aria-pressed="false" title="Blue" aria-label="Blue"></button>
+            <button type="button" class="bib-sw sw-mono" data-color="#111111" aria-pressed="false" title="Black" aria-label="Black"></button>
+          </div>
+          <label class="bib-color-pick">Custom
+            <input type="color" id="bibColor" value="#ea580c" aria-label="Custom bib colour">
+          </label>
+        </div>
+      </div>
+      <label class="bf grow">Logo — upload (optional) <input id="bibLogo" type="file" accept="image/*"></label>
+      <label class="bf grow">…or logo link (https) <input id="bibLogoUrl" type="url" inputmode="url" placeholder="https://…/logo.png"></label>
+      <span class="bf-note">A logo link loads the image from the web (needs a connection, and only when you add a link). Uploaded files stay on your device.</span>
+      <button type="button" id="bibLogoClear" class="bib-logo-clear" hidden>Remove uploaded logo</button>
+      <p class="bib-count" id="bibCount" aria-live="polite"></p>
+      <div class="bib-actions">
+        <button type="button" id="bibGenerate" class="btn primary">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg>
+          Generate &amp; print
+        </button>
+      </div>
+    </form>
+
+    <div class="bib-preview-col">
+      <span class="bib-preview-label">Preview</span>
+      <div class="bib-preview" id="bibPreview" aria-hidden="true">
+        <div class="bib-head" id="bibPvHead">
+          <img class="bib-logo" id="bibPvLogo" alt="" hidden>
+          <div class="bib-ev">
+            <span class="bib-name" id="bibPvName" hidden></span>
+            <span class="bib-race" id="bibPvRace" hidden></span>
+            <span class="bib-date" id="bibPvDate" hidden></span>
+          </div>
+        </div>
+        <div class="bib-no" id="bibPvNo">1</div>
+      </div>
+      <p class="bib-hint">What you see is what prints — 2 bibs per A4 page. Use your browser's “Save as PDF” to keep a file.</p>
+    </div>
+  </div>
+
+  <footer class="bibs-footer">
+    Crono — runs in your browser. <a href="index.html">Home</a> · <a href="app.html">Open the timer</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a>
+  </footer>
+</div>
+
+<!-- Toasts (shared "new version" update prompt) -->
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<!-- Print-only bib sheet (populated by the generator) -->
+<div id="printArea" aria-hidden="true"></div>
+
+<script src="assets/helpers.js"></script>
+<script src="assets/bibs.js"></script>
+<script src="assets/sw-register.js"></script>
+</body>
+</html>
