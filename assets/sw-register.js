@@ -130,7 +130,7 @@
     el.setAttribute("role", "status");
 
     var span = document.createElement("span");
-    span.textContent = "A new version of Crono is available";
+    span.textContent = "New version available";
 
     var reload = document.createElement("button");
     reload.type = "button";
