@@ -1,6 +1,9 @@
 (function () {
   "use strict";
 
+  // ----- i18n (from assets/i18n.js, loaded before this script) --------------
+  var t = (typeof CronoI18n !== "undefined") ? CronoI18n.t : function (k) { return k; };
+
   // ----- Pure helpers (from assets/helpers.js, loaded before this script) ---
   var H = (typeof CronoH !== "undefined") ? CronoH : {};
   var pad = H.pad, formatElapsed = H.formatElapsed, formatClockElapsed = H.formatClockElapsed,
@@ -172,7 +175,7 @@
   function updateSoundToggle() {
     $soundToggle.innerHTML = svgIcon(soundOn ? "volume" : "mute");
     $soundToggle.setAttribute("aria-pressed", soundOn ? "true" : "false");
-    $soundToggle.title = soundOn ? "Beep on record: on" : "Beep on record: off";
+    $soundToggle.title = t("sound.title");
     $soundToggle.classList.toggle("off", !soundOn);
   }
 
@@ -191,7 +194,7 @@
       if (age >= AGE_BRACKETS[i]) lo = AGE_BRACKETS[i];
     }
     var range = bracketRange(lo);
-    var sexWord = p.sex === "M" ? "Men" : "Women";
+    var sexWord = p.sex === "M" ? t("tab.men") : t("tab.women");
     return {
       key: p.sex + "|" + lo,
       shortLabel: p.sex + range,          // e.g. "M30–39"
@@ -205,9 +208,9 @@
   // Build the ranking tabs: All / Men / Women + every category present.
   function buildFilterOptions() {
     var opts = [
-      { value: "all", label: "All" },
-      { value: "M", label: "Men" },
-      { value: "F", label: "Women" }
+      { value: "all", label: t("tab.all") },
+      { value: "M", label: t("tab.men") },
+      { value: "F", label: t("tab.women") }
     ];
     var seen = {};
     Object.keys(participants).forEach(function (num) {
@@ -324,18 +327,18 @@
     } else {
       $empty.style.display = "flex";
       $emptyMsg.textContent = q
-        ? "No results match your search."
+        ? t("empty.noMatch")
         : (entries.length
-            ? "No finishers in this ranking yet."
-            : "No results yet. Enter a runner number above and press Record as each finishes.");
+            ? t("empty.noneInRanking")
+            : t("empty.msg"));
     }
 
     $statCount.textContent = entries.length;
     var nPart = Object.keys(participants).length;
-    $statPartWrap.textContent = nPart ? nPart + " participant" + (nPart === 1 ? "" : "s") + " loaded" : "";
+    $statPartWrap.textContent = nPart ? t("stats.participants", { n: nPart }) : "";
     $statPartWrap.style.display = nPart ? "" : "none";
     var nDup = entries.filter(function (e) { return !!dups[e.runnerNumber]; }).length;
-    $statDupWrap.textContent = nDup ? nDup + " duplicate" + (nDup === 1 ? "" : "s") : "";
+    $statDupWrap.textContent = nDup ? t("stats.duplicates", { n: nDup }) : "";
     $statDupWrap.style.display = nDup ? "" : "none";
   }
 
@@ -363,9 +366,9 @@
     // once there are results, so an accidental tap can't wreck the rankings.
     if (!entries.length) { applyStartNow(); return; }
     confirmModal({
-      title: "Set start to now?",
-      message: "This recalculates the time of all " + entries.length + " recorded finisher(s).",
-      confirmLabel: "Set start", danger: true
+      title: t("setStart.title"),
+      message: t("setStart.msg", { n: entries.length }),
+      confirmLabel: t("setStart.ok"), danger: true
     }).then(function (ok) { if (ok) applyStartNow(); });
   }
 
@@ -390,7 +393,7 @@
     save();
     render(id);
     // Undo safety net for an accidental record (replaces any earlier record toast).
-    toast("Recorded #" + number, "", { label: "Undo", onClick: function () { undoRecord(id, number); } });
+    toast(t("toast.recorded", { n: number }), "", { label: t("btn.undo"), onClick: function () { undoRecord(id, number); } });
   }
 
   // Remove a just-recorded finisher (from the Undo toast); no-op if already gone.
@@ -399,15 +402,15 @@
     entries = entries.filter(function (e) { return e.id !== id; });
     save();
     render();
-    toast("Removed #" + number);
+    toast(t("toast.removed", { n: number }));
   }
 
   function clearResults() {
     if (!entries.length) return;
     confirmModal({
-      title: "Clear all results?",
-      message: "All " + entries.length + " recorded result(s) will be permanently deleted.",
-      confirmLabel: "Clear results", danger: true
+      title: t("clear.title"),
+      message: t("clear.msg", { n: entries.length }),
+      confirmLabel: t("btn.clear"), danger: true
     }).then(function (ok) {
       if (!ok) return;
       entries = [];
@@ -536,8 +539,8 @@
     render();
     if ($partModal.classList.contains("show")) renderParticipants();
     toast(added
-      ? added + " participant(s) loaded"
-      : "No valid rows found. Expected: number, name, sex, birth_year", added ? "" : "error");
+      ? t("stats.participants", { n: added })
+      : t("toast.importNone"), added ? "" : "error");
   }
 
   function parseCsvLine(line, sep) {
@@ -568,21 +571,20 @@
     };
     var stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
     download("crono-backup-" + stamp + ".json", JSON.stringify(data, null, 2), "application/json");
-    toast("Backup downloaded");
+    toast(t("toast.backupDownloaded"));
   }
 
   function importBackup(text) {
     var data;
-    try { data = JSON.parse(text); } catch (e) { toast("That file isn't valid JSON.", "error"); return; }
+    try { data = JSON.parse(text); } catch (e) { toast(t("toast.badJson"), "error"); return; }
     if (!data || data.app !== "crono" || !Array.isArray(data.entries) || typeof data.participants !== "object") {
-      toast("That doesn't look like a Crono backup file.", "error");
+      toast(t("toast.badBackup"), "error");
       return;
     }
     confirmModal({
-      title: "Restore backup?",
-      message: "This replaces the current start time, " + entries.length +
-               " result(s) and the participant list with the backup's contents.",
-      confirmLabel: "Restore", danger: true
+      title: t("restore.title"),
+      message: t("restore.msg", { n: entries.length }),
+      confirmLabel: t("btn.restore"), danger: true
     }).then(function (ok) {
       if (!ok) return;
       startEpoch = parseInt(data.startEpoch, 10) || Date.now();
@@ -599,7 +601,7 @@
       updateStartPreview();
       buildFilterOptions();
       render();
-      toast("Backup restored");
+      toast(t("toast.backupRestored"));
     });
   }
 
@@ -627,30 +629,30 @@
       return n.toLowerCase().indexOf(q) > -1 || (participants[n].name || "").toLowerCase().indexOf(q) > -1;
     });
 
-    var head = '<div class="part-row part-head"><span>Number</span><span>Name</span><span>Sex</span><span>Year</span><span></span></div>';
+    var head = '<div class="part-row part-head"><span>' + escapeHtml(t("th.number")) + "</span><span>" + escapeHtml(t("th.name")) + "</span><span>" + escapeHtml(t("row.sex")) + "</span><span>" + escapeHtml(t("ph.year")) + "</span><span></span></div>";
     var rows = nums.map(function (n) {
       var p = participants[n];
       return '<div class="part-row" data-num="' + escapeAttr(n) + '">' +
-        '<input class="p-num" value="' + escapeAttr(n) + '" inputmode="numeric" aria-label="Number">' +
-        '<input class="p-name" value="' + escapeAttr(p.name || "") + '" placeholder="name" aria-label="Name">' +
-        '<select class="p-sex" aria-label="Sex">' +
+        '<input class="p-num" value="' + escapeAttr(n) + '" inputmode="numeric" aria-label="' + escapeAttr(t("th.number")) + '">' +
+        '<input class="p-name" value="' + escapeAttr(p.name || "") + '" placeholder="' + escapeAttr(t("ph.name")) + '" aria-label="' + escapeAttr(t("th.name")) + '">' +
+        '<select class="p-sex" aria-label="' + escapeAttr(t("row.sex")) + '">' +
           '<option value=""' + (!p.sex ? " selected" : "") + '>—</option>' +
           '<option value="M"' + (p.sex === "M" ? " selected" : "") + ">M</option>" +
           '<option value="F"' + (p.sex === "F" ? " selected" : "") + ">F</option>" +
         "</select>" +
-        '<input class="p-year" value="' + escapeAttr(p.birthYear ? String(p.birthYear) : "") + '" inputmode="numeric" maxlength="4" placeholder="year" aria-label="Birth year">' +
-        '<button type="button" class="p-del" title="Delete participant">' + svgIcon("x") + "</button>" +
+        '<input class="p-year" value="' + escapeAttr(p.birthYear ? String(p.birthYear) : "") + '" inputmode="numeric" maxlength="4" placeholder="' + escapeAttr(t("ph.year")) + '" aria-label="' + escapeAttr(t("row.year")) + '">' +
+        '<button type="button" class="p-del" title="' + escapeAttr(t("delPart.title")) + '">' + svgIcon("x") + "</button>" +
       "</div>";
     }).join("");
 
     var count = Object.keys(participants).length;
     var addRow =
       '<div class="part-row part-add">' +
-        '<input class="pa-num" inputmode="numeric" placeholder="number" aria-label="New number">' +
-        '<input class="pa-name" placeholder="name" aria-label="New name">' +
-        '<select class="pa-sex" aria-label="New sex"><option value="">—</option><option value="M">M</option><option value="F">F</option></select>' +
-        '<input class="pa-year" inputmode="numeric" maxlength="4" placeholder="year" aria-label="New birth year">' +
-        '<button type="button" class="pa-add" title="Add participant">' + svgIcon("check") + "</button>" +
+        '<input class="pa-num" inputmode="numeric" placeholder="' + escapeAttr(t("ph.number")) + '" aria-label="' + escapeAttr(t("th.number")) + '">' +
+        '<input class="pa-name" placeholder="' + escapeAttr(t("ph.name")) + '" aria-label="' + escapeAttr(t("th.name")) + '">' +
+        '<select class="pa-sex" aria-label="' + escapeAttr(t("row.sex")) + '"><option value="">—</option><option value="M">M</option><option value="F">F</option></select>' +
+        '<input class="pa-year" inputmode="numeric" maxlength="4" placeholder="' + escapeAttr(t("ph.year")) + '" aria-label="' + escapeAttr(t("row.year")) + '">' +
+        '<button type="button" class="pa-add" title="' + escapeAttr(t("part.add")) + '">' + svgIcon("check") + "</button>" +
       "</div>";
     $partBody.innerHTML =
       '<div class="part-count">' + count + " participant(s)" + (q ? " · showing " + nums.length : "") + "</div>" +
@@ -696,7 +698,7 @@
         save(); buildFilterOptions(); render(); renderParticipants();
       });
       row.querySelector(".p-del").addEventListener("click", function () {
-        confirmModal({ title: "Delete participant", message: "Remove participant " + orig + " from the roster?", confirmLabel: "Delete", danger: true })
+        confirmModal({ title: t("delPart.title"), message: t("delPart.msg", { n: orig }), confirmLabel: t("delPart.ok"), danger: true })
           .then(function (ok) { if (!ok) return; delete participants[orig]; save(); buildFilterOptions(); render(); renderParticipants(); });
       });
     });
@@ -806,11 +808,11 @@
   });
 
   // ----- Legal document modal ----------------------------------------------
-  var DOC_TITLES = { terms: "Terms & Conditions", privacy: "Privacy Policy" };
+  var DOC_TITLES = { terms: "footer.terms", privacy: "footer.privacy" };
   function openDoc(which) {
     var tpl = document.getElementById("tpl-" + which);
     if (!tpl) return;
-    $docTitle.textContent = DOC_TITLES[which] || "";
+    $docTitle.textContent = DOC_TITLES[which] ? t(DOC_TITLES[which]) : "";
     $docBody.innerHTML = "";
     $docBody.appendChild(tpl.content.cloneNode(true));
     $docBody.scrollTop = 0;
@@ -856,9 +858,9 @@
   var confirmResolve = null;
   function confirmModal(opts) {
     opts = opts || {};
-    $confirmTitle.textContent = opts.title || "Confirm";
+    $confirmTitle.textContent = opts.title || t("confirm.ok");
     $confirmMsg.textContent = opts.message || "";
-    $confirmOk.textContent = opts.confirmLabel || "Confirm";
+    $confirmOk.textContent = opts.confirmLabel || t("confirm.ok");
     $confirmOk.className = opts.danger ? "danger" : "primary";
     $confirmModal.classList.add("show");
     document.body.style.overflow = "hidden";
@@ -938,7 +940,7 @@
     var e = findEntry(editingRowId);
     if (!e) { closeRowEdit(); return; }
     var ms = parseElapsedToMs($rowTime.value);
-    if (ms == null) { toast("Time must be H:MM:SS, MM:SS or with .cc", "error"); return; }
+    if (ms == null) { toast(t("toast.badTime"), "error"); return; }
     var num = $rowNum.value.trim() || e.runnerNumber;
     e.runnerNumber = num;
     e.finishEpoch = startEpoch + ms;
@@ -949,16 +951,16 @@
     participants[num] = { name: prev.name || "", sex: normalizeSex($rowSex.value), birthYear: birthYear };
     save(); buildFilterOptions(); render();
     closeRowEdit();
-    toast("Result saved");
+    toast(t("toast.resultSaved"));
   }
   function deleteRowEdit() {
     var id = editingRowId, e = findEntry(id);
     if (!e) return;
-    confirmModal({ title: "Remove result", message: "Remove runner " + e.runnerNumber + " from the results?", confirmLabel: "Remove", danger: true })
+    confirmModal({ title: t("removeResult.title"), message: t("removeResult.msg", { n: e.runnerNumber }), confirmLabel: t("removeResult.ok"), danger: true })
       .then(function (ok) {
         if (!ok) return;
         entries = entries.filter(function (x) { return x.id !== id; });
-        save(); render(); closeRowEdit(); toast("Result removed");
+        save(); render(); closeRowEdit(); toast(t("toast.resultRemoved"));
       });
   }
   document.getElementById("rowClose").addEventListener("click", closeRowEdit);
@@ -1032,7 +1034,7 @@
   $start.addEventListener("change", function () {
     var epoch = clockStringToEpoch(this.value);
     if (epoch == null) {
-      toast("Enter the start time as HH:MM:SS", "error");
+      toast(t("toast.badStart"), "error");
       this.value = formatClock(startEpoch);
       return;
     }
@@ -1096,6 +1098,14 @@
   buildFilterOptions();
   render();
   initConsent();
+  // Re-render the JS-built bits (tabs, stats, sound title, open participant list) when the
+  // language changes — static [data-i18n] nodes are handled by i18n.js itself.
+  document.addEventListener("crono:langchange", function () {
+    updateSoundToggle();
+    buildFilterOptions();
+    render();
+    if ($partModal.classList.contains("show")) renderParticipants();
+  });
   var hash = (location.hash || "").replace("#", "");
   if (hash === "terms" || hash === "privacy") openDoc(hash);
   // Note: we deliberately do NOT auto-focus the runner-number input on entry — on mobile
