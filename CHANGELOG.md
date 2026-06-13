@@ -5,6 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
+- **Light theme.** Crono now has a light mode alongside the dark default. A sun/moon toggle in the app header switches it and remembers your choice (`crono.theme`); with no choice it follows your device's setting. The theme is applied before first paint (via `head.js`) so there's no flash, and it carries across every page (app, landing, bibs, legal).
 - **"Buy me a coffee" now opens a short explainer first.** Every donation button (app header, app footer, landing footer) opens a small modal that makes clear the tip is **voluntary** and **not a payment for the app** before sending you to Revolut (which still opens in a new tab). Shared, CSP-safe modal in `assets/coffee.js` + `assets/coffee.css`; links keep their `href` so they still work without JS.
 - **"Updated to the latest version" confirmation.** Clicking **Reload** on the update toast now shows a brief confirmation after the page reloads, so the action gives visible feedback (the app looks identical between versions, so it otherwise felt like nothing happened).
 - **Immediate feedback on Reload.** The button now shows **"Updating…"** and disables itself the moment it's clicked, since activating the new worker and reloading can take a second or two (it previously looked like nothing was happening).
