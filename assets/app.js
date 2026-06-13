@@ -1024,7 +1024,8 @@
     $demoModal.classList.remove("show");
     if (!$consent.classList.contains("show")) document.body.style.overflow = "";
   }
-  document.getElementById("viewDemoBtn").addEventListener("click", openDemo);
+  var $viewDemoBtn = document.getElementById("viewDemoBtn");
+  if ($viewDemoBtn) $viewDemoBtn.addEventListener("click", openDemo);   // demo trigger was removed from the header; keep the modal wiring optional
   document.getElementById("demoClose").addEventListener("click", closeDemo);
   $demoModal.addEventListener("click", function (e) { if (e.target === $demoModal) closeDemo(); });
   document.addEventListener("keydown", function (e) {
