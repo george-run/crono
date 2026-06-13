@@ -138,6 +138,11 @@
     reload.textContent = "Reload";
     reload.addEventListener("click", function () {
       userAskedToReload = true;
+      // Treat Reload as accepting this version too: on iOS Safari (especially with many
+      // open tabs holding the old worker) skipWaiting may not hand over control, so the
+      // worker stays waiting and the toast would otherwise reappear after every reload.
+      // Remembering the version breaks that loop — a genuinely newer deploy still prompts.
+      try { if (version) localStorage.setItem(DISMISS_KEY, version); } catch (e) {}
       var waiting = reg.waiting;
       if (waiting) {
         // Ask the waiting worker to activate; controllerchange then reloads us.
