@@ -16,6 +16,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Landing housekeeping: the footer "How it works" link pointed at `#` (dead) — it now jumps to the steps section (and a new "Install" link was added). Reworded the hero/closing copy that said "no install needed" since the app is now installable (it's optional).
 
 ### Changed
+- Landing review pass: copy now makes clear Crono is **for race organisers** and **runs in any browser — installing the PWA is optional** (hero, install section, closing CTA, meta/title). Moved the "Print bib numbers" section below "How it works" so the core timing story comes first; made "Open app" the primary nav action; trimmed duplicated demo wording.
 - Hero animation: the floating result card no longer bobs in place — it now trails the moving pin along the route (driven in JS off the same path), so it reads as a live result following the runner.
 - Typography: display font (headings + big race/bib numbers) switched from Space Grotesk to **Oswald** — a condensed, athletic face that suits race numbers; body stays Inter. The landing "how it works" demo now also shows the start time and distance being filled in before the timing starts, so the full flow is clear.
 - Landing demo no longer makes the page jump: the finisher list now reserves space for its full set, so filling/resetting the auto-play loop doesn't grow/shrink the layout. Also fixed the orange "Generate bib numbers" button showing no label and the bib modal's logo field overflowing on iOS.
