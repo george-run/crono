@@ -5,12 +5,13 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
+- **"Buy me a coffee" now opens a short explainer first.** Every donation button (app header, app footer, landing footer) opens a small modal that makes clear the tip is **voluntary** and **not a payment for the app** before sending you to Revolut (which still opens in a new tab). Shared, CSP-safe modal in `assets/coffee.js` + `assets/coffee.css`; links keep their `href` so they still work without JS.
 - **"Updated to the latest version" confirmation.** Clicking **Reload** on the update toast now shows a brief confirmation after the page reloads, so the action gives visible feedback (the app looks identical between versions, so it otherwise felt like nothing happened).
 - **Immediate feedback on Reload.** The button now shows **"Updating…"** and disables itself the moment it's clicked, since activating the new worker and reloading can take a second or two (it previously looked like nothing was happening).
 - **"Install Crono" button now does something on iPhone/iPad.** iOS Safari can't install a PWA programmatically (no `beforeinstallprompt`), so the button used to stay hidden / inert there; it's now shown on iOS and, when a one-tap install isn't possible, scrolls to and highlights the iPhone "Add to Home Screen" steps.
 
 ### Changed
-- **App header redesign.** The "View demo" and donation buttons are now grouped into a single rounded **toolbar** (panel background, soft border/shadow) instead of two loose icon circles — "Demo" reads teal, "Support" amber, each shown as **icon + label** on desktop and collapsing to **icon-only** on small screens. The logo mark sits in a subtle lime chip so the brand reads stronger.
+- **App header redesign.** The "View demo" and donation buttons are now grouped into a single rounded **toolbar** (panel background, soft border/shadow) instead of two loose icon circles — "Demo" reads teal, "Support" amber, each shown as **icon + label** on desktop and collapsing to **icon-only** on small screens. The logo mark sits in a subtle lime chip so the brand reads stronger. The demo icon is now a monitor-with-play (clearer than the bare triangle), and the toolbar aligns to the logo row on mobile instead of drifting down beside the tagline.
 - **The app no longer auto-focuses the runner-number field on entry.** On mobile this popped the numeric keyboard up immediately, covering the page; focus still moves there after you record a finish (or clear results), where typing the next number is expected.
 - **`og:image:type` on every page** (plus `og:image` width/height on the Terms/Privacy pages) so link unfurlers that need it — notably WhatsApp — recognise the share image.
 
