@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v75"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v76"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/crono-update-notification-loop-4wpiuo`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header — logo (in a subtle lime **chip**) + wordmark left; the "View demo" + donation actions are grouped into a **pill toolbar** on the right (`.header-actions` containing `.hbtn`/`.hbtn-demo` teal + `.hbtn-coffee` amber) — **icon + label** on desktop, collapsing to **icon-only** under 720px (`.hbtn-label` hidden); **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
@@ -55,7 +55,7 @@ assets/
   bibs.css    Bib-generator page styles + print sheet   bibs.js  Bib-number generator logic (loaded by bibs.html)
   legal.css   Styles for the standalone terms.html / privacy.html pages
   helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested; loaded by app.html, index.html AND bibs.html (bibs uses `bibRange`; landing uses the shared `consentAccepted`/`CONSENT_VERSION`/`CONSENT_KEY`)
-  head.js     reduced-motion → adds .js-anim (runs in <head> before paint)
+  head.js     runs in <head> before paint: applies the light/dark theme (data-theme on <html>, from `crono.theme` or OS) + wires any [data-theme-toggle]; adds .js-anim unless reduced-motion. Loaded by every page.
   sw-register.js  SW registration + "new version" update toast (shared by app + landing)
   coffee.css  "Buy me a coffee" explainer modal styles (shared; loaded by app.html + index.html)
   coffee.js   "Buy me a coffee" explainer modal — intercepts [data-coffee] links, explains the voluntary tip, then opens Revolut (shared by app + landing)
@@ -90,7 +90,7 @@ test/architecture.test.js   Guards (cache↔Status, ASSETS exist, no inline CSS/
 
 ## Data model (localStorage)
 Keys: `crono.startEpoch`, `crono.entries`, `crono.participants`, `crono.distanceKm`,
-`crono.sound`, `crono.cards`, `crono.consent`.
+`crono.sound`, `crono.cards`, `crono.consent`, `crono.theme` (`"light"`/`"dark"`; absent = follow OS — managed by `head.js`).
 ```
 entry        = { id, runnerNumber: string, finishEpoch: ms, details: string }
 participants = { "<number>": { name: string, sex: "M"|"F"|"", birthYear: number|null } }

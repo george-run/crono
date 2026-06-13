@@ -30,3 +30,18 @@
   --font-ui: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-display: 'Oswald', 'Arial Narrow', var(--font-ui);
 }
+
+/* Light theme — overrides only the neutrals + shadows; the brand accents (lime/teal/amber)
+   stay the same so identity is preserved. Applied via data-theme on <html> by head.js
+   (saved choice or OS preference), so there's no flash of the wrong theme. */
+:root[data-theme="light"] {
+  --bg: #f6f8fa;
+  --panel: #ffffff;
+  --panel-2: #eef2f6;
+  --border: #d9e1ea;
+  --text: #0f1720;
+  --muted: #586573;
+  --overlay: rgba(15, 23, 32, .45);
+  --shadow-soft: 0 8px 24px rgba(15, 23, 42, .12);
+  --shadow-pop: 0 12px 30px rgba(15, 23, 42, .18);
+}

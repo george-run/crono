@@ -222,7 +222,7 @@
   thead th { border-bottom-color: var(--border); }
   th { font-size: .72rem; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 600; }
   tbody tr:last-child td { border-bottom: none; }
-  tbody tr:hover td { background: rgba(255,255,255,.02); }
+  tbody tr:hover td { background: rgba(var(--primary-rgb),.05); }
   td.time, th.time { text-align: right; font-variant-numeric: tabular-nums; font-size: 1.2rem; white-space: nowrap; }
   td.place { color: var(--muted); width: 56px; font-size: 1.05rem; font-weight: 700; }
   td.place.first { color: var(--primary); }
@@ -436,7 +436,7 @@
 
   /* ---- Clickable result rows + edit affordance ---- */
   .row-click { cursor: pointer; }
-  tbody tr.row-click:hover td { background: rgba(255,255,255,.03); }
+  tbody tr.row-click:hover td { background: rgba(var(--primary-rgb),.06); }
   .cat-tag { display: inline-block; font-size: .7rem; font-weight: 700; padding: 1px 7px; border-radius: 999px;
     vertical-align: middle; margin-left: 6px; background: var(--panel-2); color: var(--muted);
     border: 1px solid var(--border); font-variant-numeric: tabular-nums; }
@@ -532,6 +532,12 @@
   .hbtn-demo:hover { background: rgba(var(--accent-2-rgb), .14); border-color: rgba(var(--accent-2-rgb), .4); }
   .hbtn-coffee { color: var(--accent-3); }
   .hbtn-coffee:hover { background: var(--accent-3); color: var(--on-accent); border-color: var(--accent-3); }
+  /* Theme toggle — icon-only; shows the sun in dark mode, the moon in light mode. */
+  .hbtn-theme { padding: 8px; color: var(--muted); }
+  .hbtn-theme:hover { color: var(--text); background: rgba(var(--primary-rgb), .14); border-color: rgba(var(--primary-rgb), .4); }
+  .hbtn-theme .theme-to-dark { display: none; }
+  :root[data-theme="light"] .hbtn-theme .theme-to-light { display: none; }
+  :root[data-theme="light"] .hbtn-theme .theme-to-dark { display: inline-block; }
 
 /* DEMO watermark tag on the mock */
 .demo::before { content: "DEMO"; position: absolute; top: 8px; right: 12px;
