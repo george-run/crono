@@ -17,7 +17,8 @@ img { max-width: 100%; }
 .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 48px; }
 
 /* Header */
-.bibs-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 0; }
+.bibs-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 0; flex-wrap: wrap; }
+.bibs-head-actions { display: inline-flex; align-items: center; gap: 10px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.4rem;
   letter-spacing: -.4px; font-family: var(--font-display); color: var(--text); }
 .brand .logo { width: 34px; height: 34px; color: var(--primary); }
