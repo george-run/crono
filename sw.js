@@ -6,7 +6,7 @@
      "new version" toast posts SKIP_WAITING when the user clicks Reload, so the running
      version is never swapped out mid-race. Bump CACHE to drop the old cache + force a
      fresh precache. Keep ASSETS in sync. */
-var CACHE = "crono-v73";
+var CACHE = "crono-v74";
 var ASSETS = [
   "./",
   "index.html",
