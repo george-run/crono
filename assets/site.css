@@ -3,6 +3,9 @@ html, body { margin: 0; }
 body { font-family: var(--font-ui); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 
+/* Bib-generator theme colours — single source for the swatches, the live preview and the print sheet. */
+:root { --bib-orange: #ea580c; --bib-lime: #4d7c0f; --bib-blue: #1d4ed8; --bib-mono: #111; }
+
 /* subtle sport backdrop */
 .bg-motif { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
   background:
@@ -380,6 +383,37 @@ a { color: inherit; text-decoration: none; }
 .bib-actions .btn.primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
 .bib-actions button:disabled { opacity: .5; cursor: not-allowed; transform: none; filter: none; }
 
+/* Colour swatches (replace the theme dropdown) */
+.bib-swatches { display: flex; gap: 8px; }
+.bib-sw { width: 30px; height: 30px; padding: 0; border-radius: 999px; border: 2px solid var(--border);
+  cursor: pointer; transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition); }
+.bib-sw:hover { transform: translateY(-1px); }
+.bib-sw.sw-orange { background: var(--bib-orange); }
+.bib-sw.sw-lime { background: var(--bib-lime); }
+.bib-sw.sw-blue { background: var(--bib-blue); }
+.bib-sw.sw-mono { background: var(--bib-mono); border-color: var(--muted); }
+.bib-sw.is-on { border-color: var(--text); box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--accent-4); }
+.bib-sw:focus-visible { outline: 2px solid var(--accent-4); outline-offset: 2px; }
+
+/* Live preview of one bib — WYSIWYG against the print sheet */
+.bib-preview-wrap { margin: 2px 0 4px; }
+.bib-preview-label { display: block; font-size: .82rem; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+.bib-preview { --bibc: var(--bib-orange); width: 100%; max-width: 340px; margin: 0 auto;
+  aspect-ratio: 186 / 128; background: #fff; color: #111; border: 3px solid var(--bibc);
+  border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.bib-preview.theme-orange { --bibc: var(--bib-orange); }
+.bib-preview.theme-lime  { --bibc: var(--bib-lime); }
+.bib-preview.theme-blue  { --bibc: var(--bib-blue); }
+.bib-preview.theme-mono  { --bibc: var(--bib-mono); }
+.bib-preview .bib-head { display: flex; align-items: center; gap: 10px; padding: 7px 12px; background: var(--bibc); color: #fff; }
+.bib-preview .bib-head[hidden] { display: none; }
+.bib-preview .bib-logo { height: 28px; width: auto; max-width: 84px; object-fit: contain; background: #fff; padding: 2px; border-radius: 4px; }
+.bib-preview .bib-ev { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.bib-preview .bib-name { font-family: var(--font-display); font-weight: 700; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bib-preview .bib-date { font-size: .75rem; opacity: .92; }
+.bib-preview .bib-no { flex: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-display);
+  font-weight: 700; color: var(--bibc); font-size: clamp(2.6rem, 14vw, 4.6rem); line-height: 1; letter-spacing: -1px; }
+
 /* Pulsing nudge on the band CTA (gated by .js-anim → respects reduced-motion). */
 .js-anim .bib-cta { animation: bibPulse 2.6s ease-in-out infinite; }
 @keyframes bibPulse {
@@ -413,9 +447,9 @@ a { color: inherit; text-decoration: none; }
   #printArea .bib-no { flex: 1; display: flex; align-items: center; justify-content: center;
     font-family: var(--font-display); font-weight: 700; color: var(--bibc);
     font-size: 120pt; line-height: 1; letter-spacing: -2pt; }
-  #printArea.theme-orange { --bibc: #ea580c; }
-  #printArea.theme-lime   { --bibc: #4d7c0f; }
-  #printArea.theme-blue   { --bibc: #1d4ed8; }
-  #printArea.theme-mono   { --bibc: #111; }
+  #printArea.theme-orange { --bibc: var(--bib-orange); }
+  #printArea.theme-lime   { --bibc: var(--bib-lime); }
+  #printArea.theme-blue   { --bibc: var(--bib-blue); }
+  #printArea.theme-mono   { --bibc: var(--bib-mono); }
   #printArea.theme-mono .bib-no { color: #111; }
 }

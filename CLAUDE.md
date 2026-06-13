@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v58"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v59"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/lucid-franklin-x34gdn`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
@@ -203,8 +203,10 @@ welcome gate on the app AND the landing** — both share `crono.consent`; standa
 pages too), **clicking the app logo returns to the landing**, **PWA**
 (installable/offline) with a dismissible **"new version"
 update toast** (never auto-reloads), animated landing, **bib-number generator** on the landing
-(modal → event name/date + number range + colour theme + optional in-browser logo → print-ready PDF,
-2 bibs per A4 page; built in `#printArea` + `@media print` in `site.css`, logic in `site.js`).
+(modal → event name/date + number range + colour-swatch theme + optional in-browser logo → print-ready PDF,
+2 bibs per A4 page; the modal shows a **live WYSIWYG preview** of a sample bib. Theme colours are tokens
+(`--bib-orange/lime/blue/mono` in `site.css`) shared by the swatches, the preview and the print sheet;
+built in `#printArea` + `@media print` in `site.css`, logic in `site.js`).
 
 ## Known constraints / TODO ideas
 - `addParticipant()` uses a `prompt()` for the new number (could become an inline row).
