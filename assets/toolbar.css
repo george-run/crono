@@ -1,0 +1,36 @@
+/* Crono — shared header toolbar: language · theme · demo · support.
+   One definition reused on every page (app, landing, bib generator); token-driven so it
+   matches both themes. Pages differ in surrounding layout but consume these same classes.
+   Icon + label on desktop; labels collapse to icon-only under 720px. */
+.header-actions { display: inline-flex; align-items: center; gap: 4px; flex: 0 0 auto;
+  padding: 4px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; box-shadow: var(--shadow-soft); }
+.hbtn { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; white-space: nowrap;
+  border: 1px solid transparent; background: transparent; color: var(--text);
+  border-radius: 999px; padding: 7px 13px; font-size: .85rem; font-weight: 600; text-decoration: none;
+  transition: var(--transition); }
+.hbtn .icon { width: 1.05em; height: 1.05em; flex: 0 0 auto; }
+.hbtn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.hbtn-demo { color: var(--accent-2); }
+.hbtn-demo:hover { background: rgba(var(--accent-2-rgb), .14); border-color: rgba(var(--accent-2-rgb), .4); }
+.hbtn-coffee { color: var(--accent-3); }
+.hbtn-coffee:hover { background: var(--accent-3); color: var(--on-accent); border-color: var(--accent-3); }
+/* Language switcher — compact native select inside the pill (caret via wrapper). */
+.lang-wrap { position: relative; display: inline-flex; align-items: center; }
+.lang-wrap::after { content: "▾"; position: absolute; right: 9px; pointer-events: none; color: var(--muted); font-size: .75em; }
+.hbtn-lang { appearance: none; -webkit-appearance: none; border: 1px solid transparent; background: transparent;
+  color: var(--text); font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
+  border-radius: 999px; padding: 7px 22px 7px 10px; }
+.hbtn-lang:hover { background: rgba(var(--primary-rgb), .14); }
+.hbtn-lang:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+/* Theme toggle — icon-only; sun in dark mode, moon in light mode. */
+.hbtn-theme { padding: 8px; color: var(--muted); }
+.hbtn-theme:hover { color: var(--text); background: rgba(var(--primary-rgb), .14); border-color: rgba(var(--primary-rgb), .4); }
+.hbtn-theme .theme-to-dark { display: none; }
+:root[data-theme="light"] .hbtn-theme .theme-to-light { display: none; }
+:root[data-theme="light"] .hbtn-theme .theme-to-dark { display: inline-block; }
+
+@media (max-width: 720px) {
+  .header-actions { gap: 2px; }
+  .hbtn { padding: 8px; }
+  .hbtn-label { display: none; }
+}
