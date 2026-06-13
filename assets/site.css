@@ -166,6 +166,8 @@ a { color: inherit; text-decoration: none; }
   .float-card.chasing .fc-pace { font-size: .82rem; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-brand { grid-column: 1 / -1; }
+  /* Keep the header light on tablets/phones — the bib entry lives in the orange band + footer. */
+  .nav-actions .btn.bib { display: none; }
 }
 @media (max-width: 720px) {
   .features { grid-template-columns: 1fr; }
@@ -195,8 +197,6 @@ a { color: inherit; text-decoration: none; }
   .float-card.chasing .fc-mid strong { font-size: .74rem; }
   .float-card.chasing .fc-mid small { font-size: .6rem; }
   .float-card.chasing .fc-pace { font-size: .74rem; }
-  /* Declutter the header — the orange band is the bib entry point on phones. */
-  .nav-actions .btn.bib { display: none; }
 }
 
 /* ===== Animations (only when .js-anim is set; respects reduced-motion) ===== */
@@ -325,6 +325,7 @@ a { color: inherit; text-decoration: none; }
 /* ===== Bib number generator ===== */
 /* Header gets two actions side by side. */
 .nav-actions { display: inline-flex; align-items: center; gap: 10px; }
+.nav-actions .btn { white-space: nowrap; }
 
 /* Orange "bib numbers" button (outline in nav, solid as the band CTA). */
 .btn.bib { border-color: rgba(var(--accent-4-rgb),.55); color: var(--accent-4); }
