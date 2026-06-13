@@ -460,16 +460,18 @@
   /* ---- Toasts ---- */
   .toasts { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 1300;
     display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; max-width: 92vw; }
+  /* The update prompt sits near the top instead (more visible than a bottom toast). */
+  .toasts-top { top: calc(12px + env(safe-area-inset-top, 0px)); bottom: auto; }
   .toast { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-left: 3px solid var(--primary);
     border-radius: var(--radius-sm); padding: 10px 16px; font-size: .92rem; box-shadow: var(--shadow-pop);
     opacity: 0; transform: translateY(10px); transition: opacity .25s ease, transform .25s ease; }
   .toast.in { opacity: 1; transform: none; }
   .toast.error { border-left-color: var(--danger); }
-  /* "New version available" prompt — interactive (toasts container is pointer-events:none). */
-  .toast-update { pointer-events: auto; display: flex; align-items: center; gap: 12px; width: min(380px, 88vw); }
+  /* "New version available" prompt — interactive (toasts container is pointer-events:none); amber to stand out. */
+  .toast-update { pointer-events: auto; display: flex; align-items: center; gap: 12px; width: min(380px, 88vw); border-left-color: var(--accent-3); }
   .toast-update span { flex: 1 1 auto; min-width: 0; }
   .toast-update .toast-reload, .toast-update .toast-dismiss { flex: 0 0 auto; }
-  .toast-reload { border: 1px solid var(--primary); background: var(--primary); color: var(--on-accent);
+  .toast-reload { border: 1px solid var(--accent-3); background: var(--accent-3); color: var(--on-accent);
     padding: 5px 12px; border-radius: 999px; font-size: .85rem; font-weight: 700; }
   .toast-dismiss { border: none; background: transparent; color: var(--muted);
     font-size: 1.2rem; line-height: 1; padding: 2px 4px; border-radius: 999px; }

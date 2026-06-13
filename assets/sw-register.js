@@ -21,13 +21,15 @@
     location.reload();
   }
 
-  // Shared toast host (landing/legal pages have none — create one on demand).
-  function toastHost() {
-    var host = document.getElementById("toasts");
+  // Shared toast host (landing/legal pages have none — create one on demand). The update
+  // prompt uses a separate top-anchored host (.toasts-top) so it's more visible.
+  function toastHost(top) {
+    var id = top ? "toastsTop" : "toasts";
+    var host = document.getElementById(id);
     if (!host) {
       host = document.createElement("div");
-      host.id = "toasts";
-      host.className = "toasts";
+      host.id = id;
+      host.className = top ? "toasts toasts-top" : "toasts";
       host.setAttribute("aria-live", "polite");
       document.body.appendChild(host);
     }
@@ -123,7 +125,7 @@
 
   function showUpdateToast(reg, version) {
     if (document.getElementById("swUpdateToast")) return;
-    var host = toastHost();
+    var host = toastHost(true);   // top-anchored, more visible than a bottom toast
     var el = document.createElement("div");
     el.id = "swUpdateToast";
     el.className = "toast toast-update in";
