@@ -6,7 +6,7 @@
      "new version" toast posts SKIP_WAITING when the user clicks Reload, so the running
      version is never swapped out mid-race. Bump CACHE to drop the old cache + force a
      fresh precache. Keep ASSETS in sync. */
-var CACHE = "crono-v61";
+var CACHE = "crono-v62";
 var ASSETS = [
   "./",
   "index.html",
@@ -70,9 +70,11 @@ self.addEventListener("fetch", function (e) {
     (req.headers.get("accept") || "").indexOf("text/html") > -1;
 
   if (isPage) {
-    // Network-first for HTML so deploys show up immediately when online.
+    // Network-first for HTML so deploys show up immediately when online. Revalidate
+    // against the server ("no-cache") so GitHub Pages' max-age=600 can't hand back a
+    // stale page right after a deploy.
     e.respondWith(
-      fetch(req).then(function (res) {
+      fetch(req, { cache: "no-cache" }).then(function (res) {
         if (res && res.ok) { var c = res.clone(); caches.open(CACHE).then(function (cc) { cc.put(req, c); }); }
         return res;
       }).catch(function () {
@@ -83,9 +85,13 @@ self.addEventListener("fetch", function (e) {
   }
 
   // Static assets: stale-while-revalidate — serve cache instantly, refresh it in the background.
+  // The revalidation MUST bypass the HTTP cache ("no-cache"): otherwise GitHub Pages'
+  // max-age=600 returns the OLD asset, we re-store that stale copy, and a deploy never
+  // propagates to returning users (the new code only arrives via the precache, i.e. only
+  // once a new worker activates). Validating with the server (304 when unchanged) fixes that.
   e.respondWith(
     caches.match(req).then(function (cached) {
-      var network = fetch(req).then(function (res) {
+      var network = fetch(req, { cache: "no-cache" }).then(function (res) {
         if (res && res.ok) {
           var copy = res.clone();
           caches.open(CACHE).then(function (c) { c.put(req, copy); });

@@ -5,6 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Fixed
+- **Deploys now actually reach returning users (root cause of the update-toast loop).** The service worker's stale-while-revalidate refresh fetched assets with the *default* HTTP cache, so GitHub Pages' `max-age=600` handed back the **old** file and the worker re-stored that stale copy — meaning a fresh deploy never propagated to people who already had the app cached (only a brand-new worker's precache, which bypasses the HTTP cache, ever got fresh files). The background revalidation and the network-first HTML fetch now use `cache: "no-cache"` (validate with the server, 304 when unchanged), matching the precache, so new code lands on the next load.
 - **"A new version is available" toast no longer nags on every page.** If you dismissed it with **×** (instead of clicking **Reload**), the new service worker stayed in its *waiting* state forever, so every navigation between pages (landing ↔ app ↔ bibs ↔ legal) re-detected it and popped the toast again. The toast now remembers the exact version you dismissed (the worker reports its cache version on request) and stays quiet until a genuinely newer deploy arrives — **Reload** still updates immediately as before.
 
 ### Changed
