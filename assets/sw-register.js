@@ -9,11 +9,42 @@
 
   var reloading = false;          // guards against a double reload
   var userAskedToReload = false;  // only reload on controllerchange if the user asked
+  var DISMISS_KEY = "crono.swDismissed";  // remembers a waiting version the user dismissed
 
   function doReload() {
     if (reloading) return;
     reloading = true;
     location.reload();
+  }
+
+  // Ask a worker for its CACHE name (so we can tell one waiting version from another).
+  // Resolves "" if it doesn't answer (e.g. an older worker without the handler).
+  function workerVersion(worker) {
+    return new Promise(function (resolve) {
+      if (!worker || !("MessageChannel" in window)) { resolve(""); return; }
+      var done = false;
+      function finish(v) { if (!done) { done = true; resolve(v || ""); } }
+      try {
+        var ch = new MessageChannel();
+        ch.port1.onmessage = function (ev) { finish(ev.data); };
+        worker.postMessage({ type: "GET_VERSION" }, [ch.port2]);
+      } catch (e) { finish(""); return; }
+      setTimeout(function () { finish(""); }, 1500);
+    });
+  }
+
+  function dismissedVersion() {
+    try { return localStorage.getItem(DISMISS_KEY) || ""; } catch (e) { return ""; }
+  }
+
+  // Show the toast only for a waiting version the user hasn't already dismissed, so the
+  // prompt doesn't reappear on every page navigation when "×" was clicked (not "Reload").
+  function maybeShowToast(reg) {
+    if (!reg.waiting || !navigator.serviceWorker.controller) return;
+    workerVersion(reg.waiting).then(function (v) {
+      if (v && v === dismissedVersion()) return;
+      showUpdateToast(reg, v);
+    });
   }
 
   // The new worker takes control only after we post SKIP_WAITING (below). Reload
@@ -26,14 +57,14 @@
   window.addEventListener("load", function () {
     navigator.serviceWorker.register("sw.js").then(function (reg) {
       // An update may have finished installing on a previous visit and be waiting.
-      if (reg.waiting && navigator.serviceWorker.controller) showUpdateToast(reg);
+      maybeShowToast(reg);
 
       reg.addEventListener("updatefound", function () {
         var nw = reg.installing;
         if (!nw) return;
         nw.addEventListener("statechange", function () {
           // "installed" + an existing controller = an update, not the first install.
-          if (nw.state === "installed" && navigator.serviceWorker.controller) showUpdateToast(reg);
+          if (nw.state === "installed" && navigator.serviceWorker.controller) maybeShowToast(reg);
         });
       });
 
@@ -51,7 +82,7 @@
     }).catch(function () {});
   });
 
-  function showUpdateToast(reg) {
+  function showUpdateToast(reg, version) {
     if (document.getElementById("swUpdateToast")) return;
     var host = document.getElementById("toasts");
     if (!host) { // landing/legal pages have no toast host — create one
@@ -91,6 +122,9 @@
     dismiss.setAttribute("aria-label", "Dismiss");
     dismiss.textContent = "×";
     dismiss.addEventListener("click", function () {
+      // Remember this version so the toast doesn't reappear on every navigation; a
+      // genuinely newer deploy (different CACHE) will still surface a fresh prompt.
+      try { if (version) localStorage.setItem(DISMISS_KEY, version); } catch (e) {}
       el.classList.remove("in");
       setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
     });
