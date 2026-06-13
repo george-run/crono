@@ -184,20 +184,21 @@
           Crono
         </a>
       </h1>
-      <span class="tagline">Chronometer for small &amp; in-house sport competitions</span>
+      <span class="tagline" data-i18n="tagline">Chronometer for small &amp; in-house sport competitions</span>
     </div>
     <div class="header-actions">
+      <span class="lang-wrap"><select class="hbtn-lang" data-lang-select aria-label="Language" data-i18n-attr="aria-label:lang.label,title:lang.label"></select></span>
       <button type="button" class="hbtn hbtn-theme" data-theme-toggle aria-label="Switch theme" title="Switch theme">
         <svg class="icon theme-to-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
         <svg class="icon theme-to-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
       </button>
       <button type="button" id="viewDemoBtn" class="hbtn hbtn-demo" aria-label="View demo" title="View demo — see how it works (auto-playing)">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><polygon points="10 7.5 15 10.5 10 13.5" fill="currentColor" stroke="none"/></svg>
-        <span class="hbtn-label">Demo</span>
+        <span class="hbtn-label" data-i18n="nav.demo">Demo</span>
       </button>
       <a class="hbtn hbtn-coffee" data-coffee href="https://revolut.me/rungeorge" target="_blank" rel="noopener" aria-label="Buy me a coffee" title="Buy me a coffee — voluntary donation, not a payment for the app">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7.5 3c0 1-1 1.4-1 2.5M11 3c0 1-1 1.4-1 2.5"/></svg>
-        <span class="hbtn-label">Support</span>
+        <span class="hbtn-label" data-i18n="nav.support">Support</span>
       </a>
     </div>
   </header>
@@ -206,33 +207,33 @@
   <div class="panel">
     <details class="setup" data-card="start" open>
       <summary class="setup-summary">
-        <span class="setup-title">Start time</span>
-        <span class="setup-preview">Start <strong id="startPreview">--:--:--</strong><span class="se-summary"> · <svg class="se-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15.5" y2="10.5"/><circle cx="12" cy="14" r="8"/></svg> <strong id="startElapsedMini">00:00:00</strong></span></span>
+        <span class="setup-title" data-i18n="start.title">Start time</span>
+        <span class="setup-preview"><span data-i18n="start.sincePrefix">Start</span> <strong id="startPreview">--:--:--</strong><span class="se-summary"> · <svg class="se-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15.5" y2="10.5"/><circle cx="12" cy="14" r="8"/></svg> <strong id="startElapsedMini">00:00:00</strong></span></span>
         <svg class="setup-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </summary>
       <div class="setup-body">
     <div class="setup-row">
       <div class="field grow">
-        <label for="startTime">Start time</label>
+        <label for="startTime" data-i18n="start.title">Start time</label>
         <div class="field-inline">
           <input type="text" id="startTime" inputmode="numeric" placeholder="HH:MM:SS" aria-describedby="startHint">
           <button id="setStartNow" title="Set the start time to the current moment">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>
-            Set now
+            <span data-i18n="start.setNow">Set now</span>
           </button>
         </div>
-        <span class="field-help" id="startHint">When the race started — every result is timed from here. Editing it recalculates all times.</span>
+        <span class="field-help" id="startHint" data-i18n="start.hint">When the race started — every result is timed from here. Editing it recalculates all times.</span>
       </div>
       <div class="field">
-        <label for="distanceKm">Distance (km)</label>
-        <input type="text" id="distanceKm" inputmode="decimal" placeholder="optional" aria-describedby="distHint">
-        <span class="field-help" id="distHint">Optional — shows each finisher's pace (min/km).</span>
+        <label for="distanceKm" data-i18n="dist.label">Distance (km)</label>
+        <input type="text" id="distanceKm" inputmode="decimal" placeholder="optional" aria-describedby="distHint" data-i18n-attr="placeholder:dist.placeholder">
+        <span class="field-help" id="distHint" data-i18n="dist.hint">Optional — shows each finisher's pace (min/km).</span>
       </div>
     </div>
 
     <div class="start-elapsed" title="Live time elapsed since the start">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15.5" y2="10.5"/><circle cx="12" cy="14" r="8"/></svg>
-      <span class="se-label">Time since start</span>
+      <span class="se-label" data-i18n="start.timeSince">Time since start</span>
       <span class="se-time" id="startElapsed">00:00:00</span>
     </div>
 
@@ -244,8 +245,8 @@
   <div class="panel">
     <details class="setup" data-card="options">
       <summary class="setup-summary">
-        <span class="setup-title">Options</span>
-        <span class="setup-preview">Participants, export, backup &amp; clear</span>
+        <span class="setup-title" data-i18n="options.title">Options</span>
+        <span class="setup-preview" data-i18n="options.preview">Participants, export, backup &amp; clear</span>
         <svg class="setup-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </summary>
       <div class="setup-body">
@@ -254,32 +255,32 @@
           <input type="file" id="restoreFile" accept=".json,application/json" class="visually-hidden">
           <button id="partBtn" title="View, add and edit participants">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Participants
+            <span data-i18n="btn.participants">Participants</span>
           </button>
           <button id="exportBtn" class="primary" title="Download results as CSV">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
-            Export CSV
+            <span data-i18n="btn.exportCsv">Export CSV</span>
           </button>
           <button id="pdfBtn" title="Export results as PDF (via print)">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 14h8M8 17.5h5"/></svg>
-            Export PDF
+            <span data-i18n="btn.exportPdf">Export PDF</span>
           </button>
           <button id="backupBtn" title="Download a full backup (.json)">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
-            Backup
+            <span data-i18n="btn.backup">Backup</span>
           </button>
           <button id="restoreBtn" title="Restore from a backup (.json)">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V8"/><path d="M7 13l5-5 5 5"/><path d="M4 4h16"/></svg>
-            Restore
+            <span data-i18n="btn.restore">Restore</span>
           </button>
           <button id="clearBtn" class="danger" title="Delete all recorded results">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/></svg>
-            Clear results
+            <span data-i18n="btn.clear">Clear results</span>
           </button>
         </div>
 
         <details class="help">
-          <summary>What do these buttons do?</summary>
+          <summary data-i18n="help.summary">What do these buttons do?</summary>
           <div class="help-body">
             <ul>
               <li><strong>Participants</strong> — manage your start list (number, name, sex, birth year) or import a CSV (<code>number,name,sex,birth_year</code>). Names and sex/age categories then show up in the results.</li>
@@ -300,14 +301,14 @@
     <form class="capture" id="captureForm" autocomplete="off">
       <div class="field">
         <div class="capture-label">
-          <label for="runnerNumber">Runner number — tap Record or press Enter to log the finish</label>
+          <label for="runnerNumber" data-i18n="capture.label">Runner number — tap Record or press Enter to log the finish</label>
           <button type="button" id="soundToggle" class="sound-toggle" title="Beep on record" aria-pressed="true"></button>
         </div>
-        <input type="text" id="runnerNumber" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="#" aria-label="Runner number">
+        <input type="text" id="runnerNumber" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="#" aria-label="Runner number" data-i18n-attr="aria-label:runner.aria">
       </div>
       <button type="submit" class="primary" id="recordBtn">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15.5" y2="10.5"/><circle cx="12" cy="14" r="8"/></svg>
-        Record
+        <span data-i18n="btn.record">Record</span>
       </button>
     </form>
   </div>
@@ -315,7 +316,7 @@
   <!-- Results -->
   <div class="panel">
     <div class="result-summary">
-      <span class="rs-main"><strong id="statCount">0</strong> recorded</span>
+      <span class="rs-main"><strong id="statCount">0</strong> <span data-i18n="results.recorded">recorded</span></span>
       <span class="rs-sub" id="statPartWrap"></span>
       <span class="rs-sub rs-dup" id="statDupWrap"></span>
     </div>
@@ -323,17 +324,17 @@
       <div class="tabs" id="rankingTabs" role="tablist" aria-label="Ranking"></div>
       <div class="result-search">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-        <input type="search" id="resultSearch" placeholder="Search number or name…" aria-label="Search results">
+        <input type="search" id="resultSearch" placeholder="Search number or name…" aria-label="Search results" data-i18n-attr="placeholder:search.placeholder">
       </div>
     </div>
     <table id="result">
       <thead>
         <tr>
-          <th>Place</th>
-          <th>Number</th>
-          <th>Name</th>
-          <th>Obs.</th>
-          <th class="time">Time</th>
+          <th data-i18n="th.place">Place</th>
+          <th data-i18n="th.number">Number</th>
+          <th data-i18n="th.name">Name</th>
+          <th data-i18n="th.obs">Obs.</th>
+          <th class="time" data-i18n="th.time">Time</th>
           <th aria-label="Remove"></th>
         </tr>
       </thead>
@@ -363,18 +364,18 @@
           <animateMotion begin="0s" dur="6s" repeatCount="indefinite" rotate="0"><mpath xlink:href="#emptyPath"/></animateMotion>
         </g>
       </svg>
-      <span id="emptyMsg">No results yet. Enter a runner number above and press Record as each finishes.</span>
+      <span id="emptyMsg" data-i18n="empty.msg">No results yet. Enter a runner number above and press Record as each finishes.</span>
     </div>
   </div>
 
   <footer class="app">
-    Crono — runs fully offline in your browser. Data is stored locally on this device.
+    <span data-i18n="footer.app">Crono — runs fully offline in your browser. Data is stored locally on this device.</span>
     <div class="footer-links">
-      <a href="terms.html" data-doc="terms">Terms &amp; Conditions</a> · <a href="privacy.html" data-doc="privacy">Privacy Policy</a>
+      <a href="terms.html" data-doc="terms" data-i18n="footer.terms">Terms &amp; Conditions</a> · <a href="privacy.html" data-doc="privacy" data-i18n="footer.privacy">Privacy Policy</a>
     </div>
     <a class="coffee-link" data-coffee href="https://revolut.me/rungeorge" target="_blank" rel="noopener" title="Voluntary donation — not a payment for the app">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7.5 3c0 1-1 1.4-1 2.5M11 3c0 1-1 1.4-1 2.5"/></svg>
-      Buy me a coffee
+      <span data-i18n="nav.coffee">Buy me a coffee</span>
     </a>
   </footer>
 </div>
@@ -465,6 +466,7 @@
 <div id="printArea" aria-hidden="true"></div>
 
 <script src="assets/helpers.js"></script>
+<script src="assets/i18n.js"></script>
 <script src="assets/app.js"></script>
 <script src="assets/coffee.js"></script>
 <script src="assets/sw-register.js"></script>

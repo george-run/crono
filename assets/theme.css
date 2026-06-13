@@ -27,7 +27,11 @@
   --transition: .14s ease;          /* default hover/state transition */
   --shadow-soft: 0 8px 24px rgba(0, 0, 0, .35);   /* sticky capture panel */
   --shadow-pop: 0 12px 30px rgba(0, 0, 0, .45);   /* toasts, floating card */
-  --font-ui: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Latin first (Inter), then system CJK + Devanagari fallbacks so ja/zh/hi render without
+     extra web-font downloads (display font Oswald inherits this chain for non-Latin glyphs). */
+  --font-ui: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    "Hiragino Sans", "Yu Gothic", Meiryo, "PingFang SC", "Microsoft YaHei",
+    "Noto Sans CJK SC", "Noto Sans CJK JP", "Noto Sans Devanagari", "Nirmala UI", sans-serif;
   --font-display: 'Oswald', 'Arial Narrow', var(--font-ui);
 }
 
