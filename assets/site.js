@@ -315,5 +315,28 @@
   window.addEventListener("appinstalled", function () { deferred = null; btn.hidden = true; });
 })();
 
+// ----- Cookie / privacy consent banner (non-blocking; shares state with the app gate) -----
+(function () {
+  "use strict";
+  var H = (typeof window !== "undefined" && window.CronoH) || {};
+  var banner = document.getElementById("cookieBanner");
+  var accept = document.getElementById("cookieAccept");
+  if (!banner || !accept) return;
+  var KEY = H.CONSENT_KEY || "crono.consent";
+  var VERSION = H.CONSENT_VERSION || 1;
+
+  function accepted() {
+    try { return H.consentAccepted(localStorage.getItem(KEY), VERSION); }
+    catch (e) { return false; }
+  }
+  // Show only if consent hasn't been recorded yet (here or in the app — same key).
+  if (!accepted()) banner.classList.add("show");
+
+  accept.addEventListener("click", function () {
+    try { localStorage.setItem(KEY, JSON.stringify({ v: VERSION, at: Date.now() })); } catch (e) {}
+    banner.classList.remove("show");
+  });
+})();
+
 // Service worker registration + update toast live in assets/sw-register.js (shared with the app).
 

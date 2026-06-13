@@ -290,6 +290,20 @@ a { color: inherit; text-decoration: none; }
   padding: 2px 4px; border-radius: 999px; cursor: pointer; }
 .toast-dismiss:hover { color: var(--text); }
 
+/* Cookie / privacy consent banner (non-blocking; under the bib modal + toasts, over content). */
+.cookie-banner { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 1050;
+  display: none; align-items: center; gap: 16px; width: min(680px, calc(100% - 32px));
+  padding: 14px 18px; background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-pop); }
+.cookie-banner.show { display: flex; }
+.cookie-text { margin: 0; flex: 1; font-size: .9rem; color: var(--muted); }
+.cookie-text a { color: var(--primary); }
+.cookie-accept { flex: 0 0 auto; }
+@media (max-width: 560px) {
+  .cookie-banner { flex-direction: column; align-items: stretch; gap: 12px; text-align: center; bottom: 12px; }
+  .cookie-accept { width: 100%; }
+}
+
 /* ===== Bib number generator ===== */
 /* Header gets two actions side by side. */
 .nav-actions { display: inline-flex; align-items: center; gap: 10px; }

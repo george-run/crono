@@ -89,6 +89,21 @@
     return v;
   }
 
+  // Consent — shared so the in-app gate (app.js) and the landing cookie banner
+  // (site.js) agree on the storage key and what "accepted" means. Bump
+  // CONSENT_VERSION whenever the Terms/Privacy change materially → re-prompts
+  // everywhere. Both pages persist `{ v: CONSENT_VERSION, at }` under CONSENT_KEY.
+  var CONSENT_KEY = "crono.consent";
+  var CONSENT_VERSION = 1;
+  // Stored consent (a JSON string or the parsed object) is valid when it parses
+  // and its version is at least the one required.
+  function consentAccepted(stored, version) {
+    try {
+      var c = (typeof stored === "string") ? JSON.parse(stored || "null") : stored;
+      return !!c && c.v >= version;
+    } catch (e) { return false; }
+  }
+
   return {
     pad: pad,
     formatElapsed: formatElapsed,
@@ -99,6 +114,9 @@
     AGE_BRACKETS: AGE_BRACKETS,
     bracketRange: bracketRange,
     bibRange: bibRange,
-    csvCell: csvCell
+    csvCell: csvCell,
+    CONSENT_KEY: CONSENT_KEY,
+    CONSENT_VERSION: CONSENT_VERSION,
+    consentAccepted: consentAccepted
   };
 });
