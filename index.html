@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'">
-<meta name="description" content="Crono — a fast, offline chronometer for small and in-house running competitions. Bib-by-bib timing, live rankings by sex and age, pace and CSV export.">
-<title>Crono — simple race timing</title>
+<meta name="description" content="Crono — a fast, offline chronometer for race organisers timing small and in-house running competitions. Runs in any browser (no install needed). Bib-by-bib timing, live rankings by sex and age, pace and CSV export.">
+<title>Crono — simple race timing for organisers</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="favicon.svg">
@@ -52,17 +52,18 @@
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
         Bib numbers
       </button>
-      <a class="btn" href="app.html">Open app</a>
+      <a class="btn primary" href="app.html">Open app</a>
     </div>
   </header>
 
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-copy">
-        <span class="badge"><span class="badge-dot"></span> Works offline · no account · no tracking</span>
+        <span class="badge"><span class="badge-dot"></span> For organisers · works offline · no account</span>
         <h1>The fastest way to <span class="accent">time your race</span></h1>
         <p class="lead">
-          A chronometer that runs right in your browser. Open it once with a connection,
+          Built for <strong>race organisers and clubs</strong> — a chronometer that runs right in
+          your browser, with <strong>nothing to install</strong>. Open it once with a connection,
           then time the whole race <strong>fully offline</strong> — recording, rankings,
           pace and CSV export. Your results are <strong>saved on your device</strong> and
           won't be lost if you lose signal or close the app.
@@ -126,21 +127,6 @@
     </div>
   </section>
 
-  <section class="section bib-section">
-    <div class="bib-band">
-      <span class="bib-art" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
-      </span>
-      <span class="eyebrow bib-eyebrow">Before race day</span>
-      <h2>Print your race bib numbers</h2>
-      <p class="bib-sub">Generate a range of numbered bibs with your event name, date and logo — pick a colour theme and download a clean, print-ready PDF (2 per A4 page). No timing needed; do it days before the race.</p>
-      <button type="button" class="btn bib lg bib-cta" data-bib-open>
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
-        Generate bib numbers
-      </button>
-    </div>
-  </section>
-
   <section class="section demo-section">
     <div class="section-head">
       <span class="eyebrow">See it in action</span>
@@ -163,7 +149,7 @@
         </ul>
       </div>
     </div>
-    <p class="demo-caption">Auto-playing preview — no need to tap. Open the app to time for real.</p>
+    <p class="demo-caption">Open the app to time a real race — every result stays on your device.</p>
   </section>
 
   <section class="section" id="features">
@@ -230,11 +216,26 @@
     </div>
   </section>
 
+  <section class="section bib-section">
+    <div class="bib-band">
+      <span class="bib-art" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
+      </span>
+      <span class="eyebrow bib-eyebrow">Before race day</span>
+      <h2>Print your race bib numbers</h2>
+      <p class="bib-sub">Organising the event? Generate a range of numbered bibs with your event name, date and logo — pick a colour theme and download a clean, print-ready PDF (2 per A4 page). No timing needed; do it days before the race.</p>
+      <button type="button" class="btn bib lg bib-cta" data-bib-open>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
+        Generate bib numbers
+      </button>
+    </div>
+  </section>
+
   <section class="section install" id="install">
     <div class="section-head">
-      <span class="eyebrow">Install it like an app</span>
-      <h2>Add Crono to your phone or desktop</h2>
-      <p class="install-lead">Crono is a PWA, so you can install it — on mobile and desktop. It then launches full-screen from your home screen (no browser bars) and runs offline. No app store, no account.</p>
+      <span class="eyebrow">Optional — it also works in any browser</span>
+      <h2>Prefer an app? Install it</h2>
+      <p class="install-lead">You don't have to install anything — Crono runs in any browser straight from the web. But if you'd like a one-tap, full-screen launcher that also works offline, you can optionally install it as an app (it's a PWA), on mobile and desktop. No app store, no account.</p>
     </div>
     <div class="features install-grid">
       <div class="card">
@@ -281,7 +282,7 @@
 
   <section class="cta-band">
     <h2>Ready to time your next race?</h2>
-    <p class="cta-sub">No account, no sign-up — open it and start the clock.</p>
+    <p class="cta-sub">Runs right in your browser — no account, no sign-up. Open it and start the clock.</p>
     <a class="btn primary lg" href="app.html">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15.5" y2="10.5"/><circle cx="12" cy="14" r="8"/></svg>
       Launch the timer
@@ -300,7 +301,7 @@
         </svg>
         Crono
       </span>
-      <p>A fast, offline chronometer for small and in-house running competitions.</p>
+      <p>A fast, offline race-timing tool for organisers of small and in-house running competitions.</p>
       <a class="btn coffee" href="https://revolut.me/rungeorge" target="_blank" rel="noopener" title="Voluntary donation — not a payment for the app">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7.5 3c0 1-1 1.4-1 2.5M11 3c0 1-1 1.4-1 2.5"/></svg>
         Buy me a coffee
