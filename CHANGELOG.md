@@ -6,6 +6,10 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 ### Added
 - **"Updated to the latest version" confirmation.** Clicking **Reload** on the update toast now shows a brief confirmation after the page reloads, so the action gives visible feedback (the app looks identical between versions, so it otherwise felt like nothing happened).
+- **Immediate feedback on Reload.** The button now shows **"Updating…"** and disables itself the moment it's clicked, since activating the new worker and reloading can take a second or two (it previously looked like nothing was happening).
+
+### Changed
+- **The app no longer auto-focuses the runner-number field on entry.** On mobile this popped the numeric keyboard up immediately, covering the page; focus still moves there after you record a finish (or clear results), where typing the next number is expected.
 - **`og:image:type` on every page** (plus `og:image` width/height on the Terms/Privacy pages) so link unfurlers that need it — notably WhatsApp — recognise the share image.
 
 - **Note on WhatsApp previews:** the custom share image (`assets/og-image.png`, ~762 KB) unfurls on Facebook but **not** on WhatsApp, which silently drops over-sized OG images (~300 KB ceiling). Adding `og:image:type` doesn't change that — a re-optimised image under ~300 KB (1200×630) is needed for WhatsApp to show it. (`tools/make-og.cjs` can generate a ~54 KB brand fallback if wanted.)

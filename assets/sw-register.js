@@ -137,7 +137,15 @@
     reload.className = "toast-reload";
     reload.textContent = "Reload";
     reload.addEventListener("click", function () {
+      if (reload.disabled) return;
       userAskedToReload = true;
+      // Immediate feedback: activating the new worker + reload can take a couple of
+      // seconds (especially the iOS fallback below), so show progress instead of a
+      // button that looks like it did nothing.
+      reload.disabled = true;
+      reload.textContent = "Updating…";
+      dismiss.disabled = true;
+      dismiss.style.opacity = ".4";
       // Treat Reload as accepting this version too: on iOS Safari (especially with many
       // open tabs holding the old worker) skipWaiting may not hand over control, so the
       // worker stays waiting and the toast would otherwise reappear after every reload.

@@ -802,7 +802,7 @@
     try { localStorage.setItem(KEY_CONSENT, JSON.stringify({ v: CONSENT_VERSION, at: Date.now() })); } catch (e) {}
     $consent.classList.remove("show");
     if (!$docModal.classList.contains("show")) document.body.style.overflow = "";
-    $runner.focus();
+    // No auto-focus on the number input here either — see the note at init.
   });
 
   // ----- Legal document modal ----------------------------------------------
@@ -1098,7 +1098,9 @@
   initConsent();
   var hash = (location.hash || "").replace("#", "");
   if (hash === "terms" || hash === "privacy") openDoc(hash);
-  if (!$consent.classList.contains("show") && !$docModal.classList.contains("show")) $runner.focus();
+  // Note: we deliberately do NOT auto-focus the runner-number input on entry — on mobile
+  // that pops the numeric keyboard up immediately, which is jarring. Focus moves there
+  // after the user records a finish (or clears results), where typing the next number is expected.
 })();
 
 // Service worker registration + update toast live in assets/sw-register.js (shared with the landing).
