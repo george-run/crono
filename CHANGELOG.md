@@ -8,8 +8,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - **"Updated to the latest version" confirmation.** Clicking **Reload** on the update toast now shows a brief confirmation after the page reloads, so the action gives visible feedback (the app looks identical between versions, so it otherwise felt like nothing happened).
 - **`og:image:type` on every page** (plus `og:image` width/height on the Terms/Privacy pages) so link unfurlers that need it — notably WhatsApp — recognise the share image.
 
-### Changed
-- **Share image shrunk 762 KB → ~54 KB** (regenerated via `tools/make-og.cjs`). WhatsApp silently drops over-sized OG images (~300 KB ceiling), so the bigger custom art previewed on Facebook but not on WhatsApp; the lighter brand image now unfurls everywhere. (The previous custom art remains in git history if a re-optimised version is provided later.)
+- **Note on WhatsApp previews:** the custom share image (`assets/og-image.png`, ~762 KB) unfurls on Facebook but **not** on WhatsApp, which silently drops over-sized OG images (~300 KB ceiling). Adding `og:image:type` doesn't change that — a re-optimised image under ~300 KB (1200×630) is needed for WhatsApp to show it. (`tools/make-og.cjs` can generate a ~54 KB brand fallback if wanted.)
 
 ### Fixed
 - **Update toast no longer loops on iOS when "Reload" can't swap the worker.** On iOS Safari (especially with many tabs holding the old worker) `skipWaiting` may not hand over control, so the worker stayed *waiting* and the toast reappeared after every reload. Clicking **Reload** now also remembers the version as accepted (like ×), breaking the loop; a genuinely newer deploy still prompts.
