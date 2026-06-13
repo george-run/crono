@@ -3,9 +3,6 @@ html, body { margin: 0; }
 body { font-family: var(--font-ui); background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 
-/* Bib-generator theme colours — single source for the swatches, the live preview and the print sheet. */
-:root { --bib-orange: #ea580c; --bib-lime: #4d7c0f; --bib-blue: #1d4ed8; --bib-mono: #111; }
-
 /* subtle sport backdrop */
 .bg-motif { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
   background:
@@ -345,75 +342,6 @@ a { color: inherit; text-decoration: none; }
   background: rgba(var(--accent-4-rgb),.16); color: var(--accent-4); margin: 0 auto 14px; }
 .bib-art svg { width: 26px; height: 26px; }
 
-/* Modal (landing's own recipe; backdrop + focus handled in site.js). */
-.bib-overlay { position: fixed; inset: 0; z-index: 1100; display: none;
-  align-items: center; justify-content: center; padding: 20px; background: var(--overlay); }
-.bib-overlay.show { display: flex; }
-.bib-modal { width: 100%; max-width: 540px; max-height: 90vh; overflow: auto;
-  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-pop); }
-.bib-modal-head { display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 20px; border-bottom: 1px solid var(--border); }
-.bib-modal-head h2 { margin: 0; font-size: 1.2rem; font-family: var(--font-display); }
-.bib-close { display: inline-grid; place-items: center; width: 36px; height: 36px;
-  border: 1px solid var(--border); background: transparent; color: var(--muted);
-  border-radius: 999px; cursor: pointer; transition: color var(--transition), border-color var(--transition); }
-.bib-close:hover { color: var(--text); border-color: var(--accent-4); }
-.bib-close .icon { width: 18px; height: 18px; }
-.bib-modal-body { padding: 20px; }
-.bib-row { display: flex; gap: 12px; margin-bottom: 14px; }
-.bib-logo-row { align-items: flex-end; }
-.bf { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;
-  font-size: .82rem; font-weight: 600; color: var(--muted); }
-.bf.grow { flex: 2; }
-/* width:100% keeps the native file input from overflowing the modal on iOS. */
-.bf input, .bf select { font: inherit; width: 100%; color: var(--text); background: var(--panel-2);
-  border: 1px solid var(--border); border-radius: var(--radius-input); padding: 9px 11px; }
-.bf input:focus, .bf select:focus { outline: 2px solid var(--accent-4); outline-offset: 2px; border-color: var(--accent-4); }
-.bib-logo-clear { border: 1px solid var(--border); background: transparent; color: var(--muted);
-  border-radius: 999px; padding: 9px 14px; cursor: pointer; font-size: .85rem; white-space: nowrap; }
-.bib-logo-clear:hover { color: var(--danger); border-color: var(--danger); }
-.bib-count { margin: 4px 0 0; font-size: .9rem; color: var(--muted); }
-.bib-count.err { color: var(--danger); }
-.bib-actions { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
-.bib-actions .spacer { flex: 1; }
-.bib-actions button { cursor: pointer; font-weight: 600; border-radius: 999px; padding: var(--btn-pad);
-  border: 1px solid var(--border); background: transparent; color: var(--text); }
-.bib-actions button:not(.primary):hover { border-color: var(--accent-4); color: var(--accent-4); }
-.bib-actions .btn.primary { background: var(--accent-4); border-color: var(--accent-4); color: var(--on-accent); }
-.bib-actions .btn.primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
-.bib-actions button:disabled { opacity: .5; cursor: not-allowed; transform: none; filter: none; }
-
-/* Colour swatches (replace the theme dropdown) */
-.bib-swatches { display: flex; gap: 8px; }
-.bib-sw { width: 30px; height: 30px; padding: 0; border-radius: 999px; border: 2px solid var(--border);
-  cursor: pointer; transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition); }
-.bib-sw:hover { transform: translateY(-1px); }
-.bib-sw.sw-orange { background: var(--bib-orange); }
-.bib-sw.sw-lime { background: var(--bib-lime); }
-.bib-sw.sw-blue { background: var(--bib-blue); }
-.bib-sw.sw-mono { background: var(--bib-mono); border-color: var(--muted); }
-.bib-sw.is-on { border-color: var(--text); box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--accent-4); }
-.bib-sw:focus-visible { outline: 2px solid var(--accent-4); outline-offset: 2px; }
-
-/* Live preview of one bib — WYSIWYG against the print sheet */
-.bib-preview-wrap { margin: 2px 0 4px; }
-.bib-preview-label { display: block; font-size: .82rem; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
-.bib-preview { --bibc: var(--bib-orange); width: 100%; max-width: 340px; margin: 0 auto;
-  aspect-ratio: 186 / 128; background: #fff; color: #111; border: 3px solid var(--bibc);
-  border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
-.bib-preview.theme-orange { --bibc: var(--bib-orange); }
-.bib-preview.theme-lime  { --bibc: var(--bib-lime); }
-.bib-preview.theme-blue  { --bibc: var(--bib-blue); }
-.bib-preview.theme-mono  { --bibc: var(--bib-mono); }
-.bib-preview .bib-head { display: flex; align-items: center; gap: 10px; padding: 7px 12px; background: var(--bibc); color: #fff; }
-.bib-preview .bib-head[hidden] { display: none; }
-.bib-preview .bib-logo { height: 28px; width: auto; max-width: 84px; object-fit: contain; background: #fff; padding: 2px; border-radius: 4px; }
-.bib-preview .bib-ev { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
-.bib-preview .bib-name { font-family: var(--font-display); font-weight: 700; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bib-preview .bib-date { font-size: .75rem; opacity: .92; }
-.bib-preview .bib-no { flex: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-display);
-  font-weight: 700; color: var(--bibc); font-size: clamp(2.6rem, 14vw, 4.6rem); line-height: 1; letter-spacing: -1px; }
-
 /* Pulsing nudge on the band CTA (gated by .js-anim → respects reduced-motion). */
 .js-anim .bib-cta { animation: bibPulse 2.6s ease-in-out infinite; }
 @keyframes bibPulse {
@@ -421,35 +349,3 @@ a { color: inherit; text-decoration: none; }
   50% { box-shadow: 0 0 0 12px rgba(var(--accent-4-rgb),0); }
 }
 .js-anim .bib-art { animation: floatBob 3.4s ease-in-out infinite; }
-
-/* ===== Printable bib sheet (built into #printArea, printed via window.print) ===== */
-#printArea { display: none; }
-@media print {
-  @page { size: A4 portrait; margin: 12mm; }
-  body { background: #fff !important; }
-  body > *:not(#printArea) { display: none !important; }
-  #printArea { display: block !important; }
-  #printArea .bib-card { box-sizing: border-box; height: 128mm; margin: 0 0 8mm;
-    display: flex; flex-direction: column; overflow: hidden; color: #111;
-    border: 1.4mm solid var(--bibc); border-radius: 5mm; page-break-inside: avoid;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  #printArea .bib-card:nth-child(2n) { page-break-after: always; margin-bottom: 0; }
-  #printArea .bib-card:last-child { page-break-after: auto; }
-  #printArea .bib-head { display: flex; align-items: center; gap: 6mm; padding: 6mm 8mm;
-    background: var(--bibc); color: #fff;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  #printArea .bib-logo { height: 16mm; width: auto; max-width: 42mm; object-fit: contain;
-    background: #fff; padding: 1mm; border-radius: 2mm; }
-  #printArea .bib-ev { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
-  #printArea .bib-name { font-family: var(--font-display); font-weight: 700; font-size: 17pt;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  #printArea .bib-date { font-size: 11pt; opacity: .92; }
-  #printArea .bib-no { flex: 1; display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display); font-weight: 700; color: var(--bibc);
-    font-size: 120pt; line-height: 1; letter-spacing: -2pt; }
-  #printArea.theme-orange { --bibc: var(--bib-orange); }
-  #printArea.theme-lime   { --bibc: var(--bib-lime); }
-  #printArea.theme-blue   { --bibc: var(--bib-blue); }
-  #printArea.theme-mono   { --bibc: var(--bib-mono); }
-  #printArea.theme-mono .bib-no { color: #111; }
-}

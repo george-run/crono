@@ -8,7 +8,7 @@ const path = require("node:path");
 
 const ROOT = path.join(__dirname, "..");
 const read = (p) => fs.readFileSync(path.join(ROOT, p), "utf8");
-const HTML = ["index.html", "app.html", "terms.html", "privacy.html"];
+const HTML = ["index.html", "app.html", "bibs.html", "terms.html", "privacy.html"];
 const exists = (p) => fs.existsSync(path.join(ROOT, p));
 
 test("sw.js CACHE version is mirrored in CLAUDE.md Status", () => {

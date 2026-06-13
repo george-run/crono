@@ -64,10 +64,10 @@
       Crono
     </span>
     <div class="nav-actions">
-      <button type="button" class="btn bib" data-bib-open>
+      <a class="btn bib" href="bibs.html">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
         Bib numbers
-      </button>
+      </a>
       <a class="btn primary" href="app.html">Open app</a>
     </div>
   </header>
@@ -236,10 +236,10 @@
       <span class="eyebrow bib-eyebrow">Before race day</span>
       <h2>Print your race bib numbers</h2>
       <p class="bib-sub">Organising the event? Generate a range of numbered bibs with your event name, date and logo — pick a colour theme and download a clean, print-ready PDF (2 per A4 page). No timing needed; do it days before the race.</p>
-      <button type="button" class="btn bib lg bib-cta" data-bib-open>
+      <a class="btn bib lg bib-cta" href="bibs.html">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
         Generate bib numbers
-      </button>
+      </a>
     </div>
   </section>
 
@@ -339,66 +339,8 @@
   <div class="footer-bottom">© <span id="yr"></span> Crono · runs fully offline in your browser.</div>
 </footer>
 
-<!-- Bib number generator modal -->
-<div class="bib-overlay" id="bibModal" role="dialog" aria-modal="true" aria-labelledby="bibModalTitle">
-  <div class="bib-modal">
-    <div class="bib-modal-head">
-      <h2 id="bibModalTitle">Print bib numbers</h2>
-      <button class="bib-close" id="bibClose" title="Close" aria-label="Close">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
-      </button>
-    </div>
-    <div class="bib-modal-body">
-      <div class="bib-row">
-        <label class="bf grow">Event name <input id="bibEvent" type="text" maxlength="60" placeholder="e.g. Spring City Run" autocomplete="off"></label>
-        <label class="bf">Date <input id="bibDate" type="text" maxlength="30" placeholder="e.g. 12 June 2026" autocomplete="off"></label>
-      </div>
-      <div class="bib-row">
-        <label class="bf">From <input id="bibFrom" type="text" inputmode="numeric" value="1" autocomplete="off"></label>
-        <label class="bf">To <input id="bibTo" type="text" inputmode="numeric" value="100" autocomplete="off"></label>
-        <div class="bf">Theme
-          <div class="bib-swatches" id="bibThemes" role="radiogroup" aria-label="Colour theme">
-            <button type="button" class="bib-sw sw-orange is-on" data-theme="orange" role="radio" aria-checked="true" title="Orange" aria-label="Orange"></button>
-            <button type="button" class="bib-sw sw-lime" data-theme="lime" role="radio" aria-checked="false" title="Lime" aria-label="Lime"></button>
-            <button type="button" class="bib-sw sw-blue" data-theme="blue" role="radio" aria-checked="false" title="Blue" aria-label="Blue"></button>
-            <button type="button" class="bib-sw sw-mono" data-theme="mono" role="radio" aria-checked="false" title="Black &amp; white" aria-label="Black and white"></button>
-          </div>
-        </div>
-      </div>
-      <div class="bib-row bib-logo-row">
-        <label class="bf grow">Logo (optional)
-          <input id="bibLogo" type="file" accept="image/*">
-        </label>
-        <button type="button" id="bibLogoClear" class="bib-logo-clear" hidden>Remove logo</button>
-      </div>
-      <div class="bib-preview-wrap">
-        <span class="bib-preview-label">Preview</span>
-        <div class="bib-preview theme-orange" id="bibPreview" aria-hidden="true">
-          <div class="bib-head" id="bibPvHead">
-            <img class="bib-logo" id="bibPvLogo" alt="" hidden>
-            <div class="bib-ev">
-              <span class="bib-name" id="bibPvName"></span>
-              <span class="bib-date" id="bibPvDate"></span>
-            </div>
-          </div>
-          <div class="bib-no" id="bibPvNo">1</div>
-        </div>
-      </div>
-      <p class="bib-count" id="bibCount" aria-live="polite"></p>
-      <div class="bib-actions">
-        <button type="button" id="bibCancel">Cancel</button>
-        <span class="spacer"></span>
-        <button type="button" id="bibGenerate" class="btn primary">Generate &amp; print</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Toasts (shared component with the app) -->
 <div id="toasts" class="toasts" aria-live="polite"></div>
-
-<!-- Print-only bib sheet (populated by the generator) -->
-<div id="printArea" aria-hidden="true"></div>
 
 <!-- Consent / Terms gate (blocking welcome modal; shares crono.consent with the app's gate) -->
 <div class="consent-overlay" id="consent" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
