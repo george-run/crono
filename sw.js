@@ -2,8 +2,11 @@
    - HTML pages: network-first (deploys show immediately when online; cache is the offline fallback).
    - Static assets: stale-while-revalidate (instant + offline, and the cache self-heals on the next
      load even if CACHE wasn't bumped).
-   Bump CACHE to drop the old cache and force a fresh precache. Keep ASSETS in sync. */
-var CACHE = "crono-v55";
+   - Updates WAIT: a freshly-installed worker does not skipWaiting on its own. The page's
+     "new version" toast posts SKIP_WAITING when the user clicks Reload, so the running
+     version is never swapped out mid-race. Bump CACHE to drop the old cache + force a
+     fresh precache. Keep ASSETS in sync. */
+var CACHE = "crono-v56";
 var ASSETS = [
   "./",
   "index.html",
@@ -33,7 +36,14 @@ self.addEventListener("install", function (e) {
         .then(function (res) { if (res && res.ok) return c.put(u, res); })
         .catch(function () {});
     }));
-  }).then(function () { return self.skipWaiting(); }));
+  }));
+  // No skipWaiting() here: the new worker waits until the page's "Reload" asks it
+  // to take over (SKIP_WAITING below), so a deploy never disrupts a live race.
+});
+
+// The page (sw-register.js) posts this when the user clicks "Reload" on the update toast.
+self.addEventListener("message", function (e) {
+  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("activate", function (e) {

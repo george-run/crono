@@ -5,6 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
+- **"New version" update flow is now honest and non-disruptive.** Previously the freshly-deployed service worker activated itself immediately (`skipWaiting`), so the "Reload to update" toast appeared *after* the new version had already taken over. Now the new worker **waits**: the running version is left untouched until you click **Reload**, which tells the worker to take over and reloads the page exactly once (it still never reloads on its own, so it can't interrupt a live race). It also catches an update that finished installing on an earlier visit, and re-checks for updates when a long-open tab regains focus. Fixed the toast on the landing page so it fades in/out like the app's (it was popping in abruptly).
 - Moved to the custom domain **crono.run**: added a `CNAME` file (so it survives deploys) and pointed all absolute URLs (canonical, Open Graph, sitemap, robots) at `https://crono.run/`. Paths stay relative, so the app still works from any base.
 
 ### Added
