@@ -295,7 +295,7 @@
           <label for="runnerNumber">Runner number — tap Record or press Enter to log the finish</label>
           <button type="button" id="soundToggle" class="sound-toggle" title="Beep on record" aria-pressed="true"></button>
         </div>
-        <input type="text" id="runnerNumber" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="0" aria-label="Runner number">
+        <input type="text" id="runnerNumber" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="#" aria-label="Runner number">
       </div>
       <button type="submit" class="primary" id="recordBtn">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15.5" y2="10.5"/><circle cx="12" cy="14" r="8"/></svg>
@@ -304,15 +304,13 @@
     </form>
   </div>
 
-  <!-- Stats -->
-  <div class="panel stats">
-    <div class="stat"><span class="num" id="statCount">0</span><span class="lbl">Recorded</span></div>
-    <div class="stat"><span class="num" id="statParticipants">0</span><span class="lbl">Participants loaded</span></div>
-    <div class="stat"><span class="num" id="statDup">0</span><span class="lbl">Duplicates</span></div>
-  </div>
-
   <!-- Results -->
   <div class="panel">
+    <div class="result-summary">
+      <span class="rs-main"><strong id="statCount">0</strong> recorded</span>
+      <span class="rs-sub" id="statPartWrap"></span>
+      <span class="rs-sub rs-dup" id="statDupWrap"></span>
+    </div>
     <div class="results-head">
       <div class="tabs" id="rankingTabs" role="tablist" aria-label="Ranking"></div>
       <div class="result-search">
