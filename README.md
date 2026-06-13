@@ -1,4 +1,4 @@
-[![Crono banner](https://rungeorge.github.io/crono/images/preview.png)](https://rungeorge.github.io/crono/)
+[![Crono banner](https://crono.run/assets/og-image.png)](https://crono.run/)
 
 # Crono — Mini Web App
 
@@ -6,7 +6,7 @@ A simple, **offline** chronometer for small and in-house sport competitions
 (running and beyond). No server, no build step, no dependencies — plain static
 files you can open anywhere or host on GitHub Pages.
 
-👉 **Live:** https://rungeorge.github.io/crono/ · **App:** https://rungeorge.github.io/crono/app.html
+👉 **Live:** https://crono.run/ · **App:** https://crono.run/app.html
 
 ## Features
 - Set and edit the start time (handles races that cross midnight)
