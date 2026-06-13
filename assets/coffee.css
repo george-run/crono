@@ -6,7 +6,7 @@
 .coffee-overlay.show { display: flex; }
 
 .coffee-modal { width: 100%; max-width: 420px; background: var(--panel);
-  border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-pop); padding: 24px; }
+  border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-pop); padding: 24px; outline: none; }
 .coffee-modal h2 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 12px; }
 .coffee-ic { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
   background: rgba(var(--accent-3-rgb), .15); color: var(--accent-3); }

@@ -23,6 +23,7 @@
 
     var modal = document.createElement("div");
     modal.className = "coffee-modal";
+    modal.tabIndex = -1;   // focus target on open (avoids a focus ring on the CTA)
     modal.innerHTML =
       '<h2 id="coffeeTitle"><span class="coffee-ic">' + CUP + '</span>Buy me a coffee</h2>' +
       '<p>Crono is completely free — no accounts, no ads, no tracking, and every feature works offline. There’s nothing to pay for.</p>' +
@@ -71,7 +72,7 @@
     lastFocus = document.activeElement;
     overlay.classList.add("show");
     document.body.style.overflow = "hidden";
-    goBtn.focus();
+    overlay.firstChild.focus();   // focus the modal, not a button (no coloured ring)
   }
 
   function close() {
