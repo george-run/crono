@@ -179,11 +179,14 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var elEvent = $("bibEvent"), elDate = $("bibDate"),
-      elFrom = $("bibFrom"), elTo = $("bibTo"), elTheme = $("bibTheme"),
+      elFrom = $("bibFrom"), elTo = $("bibTo"), elThemes = $("bibThemes"),
       elLogo = $("bibLogo"), elLogoClear = $("bibLogoClear"),
       elCount = $("bibCount"), elGen = $("bibGenerate"),
       elClose = $("bibClose"), elCancel = $("bibCancel"),
       printArea = $("printArea");
+  var pv = $("bibPreview"), pvHead = $("bibPvHead"), pvLogo = $("bibPvLogo"),
+      pvName = $("bibPvName"), pvDate = $("bibPvDate"), pvNo = $("bibPvNo");
+  var theme = "orange";
 
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
@@ -210,14 +213,40 @@
     elGen.disabled = false;
   }
 
+  // Live WYSIWYG preview of the first bib in the range.
+  function renderPreview() {
+    if (!pv) return;
+    pv.className = "bib-preview theme-" + theme;
+    var name = elEvent.value.trim(), date = elDate.value.trim();
+    if (pvHead) pvHead.hidden = !(name || date || logoData);
+    if (pvName) pvName.textContent = name;
+    if (pvDate) pvDate.textContent = date;
+    if (pvLogo) {
+      if (logoData) { pvLogo.src = logoData; pvLogo.hidden = false; }
+      else { pvLogo.removeAttribute("src"); pvLogo.hidden = true; }
+    }
+    var from = parseInt(elFrom.value, 10);
+    if (pvNo) pvNo.textContent = (from >= 0 && from < 1e7) ? String(from) : "1";
+  }
+
+  function setTheme(t) {
+    theme = t;
+    Array.prototype.forEach.call(elThemes.querySelectorAll(".bib-sw"), function (b) {
+      var on = b.getAttribute("data-theme") === t;
+      b.classList.toggle("is-on", on);
+      b.setAttribute("aria-checked", on ? "true" : "false");
+    });
+    renderPreview();
+  }
+
   function readLogo(file) {
-    if (!file || !/^image\//.test(file.type)) { logoData = ""; elLogoClear.hidden = true; return; }
+    if (!file || !/^image\//.test(file.type)) { logoData = ""; elLogoClear.hidden = true; renderPreview(); return; }
     var fr = new FileReader();
-    fr.onload = function () { logoData = String(fr.result || ""); elLogoClear.hidden = !logoData; };
-    fr.onerror = function () { logoData = ""; elLogoClear.hidden = true; };
+    fr.onload = function () { logoData = String(fr.result || ""); elLogoClear.hidden = !logoData; renderPreview(); };
+    fr.onerror = function () { logoData = ""; elLogoClear.hidden = true; renderPreview(); };
     fr.readAsDataURL(file);
   }
-  function clearLogo() { logoData = ""; elLogo.value = ""; elLogoClear.hidden = true; }
+  function clearLogo() { logoData = ""; elLogo.value = ""; elLogoClear.hidden = true; renderPreview(); }
 
   function focusables() {
     return modal.querySelectorAll(
@@ -240,6 +269,7 @@
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", onKeydown);
     updateCount();
+    renderPreview();
     setTimeout(function () { elEvent.focus(); }, 0);
   }
   function close() {
@@ -268,7 +298,7 @@
       return '<div class="bib-card">' + head + '<div class="bib-no">' + n + "</div></div>";
     }).join("");
 
-    printArea.className = "bib theme-" + elTheme.value;
+    printArea.className = "bib theme-" + theme;
     printArea.innerHTML = cards;
     close();
     // Let layout settle (and the logo data URL decode) before opening the print dialog.
@@ -279,8 +309,14 @@
   elClose.addEventListener("click", close);
   elCancel.addEventListener("click", close);
   modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
-  elFrom.addEventListener("input", updateCount);
+  elEvent.addEventListener("input", renderPreview);
+  elDate.addEventListener("input", renderPreview);
+  elFrom.addEventListener("input", function () { updateCount(); renderPreview(); });
   elTo.addEventListener("input", updateCount);
+  if (elThemes) elThemes.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".bib-sw");
+    if (b) setTheme(b.getAttribute("data-theme"));
+  });
   elLogo.addEventListener("change", function () { readLogo(elLogo.files && elLogo.files[0]); });
   elLogoClear.addEventListener("click", clearLogo);
   elGen.addEventListener("click", generate);

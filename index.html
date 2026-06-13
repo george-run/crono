@@ -356,20 +356,33 @@
       <div class="bib-row">
         <label class="bf">From <input id="bibFrom" type="text" inputmode="numeric" value="1" autocomplete="off"></label>
         <label class="bf">To <input id="bibTo" type="text" inputmode="numeric" value="100" autocomplete="off"></label>
-        <label class="bf">Theme
-          <select id="bibTheme">
-            <option value="orange">Orange</option>
-            <option value="lime">Lime</option>
-            <option value="blue">Blue</option>
-            <option value="mono">Black &amp; white</option>
-          </select>
-        </label>
+        <div class="bf">Theme
+          <div class="bib-swatches" id="bibThemes" role="radiogroup" aria-label="Colour theme">
+            <button type="button" class="bib-sw sw-orange is-on" data-theme="orange" role="radio" aria-checked="true" title="Orange" aria-label="Orange"></button>
+            <button type="button" class="bib-sw sw-lime" data-theme="lime" role="radio" aria-checked="false" title="Lime" aria-label="Lime"></button>
+            <button type="button" class="bib-sw sw-blue" data-theme="blue" role="radio" aria-checked="false" title="Blue" aria-label="Blue"></button>
+            <button type="button" class="bib-sw sw-mono" data-theme="mono" role="radio" aria-checked="false" title="Black &amp; white" aria-label="Black and white"></button>
+          </div>
+        </div>
       </div>
       <div class="bib-row bib-logo-row">
         <label class="bf grow">Logo (optional)
           <input id="bibLogo" type="file" accept="image/*">
         </label>
         <button type="button" id="bibLogoClear" class="bib-logo-clear" hidden>Remove logo</button>
+      </div>
+      <div class="bib-preview-wrap">
+        <span class="bib-preview-label">Preview</span>
+        <div class="bib-preview theme-orange" id="bibPreview" aria-hidden="true">
+          <div class="bib-head" id="bibPvHead">
+            <img class="bib-logo" id="bibPvLogo" alt="" hidden>
+            <div class="bib-ev">
+              <span class="bib-name" id="bibPvName"></span>
+              <span class="bib-date" id="bibPvDate"></span>
+            </div>
+          </div>
+          <div class="bib-no" id="bibPvNo">1</div>
+        </div>
       </div>
       <p class="bib-count" id="bibCount" aria-live="polite"></p>
       <div class="bib-actions">
