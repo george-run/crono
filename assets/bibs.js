@@ -6,6 +6,7 @@
   "use strict";
 
   var H = (typeof window !== "undefined" && window.CronoH) || {};
+  var t = (typeof CronoI18n !== "undefined") ? CronoI18n.t : function (k) { return k; };
   var MAX = 2000;                         // guard against a runaway print job
   var ORANGE = "#ea580c";
 
@@ -47,12 +48,11 @@
   function updateCount() {
     var nums = currentRange();
     if (!nums) {
-      elCount.textContent = "Enter a valid range — whole numbers, from ≤ to, up to " + MAX + " bibs.";
+      elCount.textContent = t("bibs.rangeErr", { max: MAX });
       elCount.classList.add("err"); elGen.disabled = true; return;
     }
     var pages = Math.ceil(nums.length / 2);
-    elCount.textContent = nums.length + " bib" + (nums.length === 1 ? "" : "s") +
-      " · " + pages + " page" + (pages === 1 ? "" : "s") + " (2 per A4).";
+    elCount.textContent = t("bibs.count", { n: nums.length, p: pages });
     elCount.classList.remove("err"); elGen.disabled = false;
   }
 
@@ -147,4 +147,7 @@
   setColor(ORANGE, false);
   updateCount();
   renderPreview();
+  // Re-run the dynamic count string when the language changes (static labels are handled
+  // by i18n.js itself).
+  document.addEventListener("crono:langchange", updateCount);
 })();
