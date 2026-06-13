@@ -38,8 +38,8 @@
   var $empty = document.getElementById("emptyState");
   var $emptyMsg = document.getElementById("emptyMsg");
   var $statCount = document.getElementById("statCount");
-  var $statParticipants = document.getElementById("statParticipants");
-  var $statDup = document.getElementById("statDup");
+  var $statPartWrap = document.getElementById("statPartWrap");
+  var $statDupWrap = document.getElementById("statDupWrap");
   var $importFile = document.getElementById("importFile");
   var $restoreFile = document.getElementById("restoreFile");
   var $tabs = document.getElementById("rankingTabs");
@@ -222,11 +222,13 @@
 
     $tabs.innerHTML = "";
     opts.forEach(function (o) {
+      var active = o.value === currentFilter;
       var b = document.createElement("button");
       b.type = "button";
-      b.className = "tab" + (o.value === currentFilter ? " active" : "");
+      b.className = "tab" + (active ? " active" : "");
       b.setAttribute("data-value", o.value);
       b.setAttribute("role", "tab");
+      b.setAttribute("aria-selected", active ? "true" : "false");
       b.textContent = o.label;
       $tabs.appendChild(b);
     });
@@ -295,6 +297,10 @@
       var tr = document.createElement("tr");
       tr.className = "row-click" + (e.id === newId ? " new" : "");
       tr.setAttribute("tabindex", "0");
+      tr.setAttribute("role", "button");
+      tr.setAttribute("aria-label",
+        "Edit result — runner " + e.runnerNumber + ", " + formatElapsed(elapsed) +
+        (name ? ", " + name : ""));
       tr.setAttribute("data-id", e.id);
       tr.innerHTML =
         '<td class="place' + (place === 1 ? " first" : "") + '" data-label="Place">' + place + "</td>" +
@@ -325,8 +331,12 @@
     }
 
     $statCount.textContent = entries.length;
-    $statParticipants.textContent = Object.keys(participants).length;
-    $statDup.textContent = entries.filter(function (e) { return !!dups[e.runnerNumber]; }).length;
+    var nPart = Object.keys(participants).length;
+    $statPartWrap.textContent = nPart ? nPart + " participant" + (nPart === 1 ? "" : "s") + " loaded" : "";
+    $statPartWrap.style.display = nPart ? "" : "none";
+    var nDup = entries.filter(function (e) { return !!dups[e.runnerNumber]; }).length;
+    $statDupWrap.textContent = nDup ? nDup + " duplicate" + (nDup === 1 ? "" : "s") : "";
+    $statDupWrap.style.display = nDup ? "" : "none";
   }
 
   function escapeHtml(s) {
@@ -374,15 +384,22 @@
   function recordFinish(number) {
     number = String(number).trim();
     if (number === "") return;
-    entries.push({
-      id: Date.now() + "-" + Math.random().toString(36).slice(2, 8),
-      runnerNumber: number,
-      finishEpoch: Date.now(),
-      details: ""
-    });
+    var id = Date.now() + "-" + Math.random().toString(36).slice(2, 8);
+    entries.push({ id: id, runnerNumber: number, finishEpoch: Date.now(), details: "" });
     if (soundOn) beep();
     save();
-    render(entries[entries.length - 1].id);
+    render(id);
+    // Undo safety net for an accidental record (replaces any earlier record toast).
+    toast("Recorded #" + number, "", { label: "Undo", onClick: function () { undoRecord(id, number); } });
+  }
+
+  // Remove a just-recorded finisher (from the Undo toast); no-op if already gone.
+  function undoRecord(id, number) {
+    if (!entries.some(function (e) { return e.id === id; })) return;
+    entries = entries.filter(function (e) { return e.id !== id; });
+    save();
+    render();
+    toast("Removed #" + number);
   }
 
   function clearResults() {
@@ -759,7 +776,9 @@
     if (!t) return;
     currentFilter = t.getAttribute("data-value");
     Array.prototype.forEach.call($tabs.children, function (c) {
-      c.classList.toggle("active", c.getAttribute("data-value") === currentFilter);
+      var on = c.getAttribute("data-value") === currentFilter;
+      c.classList.toggle("active", on);
+      c.setAttribute("aria-selected", on ? "true" : "false");
     });
     render();
   });
@@ -843,7 +862,8 @@
     $confirmOk.className = opts.danger ? "danger" : "primary";
     $confirmModal.classList.add("show");
     document.body.style.overflow = "hidden";
-    $confirmOk.focus();
+    // For destructive prompts, focus the safe choice (Cancel) so a stray Enter can't confirm.
+    (opts.danger ? $confirmCancel : $confirmOk).focus();
     return new Promise(function (resolve) { confirmResolve = resolve; });
   }
   function closeConfirm(result) {
@@ -862,17 +882,34 @@
   });
 
   // ----- Toasts -------------------------------------------------------------
-  function toast(msg, type) {
+  function toast(msg, type, action) {
     if (!$toasts) return;
+    // Only one actionable (Undo) toast at a time — drop any earlier one.
+    if (action) {
+      Array.prototype.forEach.call($toasts.querySelectorAll(".toast-action"), function (t) {
+        if (t.parentNode) t.parentNode.removeChild(t);
+      });
+    }
     var el = document.createElement("div");
-    el.className = "toast" + (type ? " " + type : "");
-    el.textContent = msg;
-    $toasts.appendChild(el);
-    requestAnimationFrame(function () { el.classList.add("in"); });
-    setTimeout(function () {
+    el.className = "toast" + (type ? " " + type : "") + (action ? " toast-action" : "");
+    var span = document.createElement("span");
+    span.textContent = msg;
+    el.appendChild(span);
+    function dismiss() {
       el.classList.remove("in");
       setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
-    }, type === "error" ? 4200 : 2600);
+    }
+    if (action) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "toast-btn";
+      btn.textContent = action.label;
+      btn.addEventListener("click", function () { dismiss(); action.onClick(); });
+      el.appendChild(btn);
+    }
+    $toasts.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add("in"); });
+    setTimeout(dismiss, action ? 5000 : (type === "error" ? 4200 : 2600));
   }
 
   // ----- Row edit modal (number / time / sex / year / note / delete) --------

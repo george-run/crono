@@ -19,7 +19,7 @@
   .bg-motif svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 
   /* Display font for the title, the big number and all timing figures. */
-  h1, #runnerNumber, td.time, td.place, td.num, .stat .num {
+  h1, #runnerNumber, td.time, td.place, td.num, .result-summary strong {
     font-family: var(--font-display);
   }
 
@@ -66,7 +66,7 @@
     font-size: 1rem;
     font-variant-numeric: tabular-nums;
   }
-  input:focus, select:focus { outline: 2px solid var(--primary); outline-offset: 0; border-color: var(--primary); }
+  input:focus, select:focus { outline: 2px solid var(--primary); outline-offset: 2px; border-color: var(--primary); }
 
   .tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
   .tabs::-webkit-scrollbar { height: 6px; }
@@ -182,6 +182,8 @@
     width: 100%;
     border-radius: var(--radius);
   }
+  /* Faint hint so an empty field reads as "enter a bib", not a literal value. */
+  #runnerNumber::placeholder { color: var(--muted); opacity: .45; }
   /* Record sits on its own full-width row; icon pinned left so the label is dead-centre. */
   #recordBtn { font-size: 1.15rem; padding: 14px 28px; flex: 1 1 100%; border-radius: var(--radius);
     justify-content: center; position: relative; }
@@ -207,15 +209,12 @@
     font-size: .85rem; line-height: 1.45; margin: 8px 0;
   }
 
-  .stats { display: flex; gap: 12px; flex-wrap: wrap; }
-  .stat {
-    display: flex; flex-direction: column; gap: 2px;
-    flex: 1 1 0; min-width: 120px;
-    background: var(--panel-2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 12px 14px;
-  }
-  .stat .num { font-size: 1.7rem; font-weight: 700; line-height: 1.1; color: var(--primary); font-variant-numeric: tabular-nums; }
-  .stat .lbl { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  /* Compact results summary line (replaces the old stats panel; the secondary
+     counts render only when non-zero, so the finisher list stays in focus). */
+  .result-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-bottom: 14px; }
+  .result-summary span { color: var(--muted); font-size: .9rem; }
+  .result-summary strong { color: var(--primary); font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+  .result-summary .rs-dup { color: var(--warn); }
 
   table { width: 100%; border-collapse: collapse; }
   th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); }
@@ -235,7 +234,7 @@
     display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase;
     padding: 2px 6px; border-radius: 6px; margin-left: 6px; vertical-align: middle;
   }
-  .tag.dup { background: var(--warn); color: #1f2937; }
+  .tag.dup { background: var(--warn); color: var(--on-accent); }
 
   .empty {
     display: flex; flex-direction: column; align-items: center; gap: 14px;
@@ -298,7 +297,7 @@
     /* Flash the whole card (not each cell) so the highlight doesn't layer oddly. */
     #result tr.new td { animation: none; }
     #result tr.new { animation: flashCard 1.1s ease; }
-    @keyframes flashCard { from { background: #2c3a1f; } to { background: var(--panel-2); } }
+    @keyframes flashCard { from { background: rgba(var(--primary-rgb),.22); } to { background: var(--panel-2); } }
 
     /* Label every cell using its data-label. */
     #result td[data-label]::before {
@@ -322,10 +321,6 @@
     #result td.edit-cell { position: absolute; top: 8px; right: 8px; padding: 0; width: auto; }
     #result td.edit-cell::before { content: none; }
     .row-edit .icon { width: 1.2em; height: 1.2em; }
-
-    .stats { gap: 10px; }
-    .stat { flex: 1 1 28%; min-width: 0; padding: 10px 12px; }
-    .stat .num { font-size: 1.4rem; }
 
     /* Full-width, thumb-friendly Record button under the number field. */
     #recordBtn { width: 100%; padding: 15px; font-size: 1.2rem; }
@@ -472,6 +467,12 @@
   .toast-dismiss { border: none; background: transparent; color: var(--muted);
     font-size: 1.2rem; line-height: 1; padding: 2px 4px; border-radius: 999px; }
   .toast-dismiss:hover { color: var(--text); background: transparent; }
+  /* Actionable toast (e.g. "Recorded #247" + Undo) — needs pointer events
+     since the toasts container is pointer-events:none. */
+  .toast-action { pointer-events: auto; display: flex; align-items: center; gap: 12px; }
+  .toast-btn { border: 1px solid var(--primary); background: transparent; color: var(--primary);
+    padding: 4px 12px; border-radius: 999px; font-size: .82rem; font-weight: 700; cursor: pointer; }
+  .toast-btn:hover { background: var(--primary); border-color: var(--primary); color: var(--on-accent); }
 
   /* Buy me a coffee (donation) link */
   .coffee-link { display: inline-flex; align-items: center; gap: 6px;
