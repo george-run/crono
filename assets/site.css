@@ -54,7 +54,7 @@ a { color: inherit; text-decoration: none; }
 .start-pulse { transform-box: fill-box; transform-origin: center; }
 .float-card { position: absolute; z-index: 2; right: 0; bottom: 4%;
   display: flex; align-items: center; gap: 12px;
-  background: rgba(20,27,36,.92); border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 10px 14px; box-shadow: var(--shadow-pop); backdrop-filter: blur(6px); }
 .fc-place { font-family: var(--font-display); font-weight: 700; color: var(--on-accent);
   background: var(--primary); border-radius: 9px; padding: 6px 9px; font-size: .9rem; }
