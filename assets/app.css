@@ -461,7 +461,9 @@
   .toast.in { opacity: 1; transform: none; }
   .toast.error { border-left-color: var(--danger); }
   /* "New version available" prompt — interactive (toasts container is pointer-events:none). */
-  .toast-update { pointer-events: auto; display: flex; align-items: center; gap: 12px; }
+  .toast-update { pointer-events: auto; display: flex; align-items: center; gap: 12px; width: min(380px, 88vw); }
+  .toast-update span { flex: 1 1 auto; min-width: 0; }
+  .toast-update .toast-reload, .toast-update .toast-dismiss { flex: 0 0 auto; }
   .toast-reload { border: 1px solid var(--primary); background: var(--primary); color: var(--on-accent);
     padding: 5px 12px; border-radius: 999px; font-size: .85rem; font-weight: 700; }
   .toast-dismiss { border: none; background: transparent; color: var(--muted);
