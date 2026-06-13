@@ -66,34 +66,35 @@
       Crono
     </span>
     <div class="nav-actions">
+      <span class="lang-wrap"><select class="nav-lang" data-lang-select aria-label="Language" data-i18n-attr="aria-label:lang.label,title:lang.label"></select></span>
       <a class="btn bib" href="bibs.html">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
-        Bib numbers
+        <span data-i18n="nav.bibs">Bib numbers</span>
       </a>
-      <a class="btn primary" href="app.html">Open app</a>
+      <a class="btn primary" href="app.html" data-i18n="nav.openApp">Open app</a>
     </div>
   </header>
 
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-copy">
-        <span class="badge"><span class="badge-dot"></span> For organisers · works offline · no account</span>
-        <h1>The fastest way to <span class="accent">time your race</span></h1>
-        <p class="lead">
-          Built for <strong>race organisers and clubs</strong> — a chronometer that runs right in
-          your browser, with <strong>nothing to install</strong>. Open it once with a connection,
-          then time the whole race <strong>fully offline</strong> — recording, rankings,
-          pace and CSV export. Your results are <strong>saved on your device</strong> and
+        <span class="badge"><span class="badge-dot"></span> <span data-i18n="hero.badge">For organisers · works offline · no account</span></span>
+        <h1><span data-i18n="hero.h1a">The fastest way to</span> <span class="accent" data-i18n="hero.h1b">time your race</span></h1>
+        <p class="lead" data-i18n="hero.lead">
+          Built for race organisers and clubs — a chronometer that runs right in
+          your browser, with nothing to install. Open it once with a connection,
+          then time the whole race fully offline — recording, rankings,
+          pace and CSV export. Your results are saved on your device and
           won't be lost if you lose signal or close the app.
         </p>
         <div class="cta">
           <a class="btn primary lg" href="app.html">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15.5" y2="10.5"/><circle cx="12" cy="14" r="8"/></svg>
-            Launch the timer
+            <span data-i18n="cta.launch">Launch the timer</span>
           </a>
-          <a class="btn ghost lg" href="#features">See features</a>
+          <a class="btn ghost lg" href="#features" data-i18n="cta.features">See features</a>
         </div>
-        <p class="cta-note">No app store, no sign-up — open it once online and it works offline (install it too, if you like).</p>
+        <p class="cta-note" data-i18n="cta.note">No app store, no sign-up — open it once online and it works offline (install it too, if you like).</p>
       </div>
       <div class="hero-art">
         <span class="blob"></span>
@@ -143,19 +144,19 @@
 
   <section class="section demo-section">
     <div class="section-head">
-      <span class="eyebrow">See it in action</span>
-      <h2>Watch finishers roll in</h2>
+      <span class="eyebrow" data-i18n="demoSec.eyebrow">See it in action</span>
+      <h2 data-i18n="demoSec.h2">Watch finishers roll in</h2>
     </div>
     <div class="demo-wrap">
-      <span class="demo-badge"><span class="demo-badge-dot"></span> Live demo — plays by itself</span>
+      <span class="demo-badge"><span class="demo-badge-dot"></span> <span data-i18n="demoSec.badge">Live demo — plays by itself</span></span>
       <div class="demo" id="demo" aria-hidden="true">
         <div class="demo-setup">
-          <div class="demo-field" id="demoStartField"><span class="demo-k">Start</span><span class="demo-v" id="demoStart">10:00:00</span></div>
-          <div class="demo-field" id="demoDistField"><span class="demo-k">Distance</span><span class="demo-v" id="demoDist">5 km</span></div>
+          <div class="demo-field" id="demoStartField"><span class="demo-k" data-i18n="demo.start">Start</span><span class="demo-v" id="demoStart">10:00:00</span></div>
+          <div class="demo-field" id="demoDistField"><span class="demo-k" data-i18n="demo.distance">Distance</span><span class="demo-v" id="demoDist">5 km</span></div>
         </div>
         <div class="demo-capture">
           <span class="demo-num" id="demoNum">247</span>
-          <span class="demo-rec">Record</span>
+          <span class="demo-rec" data-i18n="btn.record">Record</span>
         </div>
         <ul class="demo-list" id="demoList">
           <li class="demo-li"><span class="demo-pl">2</span><span class="demo-bib">#183</span><span class="demo-t">25:08</span></li>
@@ -163,69 +164,69 @@
         </ul>
       </div>
     </div>
-    <p class="demo-caption">Open the app to time a real race — every result stays on your device.</p>
+    <p class="demo-caption" data-i18n="demo.caption">Open the app to time a real race — every result stays on your device.</p>
   </section>
 
   <section class="section" id="features">
     <div class="section-head">
-      <span class="eyebrow">Everything you need on race day</span>
-      <h2>Simple to run, serious about results</h2>
+      <span class="eyebrow" data-i18n="feat.eyebrow">Everything you need on race day</span>
+      <h2 data-i18n="feat.h2">Simple to run, serious about results</h2>
     </div>
     <div class="features">
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6"/><path d="M12 4v3"/><circle cx="12" cy="14" r="8"/><path d="M12 14V10"/></svg></div>
-        <h3>Instant timing</h3>
-        <p>Enter a bib number and press Record (or Enter). Centisecond precision, even across midnight.</p>
+        <h3 data-i18n="feat.timingT">Instant timing</h3>
+        <p data-i18n="feat.timingD">Enter a bib number and press Record (or Enter). Centisecond precision, even across midnight.</p>
       </div>
       <div class="card featured">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M8.5 13 7 22l5-3 5 3-1.5-9"/></svg></div>
-        <h3>Live rankings</h3>
-        <p>Filter results by overall, men, women and standard 10-year age categories with one tap.</p>
+        <h3 data-i18n="feat.rankT">Live rankings</h3>
+        <p data-i18n="feat.rankD">Filter results by overall, men, women and standard 10-year age categories with one tap.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4-3"/></svg></div>
-        <h3>Pace per km</h3>
-        <p>Add a distance and Crono shows each runner's pace in min/km, in the table and the export.</p>
+        <h3 data-i18n="feat.paceT">Pace per km</h3>
+        <p data-i18n="feat.paceD">Add a distance and Crono shows each runner's pace in min/km, in the table and the export.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 19a4 4 0 0 0-8 0"/><circle cx="12" cy="9" r="4"/></svg></div>
-        <h3>Participants</h3>
-        <p>Import a CSV (number, name, sex, birth year) to show names and power the categories.</p>
+        <h3 data-i18n="feat.partT">Participants</h3>
+        <p data-i18n="feat.partD">Import a CSV (number, name, sex, birth year) to show names and power the categories.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg></div>
-        <h3>CSV export</h3>
-        <p>Download full results — place, category place, name, sex, category, time and pace.</p>
+        <h3 data-i18n="feat.csvT">CSV export</h3>
+        <p data-i18n="feat.csvD">Download full results — place, category place, name, sex, category, time and pace.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/></svg></div>
-        <h3>Works offline</h3>
-        <p>Open it once online, then time the whole race with no connection. Results are saved on your device and stay there between sessions — no account, no tracking.</p>
+        <h3 data-i18n="feat.offT">Works offline</h3>
+        <p data-i18n="feat.offD">Open it once online, then time the whole race with no connection. Results are saved on your device and stay there between sessions — no account, no tracking.</p>
       </div>
     </div>
   </section>
 
   <section class="section steps" id="how-it-works">
     <div class="section-head">
-      <span class="eyebrow">How it works</span>
-      <h2>From start line to results in three steps</h2>
+      <span class="eyebrow" data-i18n="steps.eyebrow">How it works</span>
+      <h2 data-i18n="steps.h2">From start line to results in three steps</h2>
     </div>
 
     <div class="steps-grid">
       <div class="step">
         <span class="step-num">1</span>
-        <h3>Set the start</h3>
-        <p>Tap “Set start now” when the gun goes off, or type an exact start time.</p>
+        <h3 data-i18n="step1T">Set the start</h3>
+        <p data-i18n="step1D">Tap “Set start now” when the gun goes off, or type an exact start time.</p>
       </div>
       <div class="step">
         <span class="step-num">2</span>
-        <h3>Record finishers</h3>
-        <p>Type each bib number and hit Record (or Enter) as runners cross the line.</p>
+        <h3 data-i18n="step2T">Record finishers</h3>
+        <p data-i18n="step2D">Type each bib number and hit Record (or Enter) as runners cross the line.</p>
       </div>
       <div class="step">
         <span class="step-num">3</span>
-        <h3>Rank &amp; export</h3>
-        <p>Switch ranking tabs, add a distance for pace, then export everything to CSV.</p>
+        <h3 data-i18n="step3T">Rank &amp; export</h3>
+        <p data-i18n="step3D">Switch ranking tabs, add a distance for pace, then export everything to CSV.</p>
       </div>
     </div>
   </section>
@@ -235,71 +236,71 @@
       <span class="bib-art" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
       </span>
-      <span class="eyebrow bib-eyebrow">Before race day</span>
-      <h2>Print your race bib numbers</h2>
-      <p class="bib-sub">Organising the event? Generate a range of numbered bibs with your event name, date and logo — pick a colour theme and download a clean, print-ready PDF (2 per A4 page). No timing needed; do it days before the race.</p>
+      <span class="eyebrow bib-eyebrow" data-i18n="bib.eyebrow">Before race day</span>
+      <h2 data-i18n="bib.h2">Print your race bib numbers</h2>
+      <p class="bib-sub" data-i18n="bib.sub">Organising the event? Generate a range of numbered bibs with your event name, date and logo — pick a colour theme and download a clean, print-ready PDF (2 per A4 page). No timing needed; do it days before the race.</p>
       <a class="btn bib lg bib-cta" href="bibs.html">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 10h8M8 14h5"/></svg>
-        Generate bib numbers
+        <span data-i18n="bib.cta">Generate bib numbers</span>
       </a>
     </div>
   </section>
 
   <section class="section install" id="install">
     <div class="section-head">
-      <span class="eyebrow">Optional — it also works in any browser</span>
-      <h2>Prefer an app? Install it</h2>
-      <p class="install-lead">You don't have to install anything — Crono runs in any browser straight from the web. But if you'd like a one-tap, full-screen launcher that also works offline, you can optionally install it as an app (it's a PWA), on mobile and desktop. No app store, no account.</p>
+      <span class="eyebrow" data-i18n="install.eyebrow">Optional — it also works in any browser</span>
+      <h2 data-i18n="install.h2">Prefer an app? Install it</h2>
+      <p class="install-lead" data-i18n="install.lead">You don't have to install anything — Crono runs in any browser straight from the web. But if you'd like a one-tap, full-screen launcher that also works offline, you can optionally install it as an app (it's a PWA), on mobile and desktop. No app store, no account.</p>
     </div>
     <div class="features install-grid">
       <div class="card" id="installIOS">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg></div>
-        <h3>iPhone &amp; iPad</h3>
-        <p>Open Crono in <strong>Safari</strong>, tap the <strong>Share</strong> button (the square with an up-arrow), choose <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</p>
+        <h3 data-i18n="ios.t">iPhone &amp; iPad</h3>
+        <p data-i18n="ios.d">Open Crono in Safari, tap the Share button (the square with an up-arrow), choose Add to Home Screen, then Add.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M12 8v6M9 11h6"/></svg></div>
-        <h3>Android</h3>
-        <p>Open Crono in <strong>Chrome</strong>, tap the <strong>⋮</strong> menu, choose <strong>Install app</strong> (or <strong>Add to Home screen</strong>), then <strong>Install</strong>.</p>
+        <h3 data-i18n="android.t">Android</h3>
+        <p data-i18n="android.d">Open Crono in Chrome, tap the ⋮ menu, choose Install app (or Add to Home screen), then Install.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-        <h3>Desktop</h3>
-        <p>In <strong>Chrome</strong> or <strong>Edge</strong>, click the <strong>install icon</strong> in the address bar (or menu → <strong>Install Crono</strong>). It opens in its own window.</p>
+        <h3 data-i18n="desktop.t">Desktop</h3>
+        <p data-i18n="desktop.d">In Chrome or Edge, click the install icon in the address bar (or menu → Install Crono). It opens in its own window.</p>
       </div>
     </div>
     <div class="install-cta">
       <button type="button" id="installBtn" class="btn primary lg" hidden>
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/><path d="M4 20h16"/></svg>
-        Install Crono
+        <span data-i18n="install.btn">Install Crono</span>
       </button>
     </div>
-    <p class="install-note">Tip: open Crono online once first so it can install and cache itself — after that it works with no connection.</p>
+    <p class="install-note" data-i18n="install.note">Tip: open Crono online once first so it can install and cache itself — after that it works with no connection.</p>
   </section>
 
   <section class="section faq">
     <div class="section-head">
-      <span class="eyebrow">Good to know</span>
-      <h2>Frequently asked questions</h2>
+      <span class="eyebrow" data-i18n="faq.eyebrow">Good to know</span>
+      <h2 data-i18n="faq.h2">Frequently asked questions</h2>
     </div>
     <div class="faq-list">
-      <details><summary>Is Crono free?</summary><p>Yes — it’s completely free and open-source. No account, no paywall.</p></details>
-      <details><summary>Does it work offline?</summary><p>Yes. Open Crono once while you have a connection (so it can load and install), then it keeps working <strong>completely offline</strong> — recording finishes, rankings, pace and exports all work with no signal. Great for start/finish lines with poor reception.</p></details>
-      <details><summary>Can I install it on my phone?</summary><p>Yes — Crono installs on mobile too. On <strong>iPhone/iPad</strong> use Safari's <strong>Share → Add to Home Screen</strong>; on <strong>Android</strong> use Chrome's <strong>⋮</strong> menu → <strong>Install app</strong>; on <strong>desktop</strong> click the install icon in the address bar. See the <a href="#install">install guide</a> above. Once installed it launches full-screen and runs offline.</p></details>
-      <details><summary>Will I lose my data?</summary><p>No — your start time, results and participants are <strong>saved on your device</strong> and stay there when you go offline, refresh or reopen the app. They're not sent anywhere. For extra safety (or to move to another device), use <strong>Backup</strong> to download a file you can <strong>Restore</strong> later. Clearing your browser's site data is the only thing that wipes them.</p></details>
-      <details><summary>How accurate is the timing?</summary><p>Times are recorded to the centisecond using your device clock. It’s great for club and in-house races, but for official, certified events keep a backup timing method.</p></details>
-      <details><summary>How do the sex &amp; age categories work?</summary><p>Import a participant CSV with <code>number, name, sex, birth_year</code>. Crono derives standard 10-year athletics categories and lets you rank by them. You can also fill missing data inline.</p></details>
-      <details><summary>Can I export the results?</summary><p>Yes — one click downloads a CSV with place, category place, name, sex, category, time and pace.</p></details>
-      <details><summary>Where is my data stored?</summary><p>Only in your browser (localStorage). Nothing is sent to a server; the operator can’t see or recover it, so export anything important.</p></details>
+      <details><summary data-i18n="faq.q1">Is Crono free?</summary><p data-i18n="faq.a1">Yes — it’s completely free and open-source. No account, no paywall.</p></details>
+      <details><summary data-i18n="faq.q2">Does it work offline?</summary><p data-i18n="faq.a2">Yes. Open Crono once while you have a connection (so it can load and install), then it keeps working completely offline — recording finishes, rankings, pace and exports all work with no signal. Great for start/finish lines with poor reception.</p></details>
+      <details><summary data-i18n="faq.q3">Can I install it on my phone?</summary><p data-i18n="faq.a3">Yes — Crono installs on mobile too. On iPhone/iPad use Safari's Share → Add to Home Screen; on Android use Chrome's ⋮ menu → Install app; on desktop click the install icon in the address bar. Once installed it launches full-screen and runs offline.</p></details>
+      <details><summary data-i18n="faq.q4">Will I lose my data?</summary><p data-i18n="faq.a4">No — your start time, results and participants are saved on your device and stay there when you go offline, refresh or reopen the app. They're not sent anywhere. For extra safety (or to move to another device), use Backup to download a file you can Restore later. Clearing your browser's site data is the only thing that wipes them.</p></details>
+      <details><summary data-i18n="faq.q5">How accurate is the timing?</summary><p data-i18n="faq.a5">Times are recorded to the centisecond using your device clock. It’s great for club and in-house races, but for official, certified events keep a backup timing method.</p></details>
+      <details><summary data-i18n="faq.q6">How do the sex &amp; age categories work?</summary><p data-i18n="faq.a6">Import a participant CSV with number, name, sex, birth_year. Crono derives standard 10-year athletics categories and lets you rank by them. You can also fill missing data inline.</p></details>
+      <details><summary data-i18n="faq.q7">Can I export the results?</summary><p data-i18n="faq.a7">Yes — one click downloads a CSV with place, category place, name, sex, category, time and pace.</p></details>
+      <details><summary data-i18n="faq.q8">Where is my data stored?</summary><p data-i18n="faq.a8">Only in your browser (localStorage). Nothing is sent to a server; the operator can’t see or recover it, so export anything important.</p></details>
     </div>
   </section>
 
   <section class="cta-band">
-    <h2>Ready to time your next race?</h2>
-    <p class="cta-sub">Runs right in your browser — no account, no sign-up. Open it and start the clock.</p>
+    <h2 data-i18n="ctaBand.h2">Ready to time your next race?</h2>
+    <p class="cta-sub" data-i18n="ctaBand.sub">Runs right in your browser — no account, no sign-up. Open it and start the clock.</p>
     <a class="btn primary lg" href="app.html">
       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15.5" y2="10.5"/><circle cx="12" cy="14" r="8"/></svg>
-      Launch the timer
+      <span data-i18n="cta.launch">Launch the timer</span>
     </a>
   </section>
 </div>
@@ -315,30 +316,30 @@
         </svg>
         Crono
       </span>
-      <p>A fast, offline race-timing tool for organisers of small and in-house running competitions.</p>
+      <p data-i18n="footer.brandDesc">A fast, offline race-timing tool for organisers of small and in-house running competitions.</p>
       <a class="btn coffee" data-coffee href="https://revolut.me/rungeorge" target="_blank" rel="noopener" title="Voluntary donation — not a payment for the app">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7.5 3c0 1-1 1.4-1 2.5M11 3c0 1-1 1.4-1 2.5"/></svg>
-        Buy me a coffee
+        <span data-i18n="nav.coffee">Buy me a coffee</span>
       </a>
     </div>
     <div class="footer-col">
-      <h4>Product</h4>
-      <a href="app.html">Open the app</a>
-      <a href="#features">Features</a>
-      <a href="#how-it-works">How it works</a>
-      <a href="#install">Install</a>
+      <h4 data-i18n="footer.product">Product</h4>
+      <a href="app.html" data-i18n="footer.openApp">Open the app</a>
+      <a href="#features" data-i18n="footer.features">Features</a>
+      <a href="#how-it-works" data-i18n="footer.how">How it works</a>
+      <a href="#install" data-i18n="footer.install">Install</a>
     </div>
     <div class="footer-col">
-      <h4>Legal</h4>
-      <a href="terms.html">Terms &amp; Conditions</a>
-      <a href="privacy.html">Privacy Policy</a>
+      <h4 data-i18n="footer.legal">Legal</h4>
+      <a href="terms.html" data-i18n="footer.terms">Terms &amp; Conditions</a>
+      <a href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
     </div>
     <div class="footer-col">
-      <h4>Project</h4>
+      <h4 data-i18n="footer.project">Project</h4>
       <a href="https://github.com/george-run/crono" target="_blank" rel="noopener">GitHub</a>
     </div>
   </div>
-  <div class="footer-bottom">© <span id="yr"></span> Crono · runs fully offline in your browser.</div>
+  <div class="footer-bottom">© <span id="yr"></span> Crono <span data-i18n="footer.bottom">· runs fully offline in your browser.</span></div>
 </footer>
 
 <!-- Toasts (shared component with the app) -->
@@ -352,19 +353,20 @@
       <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
       <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
     </svg>
-    <h2 id="consentTitle">Welcome to Crono</h2>
-    <p>Crono keeps your timing data locally on this device only — no tracking, no advertising or analytics cookies. To continue, please review and accept the documents below.</p>
+    <h2 id="consentTitle" data-i18n="consent.title">Welcome to Crono</h2>
+    <p data-i18n="consent.body">Crono keeps your timing data locally on this device only — no tracking, no advertising or analytics cookies. To continue, please review and accept the documents below.</p>
     <label class="consent-check">
       <input type="checkbox" id="consentCheck">
-      <span>I have read and accept the
+      <span data-i18n-html="consent.checkHtml">I have read and accept the
         <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and the
         <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
     </label>
-    <button type="button" id="consentAccept" class="btn primary" disabled>Accept &amp; continue</button>
+    <button type="button" id="consentAccept" class="btn primary" disabled data-i18n="consent.accept">Accept &amp; continue</button>
   </div>
 </div>
 
 <script src="assets/helpers.js"></script>
+<script src="assets/i18n.js"></script>
 <script src="assets/site.js"></script>
 <script src="assets/coffee.js"></script>
 <script src="assets/sw-register.js"></script>
