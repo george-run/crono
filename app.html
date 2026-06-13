@@ -165,7 +165,7 @@
     <h2 id="confirmTitle">Confirm</h2>
     <p id="confirmMsg"></p>
     <div class="confirm-actions">
-      <button id="confirmCancel">Cancel</button>
+      <button id="confirmCancel" data-i18n="confirm.cancel">Cancel</button>
       <button id="confirmOk" class="danger">Confirm</button>
     </div>
   </div>
@@ -384,20 +384,20 @@
 <div class="part-overlay" id="partModal" role="dialog" aria-modal="true" aria-labelledby="partTitle">
   <div class="part-modal">
     <div class="doc-modal-head">
-      <h2 id="partTitle">Participants</h2>
+      <h2 id="partTitle" data-i18n="part.title">Participants</h2>
       <button class="doc-close" id="partClose" title="Close" aria-label="Close">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
       </button>
     </div>
     <div class="part-toolbar">
-      <input type="search" id="partSearch" placeholder="Search number or name…" aria-label="Search participants">
+      <input type="search" id="partSearch" placeholder="Search number or name…" aria-label="Search participants" data-i18n-attr="placeholder:part.search">
       <button id="partImport" title="Import a CSV (number, name, sex, birth year)">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>
-        Import CSV
+        <span data-i18n="part.import">Import CSV</span>
       </button>
       <button id="partAdd" class="primary" title="Add a participant">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6v12"/><path d="M6 12h12"/></svg>
-        Add
+        <span data-i18n="part.add">Add</span>
       </button>
     </div>
     <div class="part-body" id="partBody"></div>
@@ -408,26 +408,26 @@
 <div class="row-overlay" id="rowModal" role="dialog" aria-modal="true" aria-labelledby="rowTitle">
   <div class="row-modal">
     <div class="doc-modal-head">
-      <h2 id="rowTitle">Edit result</h2>
+      <h2 id="rowTitle" data-i18n="row.title">Edit result</h2>
       <button class="doc-close" id="rowClose" title="Close" aria-label="Close">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
       </button>
     </div>
     <div class="row-form">
-      <label class="rf">Bib number <input id="rowNum" type="text" inputmode="numeric" autocomplete="off"></label>
-      <label class="rf">Finish time <input id="rowTime" type="text" inputmode="numeric" placeholder="H:MM:SS.cc" autocomplete="off"></label>
+      <label class="rf"><span data-i18n="row.bib">Bib number</span> <input id="rowNum" type="text" inputmode="numeric" autocomplete="off"></label>
+      <label class="rf"><span data-i18n="row.time">Finish time</span> <input id="rowTime" type="text" inputmode="numeric" placeholder="H:MM:SS.cc" autocomplete="off"></label>
       <div class="row-two">
-        <label class="rf">Sex
+        <label class="rf"><span data-i18n="row.sex">Sex</span>
           <select id="rowSex"><option value="">—</option><option value="M">M</option><option value="F">F</option></select>
         </label>
-        <label class="rf">Birth year <input id="rowYear" type="text" inputmode="numeric" maxlength="4" autocomplete="off"></label>
+        <label class="rf"><span data-i18n="row.year">Birth year</span> <input id="rowYear" type="text" inputmode="numeric" maxlength="4" autocomplete="off"></label>
       </div>
-      <label class="rf">Note <input id="rowNote" type="text" placeholder="add note…" autocomplete="off"></label>
+      <label class="rf"><span data-i18n="row.note">Note</span> <input id="rowNote" type="text" placeholder="add note…" autocomplete="off" data-i18n-attr="placeholder:ph.note"></label>
       <div class="row-actions">
-        <button id="rowDelete" class="danger">Delete</button>
+        <button id="rowDelete" class="danger" data-i18n="row.delete">Delete</button>
         <span class="spacer"></span>
-        <button id="rowCancel">Cancel</button>
-        <button id="rowSave" class="primary">Save</button>
+        <button id="rowCancel" data-i18n="confirm.cancel">Cancel</button>
+        <button id="rowSave" class="primary" data-i18n="row.save">Save</button>
       </div>
     </div>
   </div>
@@ -437,13 +437,13 @@
 <div class="doc-overlay" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoTitle">
   <div class="doc-modal demo-modal">
     <div class="doc-modal-head">
-      <h2 id="demoTitle">How to use Crono</h2>
+      <h2 id="demoTitle" data-i18n="demo.title">How to use Crono</h2>
       <button class="doc-close" id="demoClose" title="Close" aria-label="Close">
         <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
       </button>
     </div>
     <div class="doc-modal-body">
-      <p class="demo-intro">Set the <strong>start</strong> and (optional) <strong>distance</strong>, then type each bib number and hit <strong>Record</strong> as runners finish. This preview plays by itself:</p>
+      <p class="demo-intro" data-i18n="demo.intro">Set the start and (optional) distance, then type each bib number and hit Record as runners finish. This preview plays by itself:</p>
       <div class="demo" aria-hidden="true">
         <div class="demo-setup">
           <div class="demo-field"><span class="demo-k">Start</span><span class="demo-v">10:00:00</span></div>
@@ -451,7 +451,7 @@
         </div>
         <div class="demo-capture">
           <span class="demo-num" id="demoNum">0</span>
-          <span class="demo-rec">Record</span>
+          <span class="demo-rec" data-i18n="btn.record">Record</span>
         </div>
         <ul class="demo-list" id="demoList"></ul>
       </div>
