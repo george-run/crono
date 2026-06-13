@@ -4,15 +4,15 @@ Read this first. **If any rule here changes, update this file in the same commit
 New session? Skim **Status** below for where things stand, then the rules.
 
 ## TL;DR
-Static, zero-build, offline-first race chronometer on **GitHub Pages** under `/crono/`.
+Static, zero-build, offline-first race chronometer on **GitHub Pages** at the custom domain **`crono.run`** (served from root `/`; the old `rungeorge.github.io/crono/` redirects there).
 Landing = `index.html`; app = `app.html`; logic = `assets/app.js` (vanilla JS, IIFE).
 Edit → commit to the dev branch → merge to `master` → sync `gh-pages` → bump `sw.js` cache if
 assets changed. There is **no network, no image tooling and no browser/render tool** here.
 
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
-- **Live & in sync** as of **2026-06-12**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Latest deploy added the **bib-number generator** on the landing (see `CHANGELOG [Unreleased]`).
-- **Service worker cache:** `CACHE = "crono-v51"` in `sw.js` — bump it next time any cached asset changes.
+- **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
+- **Service worker cache:** `CACHE = "crono-v52"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/contest-number-generation-fecx8e`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them.
@@ -40,8 +40,9 @@ deploy**. When you add/rename/remove a file, bump the cache, or add a token, fix
 
 ## Structure
 ```
-index.html        Landing page            → /crono/
-app.html          The chronometer app     → /crono/app.html
+index.html        Landing page            → crono.run/
+app.html          The chronometer app     → crono.run/app.html
+CNAME             Custom domain for GitHub Pages (contains: crono.run) — must persist across deploys
 terms.html        Standalone Terms page    privacy.html  Standalone Privacy page
 favicon.svg       Logo mark
 manifest.webmanifest, sw.js   PWA (installable + offline)
@@ -67,7 +68,7 @@ test/architecture.test.js   Guards (cache↔Status, ASSETS exist, no inline CSS/
    connection**; all data lives in `localStorage` on the device. No servers, no accounts, no
    analytics/tracking calls. **Never** add a feature that *requires* the network at race time, and
    never make data loss possible on reload/offline (Backup/Restore is the only cross-device path).
-3. **Relative paths only** (served under `/crono/`): `assets/...`, `app.html`, never `/assets/...`.
+3. **Relative paths only** (served from the domain root at `crono.run`): `assets/...`, `app.html`, never `/assets/...`.
 4. **Don't rename IDs/classes read by JS** when refactoring.
 5. **JS style:** ES5-ish, `"use strict"`, `var`, small helpers, `// ----- Section -----` comments,
    no leaked globals. CSS/JS live in `assets/`. **No inline `<style>`/`<script>`** in the pages
