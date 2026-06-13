@@ -290,19 +290,25 @@ a { color: inherit; text-decoration: none; }
   padding: 2px 4px; border-radius: 999px; cursor: pointer; }
 .toast-dismiss:hover { color: var(--text); }
 
-/* Cookie / privacy consent banner (non-blocking; under the bib modal + toasts, over content). */
-.cookie-banner { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 1050;
-  display: none; align-items: center; gap: 16px; width: min(680px, calc(100% - 32px));
-  padding: 14px 18px; background: var(--panel); border: 1px solid var(--border);
-  border-radius: var(--radius); box-shadow: var(--shadow-pop); }
-.cookie-banner.show { display: flex; }
-.cookie-text { margin: 0; flex: 1; font-size: .9rem; color: var(--muted); }
-.cookie-text a { color: var(--primary); }
-.cookie-accept { flex: 0 0 auto; }
-@media (max-width: 560px) {
-  .cookie-banner { flex-direction: column; align-items: stretch; gap: 12px; text-align: center; bottom: 12px; }
-  .cookie-accept { width: 100%; }
-}
+/* Consent / Terms gate — the same blocking welcome modal as the app, token-driven
+   (separate selectors from app.css by design; shared look comes from the tokens). */
+.consent-overlay { position: fixed; inset: 0; z-index: 1400; display: none;
+  align-items: center; justify-content: center; padding: 20px;
+  background: var(--overlay); backdrop-filter: blur(4px); }
+.consent-overlay.show { display: flex; }
+.consent-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  max-width: 460px; width: 100%; padding: 28px;
+  display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+.consent-card .consent-mark { width: 48px; height: 48px; color: var(--primary); }
+.consent-card h2 { margin: 0; font-size: 1.45rem; font-family: var(--font-display); }
+.consent-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+.consent-check { display: flex; gap: 10px; align-items: flex-start; text-align: left;
+  font-size: .9rem; color: var(--text); cursor: pointer; }
+.consent-check input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--primary); flex: 0 0 auto; }
+.consent-card a { color: var(--primary); }
+#consentAccept { width: 100%; justify-content: center; padding: 12px; margin-top: 4px; }
+#consentAccept:disabled { opacity: .45; cursor: not-allowed; }
+#consentAccept:disabled:hover { transform: none; background: var(--primary); border-color: var(--primary); }
 
 /* ===== Bib number generator ===== */
 /* Header gets two actions side by side. */

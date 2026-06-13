@@ -315,13 +315,14 @@
   window.addEventListener("appinstalled", function () { deferred = null; btn.hidden = true; });
 })();
 
-// ----- Cookie / privacy consent banner (non-blocking; shares state with the app gate) -----
+// ----- Consent / Terms gate (blocking welcome modal; shares crono.consent with the app) -----
 (function () {
   "use strict";
   var H = (typeof window !== "undefined" && window.CronoH) || {};
-  var banner = document.getElementById("cookieBanner");
-  var accept = document.getElementById("cookieAccept");
-  if (!banner || !accept) return;
+  var overlay = document.getElementById("consent");
+  var check = document.getElementById("consentCheck");
+  var accept = document.getElementById("consentAccept");
+  if (!overlay || !check || !accept) return;
   var KEY = H.CONSENT_KEY || "crono.consent";
   var VERSION = H.CONSENT_VERSION || 1;
 
@@ -329,12 +330,35 @@
     try { return H.consentAccepted(localStorage.getItem(KEY), VERSION); }
     catch (e) { return false; }
   }
-  // Show only if consent hasn't been recorded yet (here or in the app — same key).
-  if (!accepted()) banner.classList.add("show");
+  // Keep focus inside the gate (it's mandatory: no ESC, no backdrop close).
+  function focusables() {
+    return overlay.querySelectorAll('a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])');
+  }
+  function onKeydown(e) {
+    if (e.key !== "Tab") return;
+    var f = focusables();
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
 
+  if (accepted()) return;   // already accepted here or in the app (same key) → no gate
+
+  check.checked = false;
+  accept.disabled = true;
+  overlay.classList.add("show");
+  document.body.style.overflow = "hidden";
+  document.addEventListener("keydown", onKeydown);
+  setTimeout(function () { check.focus(); }, 0);
+
+  check.addEventListener("change", function () { accept.disabled = !this.checked; });
   accept.addEventListener("click", function () {
+    if (!check.checked) return;
     try { localStorage.setItem(KEY, JSON.stringify({ v: VERSION, at: Date.now() })); } catch (e) {}
-    banner.classList.remove("show");
+    overlay.classList.remove("show");
+    document.body.style.overflow = "";
+    document.removeEventListener("keydown", onKeydown);
   });
 })();
 

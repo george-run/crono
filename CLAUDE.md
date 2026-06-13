@@ -12,10 +12,10 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v54"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v55"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/hopeful-galileo-l82lkf`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
-- **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing has a **non-blocking cookie/privacy banner** (`#cookieBanner`, bottom) that shares the app's `crono.consent` key — accepting in either place satisfies both; the in-app gate stays the blocking welcome screen. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
+- **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
 
 ## Keeping this file honest (run the audit)
 Prose drifts when it relies on memory, so the invariants are now **tests**. `npm test`
@@ -50,7 +50,7 @@ robots.txt, sitemap.xml       SEO (absolute URLs; update them on the custom-doma
 assets/
   theme.css   Shared design tokens (:root) — single source of truth
   app.css     App styles            app.js   App logic (IIFE)
-  site.css    Landing styles        site.js  Landing animations (reveal, demo loop) + bib-number generator + cookie-consent banner (separate IIFEs; the latter two run even under reduced-motion)
+  site.css    Landing styles        site.js  Landing animations (reveal, demo loop) + bib-number generator + consent gate (separate IIFEs; the latter two run even under reduced-motion)
   legal.css   Styles for the standalone terms.html / privacy.html pages
   helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested; loaded by app.html AND index.html (landing uses `bibRange` + the shared `consentAccepted`/`CONSENT_VERSION`/`CONSENT_KEY`)
   head.js     reduced-motion → adds .js-anim (runs in <head> before paint)
@@ -192,9 +192,9 @@ Start time (+confirm) with a **live "time since start" stopwatch** in the Start 
 record on Enter/Record with **beep** (toggle), centiseconds, midnight-safe,
 duplicates, per-row notes, **inline edit of number & time**, sex/age-category rankings via **tabs**,
 **pace** (distance), **results search**, **participant manager** (add/edit/delete/search/CSV import),
-**CSV + PDF (print) export**, **backup/restore JSON**, consent + Terms/Privacy (blocking welcome
-gate in app, **non-blocking cookie banner on the landing** — both share `crono.consent`; standalone
-Terms/Privacy pages from landing), **clicking the app logo returns to the landing**, **PWA**
+**CSV + PDF (print) export**, **backup/restore JSON**, consent + Terms/Privacy (the **same blocking
+welcome gate on the app AND the landing** — both share `crono.consent`; standalone Terms/Privacy
+pages too), **clicking the app logo returns to the landing**, **PWA**
 (installable/offline) with a dismissible **"new version"
 update toast** (never auto-reloads), animated landing, **bib-number generator** on the landing
 (modal → event name/date + number range + colour theme + optional in-browser logo → print-ready PDF,
