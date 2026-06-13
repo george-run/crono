@@ -7,6 +7,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 ### Added
 - **"Updated to the latest version" confirmation.** Clicking **Reload** on the update toast now shows a brief confirmation after the page reloads, so the action gives visible feedback (the app looks identical between versions, so it otherwise felt like nothing happened).
 - **Immediate feedback on Reload.** The button now shows **"Updating…"** and disables itself the moment it's clicked, since activating the new worker and reloading can take a second or two (it previously looked like nothing was happening).
+- **"Install Crono" button now does something on iPhone/iPad.** iOS Safari can't install a PWA programmatically (no `beforeinstallprompt`), so the button used to stay hidden / inert there; it's now shown on iOS and, when a one-tap install isn't possible, scrolls to and highlights the iPhone "Add to Home Screen" steps.
 
 ### Changed
 - **The app no longer auto-focuses the runner-number field on entry.** On mobile this popped the numeric keyboard up immediately, covering the page; focus still moves there after you record a finish (or clear results), where typing the next number is expected.

@@ -164,7 +164,7 @@
   }
 })();
 
-// ----- One-click PWA install (Android / desktop Chromium); iOS uses the on-page steps -----
+// ----- One-click PWA install (Android / desktop Chromium); iOS gets guided steps -----
 (function () {
   "use strict";
   var btn = document.getElementById("installBtn");
@@ -175,6 +175,12 @@
     try { return matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; }
     catch (e) { return false; }
   }
+  // iOS Safari (incl. iPadOS, which reports as MacIntel + touch) — it exposes navigator.standalone.
+  function isIOS() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1) ||
+      ("standalone" in navigator);
+  }
 
   // Chromium fires this when the app is installable; stash it and reveal the button.
   window.addEventListener("beforeinstallprompt", function (e) {
@@ -183,10 +189,24 @@
     if (!isStandalone()) btn.hidden = false;
   });
 
+  // iOS never fires beforeinstallprompt and can't install programmatically. Hiding the
+  // button there made it look broken, so show it and let the click guide the user instead.
+  if (isIOS() && !isStandalone()) btn.hidden = false;
+
   btn.addEventListener("click", function () {
-    if (!deferred) return;
-    deferred.prompt();
-    deferred.userChoice.then(function () { deferred = null; btn.hidden = true; });
+    if (deferred) {                 // Chromium: real one-tap install
+      deferred.prompt();
+      deferred.userChoice.then(function () { deferred = null; btn.hidden = true; });
+      return;
+    }
+    // No programmatic install (iOS, or not yet installable): point at the on-page steps.
+    var card = document.getElementById("installIOS");
+    if (!card) return;
+    var rm = false;
+    try { rm = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    card.scrollIntoView({ behavior: rm ? "auto" : "smooth", block: "center" });
+    card.classList.add("flash");
+    setTimeout(function () { card.classList.remove("flash"); }, 1800);
   });
 
   // Once installed, drop the prompt and hide the button.
