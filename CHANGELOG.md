@@ -10,6 +10,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - **"Install Crono" button now does something on iPhone/iPad.** iOS Safari can't install a PWA programmatically (no `beforeinstallprompt`), so the button used to stay hidden / inert there; it's now shown on iOS and, when a one-tap install isn't possible, scrolls to and highlights the iPhone "Add to Home Screen" steps.
 
 ### Changed
+- **App header redesign.** The "View demo" and donation buttons are now grouped into a single rounded **toolbar** (panel background, soft border/shadow) instead of two loose icon circles — "Demo" reads teal, "Support" amber, each shown as **icon + label** on desktop and collapsing to **icon-only** on small screens. The logo mark sits in a subtle lime chip so the brand reads stronger.
 - **The app no longer auto-focuses the runner-number field on entry.** On mobile this popped the numeric keyboard up immediately, covering the page; focus still moves there after you record a finish (or clear results), where typing the next number is expected.
 - **`og:image:type` on every page** (plus `og:image` width/height on the Terms/Privacy pages) so link unfurlers that need it — notably WhatsApp — recognise the share image.
 

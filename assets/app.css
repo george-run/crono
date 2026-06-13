@@ -43,7 +43,8 @@
   }
   header.app h1 .brand-link:hover { color: var(--primary); }
   header.app h1 .brand-link:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
-  header.app h1 .logo { color: var(--primary); width: 1.15em; height: 1.15em; }
+  header.app h1 .logo { color: var(--primary); width: 1.15em; height: 1.15em;
+    background: rgba(var(--primary-rgb), .1); border-radius: 50%; padding: .24em; box-sizing: content-box; }
   header.app .tagline { color: var(--muted); font-size: .95rem; }
 
   .panel {
@@ -270,6 +271,10 @@
     header.app { padding: 4px 0 14px; }
     header.app h1 { font-size: 1.6rem; }
     .panel { padding: 14px; }
+    /* Header toolbar collapses to icon-only to save width next to the wordmark. */
+    .header-actions { gap: 2px; }
+    .hbtn { padding: 8px; }
+    .hbtn-label { display: none; }
 
     /* Setup fields stack full-width on phones, with room to breathe. */
     .setup-row { gap: 20px; }
@@ -483,9 +488,6 @@
   .coffee-link:hover { background: var(--accent-3); color: var(--on-accent); border-color: var(--accent-3); }
   .coffee-link .icon { width: 1em; height: 1em; }
   footer.app .coffee-link { margin-top: 10px; }
-  /* Header donation link is icon-only (it's fully labelled in the footer). */
-  .header-coffee { flex: 0 0 auto; align-self: center; padding: 7px; }
-  .header-coffee .icon { width: 1.15em; height: 1.15em; }
 
   /* Participants: inline "add" row */
   .part-add { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 12px; }
@@ -513,10 +515,21 @@
   .demo-bib { font-family: var(--font-display); font-weight: 700; }
   .demo-t { font-variant-numeric: tabular-nums; color: var(--muted); }
 
-  /* Header actions — icon-only buttons (View demo + Buy me a coffee). */
-  .header-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
-  .header-demo { padding: 7px; }
-  .header-demo .icon { width: 1.15em; height: 1.15em; }
+  /* Header actions — a compact toolbar grouping "View demo" + the donation link.
+     Each button is icon + label on desktop; labels collapse to icon-only on small screens
+     (see the 720px block). The demo reads teal, the donation amber — both from tokens. */
+  .header-actions { display: inline-flex; align-items: center; gap: 4px; flex: 0 0 auto; align-self: center;
+    padding: 4px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; box-shadow: var(--shadow-soft); }
+  .hbtn { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; white-space: nowrap;
+    border: 1px solid transparent; background: transparent; color: var(--text);
+    border-radius: 999px; padding: 7px 13px; font-size: .85rem; font-weight: 600; text-decoration: none;
+    transition: var(--transition); }
+  .hbtn .icon { width: 1.05em; height: 1.05em; flex: 0 0 auto; }
+  .hbtn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .hbtn-demo { color: var(--accent-2); }
+  .hbtn-demo:hover { background: rgba(var(--accent-2-rgb), .14); border-color: rgba(var(--accent-2-rgb), .4); }
+  .hbtn-coffee { color: var(--accent-3); }
+  .hbtn-coffee:hover { background: var(--accent-3); color: var(--on-accent); border-color: var(--accent-3); }
 
 /* DEMO watermark tag on the mock */
 .demo::before { content: "DEMO"; position: absolute; top: 8px; right: 12px;
