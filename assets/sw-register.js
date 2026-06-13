@@ -10,11 +10,49 @@
   var reloading = false;          // guards against a double reload
   var userAskedToReload = false;  // only reload on controllerchange if the user asked
   var DISMISS_KEY = "crono.swDismissed";  // remembers a waiting version the user dismissed
+  var UPDATED_KEY = "crono.justUpdated";  // set just before a user-asked reload → confirm after it
 
   function doReload() {
     if (reloading) return;
     reloading = true;
+    // Leave a one-shot flag so the reloaded page can confirm the swap visibly (the app
+    // looks identical between versions, so "Reload" otherwise feels like it did nothing).
+    if (userAskedToReload) { try { sessionStorage.setItem(UPDATED_KEY, "1"); } catch (e) {} }
     location.reload();
+  }
+
+  // Shared toast host (landing/legal pages have none — create one on demand).
+  function toastHost() {
+    var host = document.getElementById("toasts");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "toasts";
+      host.className = "toasts";
+      host.setAttribute("aria-live", "polite");
+      document.body.appendChild(host);
+    }
+    return host;
+  }
+
+  // A brief, auto-dismissing confirmation toast (no buttons).
+  function showInfoToast(message) {
+    var el = document.createElement("div");
+    el.className = "toast";
+    el.setAttribute("role", "status");
+    el.textContent = message;
+    toastHost().appendChild(el);
+    requestAnimationFrame(function () { el.classList.add("in"); });
+    setTimeout(function () {
+      el.classList.remove("in");
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
+    }, 3500);
+  }
+
+  // After a user-asked reload, confirm the new version actually took over.
+  function confirmUpdateIfJustReloaded() {
+    var flag = null;
+    try { flag = sessionStorage.getItem(UPDATED_KEY); sessionStorage.removeItem(UPDATED_KEY); } catch (e) {}
+    if (flag) showInfoToast("Updated to the latest version");
   }
 
   // Ask a worker for its CACHE name (so we can tell one waiting version from another).
@@ -55,6 +93,7 @@
   });
 
   window.addEventListener("load", function () {
+    confirmUpdateIfJustReloaded();
     navigator.serviceWorker.register("sw.js").then(function (reg) {
       // An update may have finished installing on a previous visit and be waiting.
       maybeShowToast(reg);
@@ -84,14 +123,7 @@
 
   function showUpdateToast(reg, version) {
     if (document.getElementById("swUpdateToast")) return;
-    var host = document.getElementById("toasts");
-    if (!host) { // landing/legal pages have no toast host — create one
-      host = document.createElement("div");
-      host.id = "toasts";
-      host.className = "toasts";
-      host.setAttribute("aria-live", "polite");
-      document.body.appendChild(host);
-    }
+    var host = toastHost();
     var el = document.createElement("div");
     el.id = "swUpdateToast";
     el.className = "toast toast-update in";
