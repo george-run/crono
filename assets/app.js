@@ -14,8 +14,8 @@
   var KEY_DISTANCE = "crono.distanceKm";
   var KEY_SOUND = "crono.sound";
   var KEY_CARDS = "crono.cards";
-  var KEY_CONSENT = "crono.consent";
-  var CONSENT_VERSION = 1;        // bump to re-prompt if the terms change
+  var KEY_CONSENT = H.CONSENT_KEY || "crono.consent";      // shared with the landing banner
+  var CONSENT_VERSION = H.CONSENT_VERSION || 1;            // bump in helpers.js to re-prompt
 
   // ----- State --------------------------------------------------------------
   var startEpoch = null;          // absolute ms timestamp of the race start
@@ -766,10 +766,7 @@
 
   // ----- Consent / Terms gate ----------------------------------------------
   function consentAccepted() {
-    try {
-      var c = JSON.parse(localStorage.getItem(KEY_CONSENT) || "null");
-      return !!c && c.v >= CONSENT_VERSION;
-    } catch (e) { return false; }
+    return H.consentAccepted(localStorage.getItem(KEY_CONSENT), CONSENT_VERSION);
   }
   function initConsent() {
     if (consentAccepted()) return;

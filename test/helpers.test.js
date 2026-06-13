@@ -63,3 +63,15 @@ test("csvCell escapes and guards formula injection", () => {
   assert.equal(H.csvCell("=1+1"), "'=1+1");
   assert.equal(H.csvCell("@cmd"), "'@cmd");
 });
+
+test("consentAccepted (shared by the app gate and the landing banner)", () => {
+  const V = H.CONSENT_VERSION;
+  assert.equal(H.consentAccepted(null, V), false);
+  assert.equal(H.consentAccepted("", V), false);
+  assert.equal(H.consentAccepted("not json", V), false);   // malformed → not accepted
+  assert.equal(H.consentAccepted("{}", V), false);          // no version
+  assert.equal(H.consentAccepted(JSON.stringify({ v: V, at: 1 }), V), true);
+  assert.equal(H.consentAccepted(JSON.stringify({ v: V - 1, at: 1 }), V), false); // stale version
+  assert.equal(H.consentAccepted(JSON.stringify({ v: V + 1, at: 1 }), V), true);  // newer is fine
+  assert.equal(H.consentAccepted({ v: V }, V), true);       // accepts a parsed object too
+});

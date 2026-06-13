@@ -391,6 +391,15 @@
 <!-- Print-only bib sheet (populated by the generator) -->
 <div id="printArea" aria-hidden="true"></div>
 
+<!-- Cookie / privacy consent (non-blocking; shares crono.consent with the app gate) -->
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Privacy notice">
+  <p class="cookie-text">
+    Crono keeps your data on this device only — no tracking, advertising or analytics cookies.
+    See our <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms</a>.
+  </p>
+  <button type="button" id="cookieAccept" class="btn primary cookie-accept">Got it</button>
+</div>
+
 <script src="assets/helpers.js"></script>
 <script src="assets/site.js"></script>
 <script src="assets/sw-register.js"></script>
