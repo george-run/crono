@@ -4,7 +4,7 @@ Read this first. **If any rule here changes, update this file in the same commit
 New session? Skim **Status** below for where things stand, then the rules.
 
 ## TL;DR
-Static, zero-build, offline-first race chronometer on **GitHub Pages** at the custom domain **`crono.run`** (served from root `/`; the old `rungeorge.github.io/crono/` redirects there).
+Static, zero-build, offline-first race chronometer on **GitHub Pages** at the custom domain **`crono.run`** (served from root `/`; the old `george-run.github.io/crono/` redirects there).
 Landing = `index.html`; app = `app.html`; logic = `assets/app.js` (vanilla JS, IIFE).
 Edit → commit to the dev branch → merge to `master` → sync `gh-pages` → bump `sw.js` cache if
 assets changed. There is **no network, no image tooling and no browser/render tool** here.
@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v52"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v53"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/contest-number-generation-fecx8e`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header decluttered — logo left, icon-only "View demo" + donation buttons right, **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them.
