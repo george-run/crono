@@ -42,10 +42,10 @@
     goBtn.href = DONATE_URL;
     goBtn.target = "_blank";
     goBtn.rel = "noopener";
-    goBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7.5 3c0 1-1 1.4-1 2.5M11 3c0 1-1 1.4-1 2.5"/></svg>Open Revolut';
+    goBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13v5a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7.5 3c0 1-1 1.4-1 2.5M11 3c0 1-1 1.4-1 2.5"/></svg>Donate on Revolut';
 
+    actions.appendChild(goBtn);      // primary on top
     actions.appendChild(cancelBtn);
-    actions.appendChild(goBtn);
     modal.appendChild(actions);
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
@@ -61,7 +61,7 @@
   }
 
   function trapTab(e) {
-    var first = cancelBtn, last = goBtn;
+    var first = goBtn, last = cancelBtn;
     if (!overlay.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
     else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
