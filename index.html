@@ -391,13 +391,24 @@
 <!-- Print-only bib sheet (populated by the generator) -->
 <div id="printArea" aria-hidden="true"></div>
 
-<!-- Cookie / privacy consent (non-blocking; shares crono.consent with the app gate) -->
-<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Privacy notice">
-  <p class="cookie-text">
-    Crono keeps your data on this device only — no tracking, advertising or analytics cookies.
-    See our <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms</a>.
-  </p>
-  <button type="button" id="cookieAccept" class="btn primary cookie-accept">Got it</button>
+<!-- Consent / Terms gate (blocking welcome modal; shares crono.consent with the app's gate) -->
+<div class="consent-overlay" id="consent" role="dialog" aria-modal="true" aria-labelledby="consentTitle">
+  <div class="consent-card">
+    <svg class="consent-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" opacity=".25"/>
+      <path d="M12 3a9 9 0 0 1 8.5 6.1" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="12" cy="12" r="2.3" fill="var(--primary)"/>
+    </svg>
+    <h2 id="consentTitle">Welcome to Crono</h2>
+    <p>Crono keeps your timing data locally on this device only — no tracking, no advertising or analytics cookies. To continue, please review and accept the documents below.</p>
+    <label class="consent-check">
+      <input type="checkbox" id="consentCheck">
+      <span>I have read and accept the
+        <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and the
+        <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+    </label>
+    <button type="button" id="consentAccept" class="btn primary" disabled>Accept &amp; continue</button>
+  </div>
 </div>
 
 <script src="assets/helpers.js"></script>

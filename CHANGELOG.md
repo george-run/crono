@@ -8,7 +8,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - Moved to the custom domain **crono.run**: added a `CNAME` file (so it survives deploys) and pointed all absolute URLs (canonical, Open Graph, sitemap, robots) at `https://crono.run/`. Paths stay relative, so the app still works from any base.
 
 ### Added
-- **Cookie/privacy consent on the landing page**: a non-blocking banner pinned to the bottom explains that data stays on your device (no tracking/advertising/analytics cookies) with links to the Privacy Policy and Terms, plus a "Got it" button. It shares the app's `crono.consent` storage, so accepting on the landing also satisfies the in-app welcome gate (and vice-versa). The consent key + version are now single-sourced in `helpers.js` (new tested `consentAccepted` helper) so the app and landing can't drift.
+- **Consent / Terms gate on the landing page**: the landing now shows the same blocking "Welcome to Crono" modal as the app (review + accept the Terms and Privacy Policy before continuing — checkbox enables the "Accept & continue" button; the gate is focus-trapped and can't be dismissed without accepting). It shares the app's `crono.consent` storage, so accepting on the landing also satisfies the in-app gate (and vice-versa). The consent key + version are now single-sourced in `helpers.js` (new tested `consentAccepted` helper) so the app and landing can't drift.
 - **Click the app logo to return to the landing**: the logo/"Crono" wordmark in the app header is now a link to the home page. The existing "you have unsaved results" prompt (`beforeunload`) still warns before leaving when there are recorded finishers, so nothing is lost by accident.
 
 ### Added
