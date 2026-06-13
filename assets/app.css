@@ -532,6 +532,14 @@
   .hbtn-demo:hover { background: rgba(var(--accent-2-rgb), .14); border-color: rgba(var(--accent-2-rgb), .4); }
   .hbtn-coffee { color: var(--accent-3); }
   .hbtn-coffee:hover { background: var(--accent-3); color: var(--on-accent); border-color: var(--accent-3); }
+  /* Language switcher — a compact native select inside the toolbar pill (caret via wrapper). */
+  .lang-wrap { position: relative; display: inline-flex; align-items: center; }
+  .lang-wrap::after { content: "▾"; position: absolute; right: 9px; pointer-events: none; color: var(--muted); font-size: .75em; }
+  .hbtn-lang { appearance: none; -webkit-appearance: none; border: 1px solid transparent; background: transparent;
+    color: var(--text); font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
+    border-radius: 999px; padding: 7px 22px 7px 10px; }
+  .hbtn-lang:hover { background: rgba(var(--primary-rgb), .14); }
+  .hbtn-lang:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
   /* Theme toggle — icon-only; shows the sun in dark mode, the moon in light mode. */
   .hbtn-theme { padding: 8px; color: var(--muted); }
   .hbtn-theme:hover { color: var(--text); background: rgba(var(--primary-rgb), .14); border-color: rgba(var(--primary-rgb), .4); }

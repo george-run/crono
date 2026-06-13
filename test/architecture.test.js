@@ -57,3 +57,16 @@ test("every assets/*.js is loaded by at least one page", () => {
     assert.ok(pages.includes("assets/" + js), `assets/${js} is never referenced by a page (orphan?)`);
   });
 });
+
+test("i18n: every language has the exact same key set as English", () => {
+  const i18n = require("../assets/i18n.js");
+  const enKeys = Object.keys(i18n.STR.en).sort();
+  i18n.LANGS.forEach((lang) => {
+    assert.ok(i18n.STR[lang], `missing string table for language "${lang}"`);
+    const keys = Object.keys(i18n.STR[lang]).sort();
+    const missing = enKeys.filter((k) => !(k in i18n.STR[lang]));
+    const extra = keys.filter((k) => !(k in i18n.STR.en));
+    assert.deepEqual(missing, [], `"${lang}" is missing keys: ${missing.join(", ")}`);
+    assert.deepEqual(extra, [], `"${lang}" has unknown keys: ${extra.join(", ")}`);
+  });
+});
