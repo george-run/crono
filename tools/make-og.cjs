@@ -8,11 +8,12 @@ var zlib = require("zlib");
 var fs = require("fs");
 var path = require("path");
 
-var SS = 2, W = 1200, H = 630, BW = W * SS, BH = H * SS;
+var SS = 4, W = 1200, H = 630, BW = W * SS, BH = H * SS;
 var big = Buffer.alloc(BW * BH * 3);
 
 var BG = [11, 15, 20], LIME = [163, 230, 53], TEAL = [45, 212, 191],
-    ORANGE = [249, 115, 22], TEXT = [233, 240, 246], MUTED = [150, 162, 176], DARK = [11, 15, 20];
+    ORANGE = [249, 115, 22], TEXT = [233, 240, 246], MUTED = [150, 162, 176],
+    SUB = [206, 216, 227], DARK = [11, 15, 20];
 
 function bset(x, y, c) { x |= 0; y |= 0; if (x < 0 || y < 0 || x >= BW || y >= BH) return; var i = (y * BW + x) * 3; big[i] = c[0]; big[i + 1] = c[1]; big[i + 2] = c[2]; }
 function bblend(x, y, c, a) { x |= 0; y |= 0; if (x < 0 || y < 0 || x >= BW || y >= BH || a <= 0) return; if (a > 1) a = 1; var i = (y * BW + x) * 3; big[i] = Math.round(big[i] * (1 - a) + c[0] * a); big[i + 1] = Math.round(big[i + 1] * (1 - a) + c[1] * a); big[i + 2] = Math.round(big[i + 2] * (1 - a) + c[2] * a); }
@@ -66,41 +67,44 @@ var FONT = {
   "M": { w: 0.84, s: [[[0.06, 0.95], [0.06, 0.05], [0.40, 0.56], [0.74, 0.05], [0.74, 0.95]]] },
   "N": { w: 0.74, s: [[[0.08, 0.95], [0.08, 0.05], [0.66, 0.95], [0.66, 0.05]]] },
   "O": { w: 0.76, s: [ell(0.38, 0.5, 0.31, 0.45, 0, 360, 44)] },
-  "R": { w: 0.68, s: [[[0.08, 0.05], [0.08, 0.95]], ell(0.08, 0.28, 0.34, 0.23, -90, 90, 18), [[0.30, 0.50], [0.62, 0.95]]] },
-  "S": { w: 0.62, s: [[[0.55, 0.20], [0.46, 0.09], [0.28, 0.07], [0.13, 0.16], [0.10, 0.30], [0.20, 0.41], [0.40, 0.48], [0.54, 0.57], [0.57, 0.72], [0.47, 0.85], [0.28, 0.92], [0.12, 0.86], [0.06, 0.74]]] },
+  "R": { w: 0.64, s: [[[0.08, 0.05], [0.08, 0.95]], ell(0.08, 0.28, 0.32, 0.23, -90, 90, 22), [[0.11, 0.50], [0.60, 0.95]]] },
+  "S": { w: 0.60, s: [[[0.56, 0.20], [0.47, 0.09], [0.30, 0.06], [0.14, 0.14], [0.09, 0.29], [0.18, 0.41], [0.38, 0.48], [0.54, 0.56], [0.59, 0.71], [0.50, 0.86], [0.31, 0.93], [0.14, 0.87], [0.07, 0.73]]] },
   "T": { w: 0.60, s: [[[0.05, 0.05], [0.55, 0.05]], [[0.30, 0.05], [0.30, 0.95]]] },
-  "U": { w: 0.72, s: [[[0.08, 0.05], [0.08, 0.62]], ell(0.38, 0.62, 0.30, 0.30, 180, 360, 22), [[0.68, 0.62], [0.68, 0.05]]] },
+  "U": { w: 0.72, s: [[[0.08, 0.05], [0.08, 0.62]], ell(0.38, 0.62, 0.30, 0.33, 180, 0, 24), [[0.68, 0.62], [0.68, 0.05]]] },
   "Y": { w: 0.66, s: [[[0.06, 0.05], [0.34, 0.50]], [[0.62, 0.05], [0.34, 0.50]], [[0.34, 0.50], [0.34, 0.95]]] }
 };
-function drawText(str, ox, oy, size, th, col, tracking) {
+// xs = horizontal scale (<1 condenses the glyphs, Oswald-style).
+function drawText(str, ox, oy, size, th, col, tracking, xs) {
+  if (xs == null) xs = 1;
   var x = ox;
   for (var k = 0; k < str.length; k++) {
     var ch = str[k];
-    if (ch === " ") { x += 0.34 * size + tracking; continue; }
-    var g = FONT[ch]; if (!g) { x += 0.5 * size + tracking; continue; }
-    for (var si = 0; si < g.s.length; si++) { var poly = g.s[si]; for (var pi = 0; pi < poly.length - 1; pi++) line(x + poly[pi][0] * size, oy + poly[pi][1] * size, x + poly[pi + 1][0] * size, oy + poly[pi + 1][1] * size, th / 2, col); }
-    x += g.w * size + tracking;
+    if (ch === " ") { x += 0.34 * size * xs + tracking; continue; }
+    var g = FONT[ch]; if (!g) { x += 0.5 * size * xs + tracking; continue; }
+    for (var si = 0; si < g.s.length; si++) { var poly = g.s[si]; for (var pi = 0; pi < poly.length - 1; pi++) line(x + poly[pi][0] * size * xs, oy + poly[pi][1] * size, x + poly[pi + 1][0] * size * xs, oy + poly[pi + 1][1] * size, th / 2, col); }
+    x += g.w * size * xs + tracking;
   }
   return x;
 }
-function textWidth(str, size, tracking) { var w = 0; for (var k = 0; k < str.length; k++) { var ch = str[k]; w += (ch === " " ? 0.34 * size : (FONT[ch] ? FONT[ch].w * size : 0.5 * size)) + tracking; } return w - tracking; }
+function textWidth(str, size, tracking, xs) { if (xs == null) xs = 1; var w = 0; for (var k = 0; k < str.length; k++) { var ch = str[k]; w += (ch === " " ? 0.34 * size * xs : (FONT[ch] ? FONT[ch].w * size * xs : 0.5 * size * xs)) + tracking; } return w - tracking; }
 
-// ----- Wordmark + sub-line -----
-drawText("CRONO", 268, 96, 118, 17, TEXT, 14);
-rect(270, 232, 360, 7, LIME);
-drawText("RACE TIMING FOR ORGANISERS", 272, 280, 34, 6, MUTED, 7);
+// ----- Wordmark + sub-line (condensed, Oswald-leaning) -----
+var WX = 268, CXS = 0.84;
+var cronoEnd = drawText("CRONO", WX, 92, 122, 18, TEXT, 12, CXS);
+rect(WX + 2, 232, cronoEnd - WX - 4, 7, LIME);
+drawText("RACE TIMING FOR ORGANISERS", WX + 4, 278, 36, 7, SUB, 6, 0.9);
 
 // ----- CTA pill -----
-var ctaY = 372, ctaH = 70, ctaPad = 34;
+var ctaY = 374, ctaH = 72, ctaPad = 36, pillXs = 0.9;
 var label = "TIME YOUR RACE";
-var lblSize = 30, lblW = textWidth(label, lblSize, 6);
-var ctaW = lblW + ctaPad * 2 + 54;          // room for label + arrow
-rrect(270, ctaY, ctaW, ctaH, 35, LIME);
-var tx = 270 + ctaPad, ty = ctaY + (ctaH - lblSize) / 2;
-drawText(label, tx, ty, lblSize, 6, DARK, 6);
+var lblSize = 32, lblW = textWidth(label, lblSize, 6, pillXs);
+var ctaW = lblW + ctaPad * 2 + 56;          // room for label + arrow
+rrect(WX, ctaY, ctaW, ctaH, 36, LIME);
+var tx = WX + ctaPad, ty = ctaY + (ctaH - lblSize) / 2;
+drawText(label, tx, ty, lblSize, 7, DARK, 6, pillXs);
 // arrow
-var ax = tx + lblW + 22, ay = ctaY + ctaH / 2;
-line(ax, ay, ax + 28, ay, 3, DARK); line(ax + 28, ay, ax + 18, ay - 10, 3, DARK); line(ax + 28, ay, ax + 18, ay + 10, 3, DARK);
+var ax = tx + lblW + 24, ay = ctaY + ctaH / 2;
+line(ax, ay, ax + 30, ay, 3.5, DARK); line(ax + 30, ay, ax + 19, ay - 10, 3.5, DARK); line(ax + 30, ay, ax + 19, ay + 10, 3.5, DARK);
 
 rect(0, H - 9, W, 9, LIME);
 
