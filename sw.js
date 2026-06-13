@@ -6,7 +6,7 @@
      "new version" toast posts SKIP_WAITING when the user clicks Reload, so the running
      version is never swapped out mid-race. Bump CACHE to drop the old cache + force a
      fresh precache. Keep ASSETS in sync. */
-var CACHE = "crono-v60";
+var CACHE = "crono-v61";
 var ASSETS = [
   "./",
   "index.html",
@@ -44,9 +44,14 @@ self.addEventListener("install", function (e) {
   // to take over (SKIP_WAITING below), so a deploy never disrupts a live race.
 });
 
-// The page (sw-register.js) posts this when the user clicks "Reload" on the update toast.
+// The page (sw-register.js) posts these:
+//  - SKIP_WAITING when the user clicks "Reload" on the update toast.
+//  - GET_VERSION to learn this worker's CACHE, so the page can remember a dismissed
+//    version and not re-nag with the same toast on every navigation.
 self.addEventListener("message", function (e) {
-  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
+  if (!e.data) return;
+  if (e.data.type === "SKIP_WAITING") self.skipWaiting();
+  else if (e.data.type === "GET_VERSION" && e.ports && e.ports[0]) e.ports[0].postMessage(CACHE);
 });
 
 self.addEventListener("activate", function (e) {

@@ -4,6 +4,9 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Fixed
+- **"A new version is available" toast no longer nags on every page.** If you dismissed it with **×** (instead of clicking **Reload**), the new service worker stayed in its *waiting* state forever, so every navigation between pages (landing ↔ app ↔ bibs ↔ legal) re-detected it and popped the toast again. The toast now remembers the exact version you dismissed (the worker reports its cache version on request) and stays quiet until a genuinely newer deploy arrives — **Reload** still updates immediately as before.
+
 ### Changed
 - Updated the "Buy me a coffee" donation link to the current Revolut handle (`revolut.me/rungeorge`).
 - **Social-share (OG) image.** Now custom artwork, optimised with a zero-dependency Node PNG pipeline: re-encoded to the exact **1200×630** OG size (was 1424×752, mismatching the meta), alpha flattened onto the brand background, adaptive per-row PNG filtering — roughly halving the file (**1.4 MB → ~760 KB**). (The built-in `tools/make-og.cjs` generator was also sharpened — 4× AA, fixed an inverted glyph — but the live image is the custom art.)
