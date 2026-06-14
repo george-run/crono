@@ -5,7 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
-- **"How it works" is now an animated UML-style sequence diagram.** Actors *Organiser · Crono · Volunteer* with lifelines and messages — *Set start → Timing (offline) → Record #92 / #183 → Rankings + CSV* — with looping pulses that travel along each arrow to show the flow (static and fully readable under reduced-motion). Backed by an intro explaining Crono is for smaller races (runners finishing a few at a time) and an offline note covering the start, finish or any checkpoint with no signal. Translated across all eight languages, with an accessible text description.
+- **"How it works" is now an animated race scene.** A concrete, easy-to-grasp picture: a START line (organiser), a lane with runners moving along it, and a FINISH line where a volunteer records each bib into a results card (#92, #183, #47) — with a simple numbered legend (1 Organiser sets the start · 2 Volunteers record each bib · 3 Rankings + CSV). Animation loops (runners run, results tick in) and is static/readable under reduced-motion. Translated across all eight languages, with an accessible text description.
 - **Hero headline now names the audience.** "The fastest way to time your race" → "The fastest way **for organisers** to time your race" (translated across all eight languages), so it's immediately clear who Crono is for.
 - **Clearer hero value props.**
 
