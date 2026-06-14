@@ -244,14 +244,11 @@
         <span class="hiw-clock-v" id="hiwClock">00:00.00</span>
       </div>
       <div class="hiw-scene">
-        <div class="hiw-vol">
-          <svg class="hiw-vol-fig" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="12" r="5.5"/><path d="M14 28a10 10 0 0 1 20 0"/><rect class="hiw-vol-lap" x="11" y="29" width="26" height="10" rx="2"/><path d="M15 29v-4h18v4"/></svg>
-          <span class="hiw-vol-lbl" data-i18n="flow.startLine">Start</span>
-        </div>
-        <div class="hiw-track">
-          <span class="hiw-runner" id="hiwRunner"></span>
-          <span class="hiw-finishline"></span>
-        </div>
+        <svg class="hiw-route" viewBox="0 0 300 104" aria-hidden="true">
+          <path class="hiw-route-path" id="hiwRoute" d="M8 86 C 84 96, 64 26, 150 36 S 250 90, 292 52"/>
+          <circle class="hiw-route-start" cx="8" cy="86" r="5"/>
+          <g class="hiw-pin" id="hiwPin"><path class="hiw-pin-body" d="M0 0 C -6 -9 -11 -13 -11 -20 a11 11 0 1 1 22 0 c0 7 -5 11 -11 20 Z"/><circle class="hiw-pin-dot" cx="0" cy="-20" r="4.5"/></g>
+        </svg>
         <div class="hiw-vol hiw-vol--finish">
           <span class="hiw-bubble" id="hiwBubble"><span class="hiw-hash">#</span><span class="hiw-type" id="hiwType"></span><span class="hiw-caret"></span></span>
           <svg class="hiw-vol-fig" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="12" r="5.5"/><path d="M14 28a10 10 0 0 1 20 0"/><rect class="hiw-vol-lap" x="11" y="29" width="26" height="10" rx="2"/><path d="M15 29v-4h18v4"/></svg>
@@ -266,7 +263,7 @@
       </div>
     </div>
     <ol class="scene-legend">
-      <li><span class="sl-num">1</span><span data-i18n="flow.zoneStart">A volunteer at the start sets the clock</span></li>
+      <li><span class="sl-num">1</span><span data-i18n="flow.zoneStart">Tap once to start the clock</span></li>
       <li><span class="sl-num">2</span><span data-i18n="flow.zoneFinish">A volunteer at the finish types each bib</span></li>
       <li><span class="sl-num">3</span><span data-i18n="flow.zoneResults">Crono ranks them instantly + CSV</span></li>
     </ol>

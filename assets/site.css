@@ -123,19 +123,17 @@ a { color: inherit; text-decoration: none; }
 .hiw-clock-k { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 700; }
 .hiw-clock-v { font-family: var(--font-display); font-variant-numeric: tabular-nums; font-size: 1.9rem;
   font-weight: 700; color: var(--primary); line-height: 1; }
-/* scene: [start volunteer] —— runner on track —— [finish volunteer] */
-.hiw-scene { display: flex; align-items: flex-end; gap: 8px; margin: 16px 0; }
-.hiw-vol { flex: 0 0 auto; width: 56px; display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; }
-.hiw-vol-fig { width: 46px; height: 46px; color: var(--accent-2); }
+/* scene: a runner (map pin) rides a curvy route — like the hero — toward the finish volunteer */
+.hiw-scene { display: flex; align-items: center; gap: 6px; margin: 14px 0; }
+.hiw-route { flex: 1 1 auto; min-width: 0; width: 100%; height: auto; }
+.hiw-route-path { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 12; opacity: .55; }
+.hiw-route-start { fill: var(--primary); }
+.hiw-pin-body { fill: var(--primary); }
+.hiw-pin-dot { fill: var(--on-accent); }
+.hiw-vol { flex: 0 0 auto; width: 60px; display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; }
+.hiw-vol-fig { width: 48px; height: 48px; color: var(--accent-2); }
 .hiw-vol-lap { fill: rgba(var(--accent-2-rgb), .18); }
 .hiw-vol-lbl { font-size: .7rem; font-weight: 700; color: var(--muted); }
-.hiw-track { flex: 1 1 auto; position: relative; align-self: center; height: 46px; border-radius: 11px;
-  background: rgba(var(--primary-rgb), .06); border: 1px solid var(--border); overflow: hidden; }
-.hiw-runner { position: absolute; top: 50%; left: 8px; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--primary); transform: translateY(-50%); box-shadow: 0 0 0 4px rgba(var(--primary-rgb), .18);
-  transition: left 1.6s cubic-bezier(.4,.05,.5,1); }
-.hiw-finishline { position: absolute; top: 0; bottom: 0; right: 0; width: 7px;
-  background-image: repeating-linear-gradient(45deg, var(--text) 0 4px, transparent 4px 8px); opacity: .75; }
 /* the finish volunteer "types" each bib into a little bubble above their laptop */
 .hiw-bubble { position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%);
   display: inline-flex; align-items: center; min-width: 46px; justify-content: center; padding: 3px 8px;
