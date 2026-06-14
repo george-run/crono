@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-14**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v120"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v121"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/crono-update-notification-loop-4wpiuo`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** header is consistent on every page — **logo (30px) + Oswald wordmark (1.5rem)**, same size/treatment everywhere (no chip); the **language picker (short codes EN/RO/…) · theme toggle · donation** actions are grouped into a **pill toolbar** on the right (`.header-actions` containing `.lang-wrap`/`.hbtn-theme` + `.hbtn-coffee` amber) — **icon + label** on desktop, collapsing to **icon-only** under 720px (`.hbtn-label` hidden); there is **no Demo entry** anywhere (the old in-app demo modal + landing auto-play mock were removed; the landing's **"How it works" mini-demo** `.hiw` replaces them); **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
@@ -201,6 +201,11 @@ Any change to a **cached** CSS file → bump `sw.js` `CACHE` and refresh the **S
 - **Bump `CACHE` whenever any cached asset changes**, and keep the `ASSETS` precache list in sync.
   (Bumping drops the old cache + forces a fresh precache; network-first means returning online users are
   already current even before the new worker activates.)
+- **Visible app version:** the app footer shows the running build in any `[data-app-version]` element —
+  `sw-register.js` asks the active worker for its `CACHE` (via `GET_VERSION`) and fills it (e.g. `v120`).
+  Single source = `sw.js` `CACHE`; since you bump it every deploy, the shown version updates automatically
+  (and correctly shows the *current* build until the user clicks Reload). **No separate version constant to
+  maintain** — just keep bumping `CACHE`.
 - SW runs only over http(s) (GitHub Pages), not `file://`. Online, every load is current; offline serves
   the last-cached copy of each file.
 - **Update lifecycle (never auto-reload — bad mid-race):** a freshly-installed worker does **not**
