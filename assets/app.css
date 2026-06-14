@@ -533,3 +533,24 @@
 .demo::before { content: "DEMO"; position: absolute; top: 8px; right: 12px;
   font-size: .6rem; font-weight: 700; letter-spacing: 1.5px; color: var(--muted);
   opacity: .55; pointer-events: none; }
+
+/* ----- First-run quick tour (built by assets/tour.js) ----- */
+.tour-catch { position: fixed; inset: 0; z-index: 1240; }
+.tour-spot { position: fixed; border-radius: var(--radius-sm); border: 2px solid var(--primary);
+  box-shadow: 0 0 0 9999px var(--overlay); pointer-events: none; z-index: 1250;
+  transition: top .2s ease, left .2s ease, width .2s ease, height .2s ease; }
+.tour-pop { position: fixed; z-index: 1260; width: 360px; max-width: calc(100vw - 24px);
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-pop); padding: 16px; }
+.tour-title { margin: 0 0 6px; font-size: 1.05rem; }
+.tour-body { margin: 0 0 14px; color: var(--muted); font-size: .95rem; line-height: 1.5; }
+.tour-foot { display: flex; align-items: center; gap: 8px; }
+.tour-counter { font-size: .8rem; color: var(--muted); }
+.tour-spacer { flex: 1; }
+.tour-foot button { border-radius: 999px; padding: 8px 14px; font-size: .9rem; font-weight: 600;
+  border: 1px solid var(--border); background: transparent; color: var(--text); cursor: pointer; }
+.tour-foot button:hover { border-color: var(--primary); }
+.tour-skip { color: var(--muted); }
+.tour-next.primary { background: var(--primary); border-color: var(--primary); color: var(--on-accent); font-weight: 700; }
+.tour-restart { margin-top: 4px; }
+@media (prefers-reduced-motion: reduce) { .tour-spot { transition: none; } }
