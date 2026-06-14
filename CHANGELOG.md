@@ -4,6 +4,9 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- **Printed bibs now carry a small QR code to crono.run** (+ a discreet "crono.run" caption) so events promote the app. The QR is fixed, generated once by a zero-dependency byte-mode encoder (`tools/make-qr.cjs` → `assets/qr-crono.svg`), so nothing extra ships or runs at print time and it works offline.
+
 ### Changed
 - **Lighter, more useful landing copy.** Trimmed the hero intro and rewrote the six feature blurbs to be benefit-led and jargon-free (e.g. "Centisecond precision, even across midnight" → "Quick and accurate"; "standard 10-year age categories" → "age group"). Applied across all eight languages. The hero badge tagline was also shortened ("works offline" → "offline") so it fits without awkward wrapping on longer languages.
 
