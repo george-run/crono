@@ -46,8 +46,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-ui); -
 
 .disp-empty { text-align: center; color: var(--muted); font-size: 1.1rem; padding: 48px 16px; }
 
-/* Fullscreen is a desktop/projector feature — the API is unreliable on phones, so hide it there. */
-@media (max-width: 720px) { .hbtn-fs { display: none; } }
+/* Fullscreen is a desktop/projector feature — the API is unreliable on phones, so hide it there.
+   `.header-actions .hbtn-fs` (0,2,0) outranks toolbar.css's `.hbtn` (0,1,0), which loads later. */
+@media (max-width: 720px) { .header-actions .hbtn-fs { display: none; } }
 
 @media (max-width: 560px) {
   .disp { padding: 14px 12px 48px; }
