@@ -78,6 +78,12 @@
       "bibs.footer": "Crono — runs in your browser.", "bibs.home": "Home", "bibs.openTimer": "Open the timer",
       "bibs.rangeErr": "Enter a valid range — whole numbers, from ≤ to, up to {max} bibs.",
       "bibs.count": "{n} bibs · {p} pages (2 per A4).",
+      "coffee.body1": "Crono is completely free — no accounts, no ads, no tracking, and every feature works offline. There’s nothing to pay for.",
+      "coffee.body2": "If it saved you time at a race and you’d like to say thanks, you can leave a small voluntary tip. It’s entirely optional and is not a payment for the app — it just helps cover the time spent building and maintaining it. The link opens Revolut in a new tab.",
+      "coffee.cancel": "Maybe later", "coffee.go": "Donate on Revolut",
+      "update.available": "New version available", "update.reload": "Reload", "update.updating": "Updating…", "update.updated": "Updated to the latest version", "update.dismiss": "Dismiss",
+      "title.landing": "Crono — simple race timing for organisers", "title.app": "Crono — race chronometer", "title.bibs": "Print race bib numbers — Crono",
+      "stats.participants.one": "{n} participant loaded", "stats.duplicates.one": "{n} duplicate",
       "start.title": "Start time", "start.setNow": "Set now", "start.sincePrefix": "Start",
       "start.hint": "When the race started — every result is timed from here. Editing it recalculates all times.",
       "start.timeSince": "Time since start",
@@ -175,6 +181,12 @@
       "bibs.footer": "Crono — rulează în browserul tău.", "bibs.home": "Acasă", "bibs.openTimer": "Deschide cronometrul",
       "bibs.rangeErr": "Introdu un interval valid — numere întregi, de la ≤ până la, maxim {max} numere.",
       "bibs.count": "{n} numere · {p} pagini (2 pe A4).",
+      "coffee.body1": "Crono este complet gratuit — fără conturi, fără reclame, fără urmărire, și toate funcțiile merg offline. Nu ai nimic de plătit.",
+      "coffee.body2": "Dacă ți-a economisit timp la o cursă și vrei să spui mulțumesc, poți lăsa un mic bacșiș voluntar. Este complet opțional și nu e o plată pentru aplicație — doar ajută la acoperirea timpului petrecut construind-o și întreținând-o. Linkul deschide Revolut într-o filă nouă.",
+      "coffee.cancel": "Poate mai târziu", "coffee.go": "Donează pe Revolut",
+      "update.available": "Versiune nouă disponibilă", "update.reload": "Reîncarcă", "update.updating": "Se actualizează…", "update.updated": "Actualizat la cea mai recentă versiune", "update.dismiss": "Închide",
+      "title.landing": "Crono — cronometrare simplă pentru organizatori", "title.app": "Crono — cronometru de cursă", "title.bibs": "Tipărește numere de concurs — Crono",
+      "stats.participants.one": "{n} participant încărcat", "stats.duplicates.one": "{n} duplicat",
       "start.title": "Ora de start", "start.setNow": "Acum", "start.sincePrefix": "Start",
       "start.hint": "Când a început cursa — fiecare rezultat se cronometrează de aici. Modificarea recalculează toți timpii.",
       "start.timeSince": "Timp de la start",
@@ -272,6 +284,12 @@
       "bibs.footer": "Crono — funciona en tu navegador.", "bibs.home": "Inicio", "bibs.openTimer": "Abrir el cronómetro",
       "bibs.rangeErr": "Introduce un rango válido — números enteros, desde ≤ hasta, máximo {max} dorsales.",
       "bibs.count": "{n} dorsales · {p} páginas (2 por A4).",
+      "coffee.body1": "Crono es totalmente gratis — sin cuentas, sin anuncios, sin rastreo, y todas las funciones funcionan sin conexión. No hay nada que pagar.",
+      "coffee.body2": "Si te ahorró tiempo en una carrera y quieres dar las gracias, puedes dejar una pequeña propina voluntaria. Es totalmente opcional y no es un pago por la app — solo ayuda a cubrir el tiempo dedicado a crearla y mantenerla. El enlace abre Revolut en una pestaña nueva.",
+      "coffee.cancel": "Quizás más tarde", "coffee.go": "Donar en Revolut",
+      "update.available": "Nueva versión disponible", "update.reload": "Recargar", "update.updating": "Actualizando…", "update.updated": "Actualizado a la última versión", "update.dismiss": "Cerrar",
+      "title.landing": "Crono — cronometraje sencillo para organizadores", "title.app": "Crono — cronómetro de carrera", "title.bibs": "Imprime dorsales de carrera — Crono",
+      "stats.participants.one": "{n} participante cargado", "stats.duplicates.one": "{n} duplicado",
       "start.title": "Hora de inicio", "start.setNow": "Ahora", "start.sincePrefix": "Inicio",
       "start.hint": "Cuando empezó la carrera — cada resultado se cronometra desde aquí. Editarla recalcula todos los tiempos.",
       "start.timeSince": "Tiempo desde el inicio",
@@ -369,6 +387,12 @@
       "bibs.footer": "Crono — läuft in deinem Browser.", "bibs.home": "Start", "bibs.openTimer": "Stoppuhr öffnen",
       "bibs.rangeErr": "Gib einen gültigen Bereich ein — ganze Zahlen, von ≤ bis, maximal {max} Startnummern.",
       "bibs.count": "{n} Startnummern · {p} Seiten (2 pro A4).",
+      "coffee.body1": "Crono ist völlig kostenlos — keine Konten, keine Werbung, kein Tracking, und alle Funktionen laufen offline. Es gibt nichts zu bezahlen.",
+      "coffee.body2": "Wenn es dir bei einem Rennen Zeit gespart hat und du Danke sagen möchtest, kannst du ein kleines freiwilliges Trinkgeld geben. Es ist völlig optional und keine Bezahlung für die App — es hilft nur, die Zeit für Entwicklung und Pflege zu decken. Der Link öffnet Revolut in einem neuen Tab.",
+      "coffee.cancel": "Vielleicht später", "coffee.go": "Auf Revolut spenden",
+      "update.available": "Neue Version verfügbar", "update.reload": "Neu laden", "update.updating": "Wird aktualisiert…", "update.updated": "Auf die neueste Version aktualisiert", "update.dismiss": "Schließen",
+      "title.landing": "Crono — einfache Zeitnahme für Organisatoren", "title.app": "Crono — Rennstoppuhr", "title.bibs": "Startnummern drucken — Crono",
+      "stats.participants.one": "{n} Teilnehmer geladen", "stats.duplicates.one": "{n} Duplikat",
       "start.title": "Startzeit", "start.setNow": "Jetzt", "start.sincePrefix": "Start",
       "start.hint": "Wann das Rennen begann — jedes Ergebnis wird von hier gemessen. Eine Änderung berechnet alle Zeiten neu.",
       "start.timeSince": "Zeit seit dem Start",
@@ -466,6 +490,12 @@
       "bibs.footer": "Crono — fonctionne dans votre navigateur.", "bibs.home": "Accueil", "bibs.openTimer": "Ouvrir le chrono",
       "bibs.rangeErr": "Saisissez une plage valide — nombres entiers, de ≤ à, jusqu'à {max} dossards.",
       "bibs.count": "{n} dossards · {p} pages (2 par A4).",
+      "coffee.body1": "Crono est entièrement gratuit — pas de comptes, pas de pub, pas de suivi, et toutes les fonctions marchent hors ligne. Il n'y a rien à payer.",
+      "coffee.body2": "S'il vous a fait gagner du temps lors d'une course et que vous voulez dire merci, vous pouvez laisser un petit pourboire volontaire. C'est entièrement facultatif et ce n'est pas un paiement pour l'app — cela aide juste à couvrir le temps passé à la créer et la maintenir. Le lien ouvre Revolut dans un nouvel onglet.",
+      "coffee.cancel": "Peut-être plus tard", "coffee.go": "Faire un don sur Revolut",
+      "update.available": "Nouvelle version disponible", "update.reload": "Recharger", "update.updating": "Mise à jour…", "update.updated": "Mis à jour vers la dernière version", "update.dismiss": "Fermer",
+      "title.landing": "Crono — chronométrage simple pour organisateurs", "title.app": "Crono — chronomètre de course", "title.bibs": "Imprimer des dossards — Crono",
+      "stats.participants.one": "{n} participant chargé", "stats.duplicates.one": "{n} doublon",
       "start.title": "Heure de départ", "start.setNow": "Maintenant", "start.sincePrefix": "Départ",
       "start.hint": "Quand la course a commencé — chaque résultat est chronométré à partir d'ici. La modifier recalcule tous les temps.",
       "start.timeSince": "Temps depuis le départ",
@@ -563,6 +593,12 @@
       "bibs.footer": "Crono — ブラウザで動作します。", "bibs.home": "ホーム", "bibs.openTimer": "タイマーを開く",
       "bibs.rangeErr": "有効な範囲を入力してください — 整数、開始 ≤ 終了、最大{max}枚。",
       "bibs.count": "{n}枚 · {p}ページ（A4に2枚）。",
+      "coffee.body1": "Cronoは完全無料です — アカウント不要、広告なし、追跡なし、すべての機能がオフラインで動作します。支払うものは何もありません。",
+      "coffee.body2": "レースで時間を節約できてお礼をしたい場合は、少額の任意のチップを送れます。完全に任意で、アプリへの支払いではありません — 開発と保守にかかる時間の足しになるだけです。リンクは新しいタブでRevolutを開きます。",
+      "coffee.cancel": "あとで", "coffee.go": "Revolutで寄付",
+      "update.available": "新しいバージョンがあります", "update.reload": "再読み込み", "update.updating": "更新中…", "update.updated": "最新バージョンに更新しました", "update.dismiss": "閉じる",
+      "title.landing": "Crono — 主催者向けのシンプルなレース計測", "title.app": "Crono — レースストップウォッチ", "title.bibs": "レースのゼッケン番号を印刷 — Crono",
+      "stats.participants.one": "{n}名の参加者を読み込みました", "stats.duplicates.one": "重複{n}件",
       "start.title": "スタート時刻", "start.setNow": "現在に設定", "start.sincePrefix": "スタート",
       "start.hint": "レースの開始時刻です。すべての結果はここから計測されます。変更するとすべてのタイムが再計算されます。",
       "start.timeSince": "スタートからの経過時間",
@@ -660,6 +696,12 @@
       "bibs.footer": "Crono — 在你的浏览器中运行。", "bibs.home": "主页", "bibs.openTimer": "打开计时器",
       "bibs.rangeErr": "请输入有效范围——整数，从 ≤ 到，最多 {max} 个。",
       "bibs.count": "{n} 个 · {p} 页（每张A4两个）。",
+      "coffee.body1": "Crono 完全免费——无需账户、无广告、无追踪，所有功能均可离线使用。无需支付任何费用。",
+      "coffee.body2": "如果它在比赛中为你节省了时间，并且你想表示感谢，可以留下一小笔自愿打赏。完全可选，并非为应用付费——只是帮助分担开发和维护所花的时间。链接会在新标签页打开 Revolut。",
+      "coffee.cancel": "以后再说", "coffee.go": "在 Revolut 捐赠",
+      "update.available": "有新版本可用", "update.reload": "重新加载", "update.updating": "正在更新…", "update.updated": "已更新到最新版本", "update.dismiss": "关闭",
+      "title.landing": "Crono — 面向组织者的简单赛事计时", "title.app": "Crono — 比赛计时器", "title.bibs": "打印比赛号码布 — Crono",
+      "stats.participants.one": "已加载{n}名参赛者", "stats.duplicates.one": "{n}个重复",
       "start.title": "开始时间", "start.setNow": "设为现在", "start.sincePrefix": "开始",
       "start.hint": "比赛开始的时间——所有成绩都从此计时。修改后会重新计算所有时间。",
       "start.timeSince": "自开始以来的时间",
@@ -757,6 +799,12 @@
       "bibs.footer": "Crono — आपके ब्राउज़र में चलता है।", "bibs.home": "होम", "bibs.openTimer": "टाइमर खोलें",
       "bibs.rangeErr": "एक मान्य श्रेणी दर्ज करें — पूर्ण संख्याएँ, से ≤ तक, अधिकतम {max} बिब।",
       "bibs.count": "{n} बिब · {p} पृष्ठ (प्रति A4 2)।",
+      "coffee.body1": "Crono पूरी तरह मुफ़्त है — कोई खाता नहीं, कोई विज्ञापन नहीं, कोई ट्रैकिंग नहीं, और हर सुविधा ऑफ़लाइन काम करती है। भुगतान करने को कुछ नहीं है।",
+      "coffee.body2": "अगर इसने किसी दौड़ में आपका समय बचाया और आप धन्यवाद कहना चाहते हैं, तो आप एक छोटी स्वैच्छिक टिप दे सकते हैं। यह पूरी तरह वैकल्पिक है और ऐप के लिए भुगतान नहीं है — यह बस इसे बनाने और बनाए रखने में लगे समय की भरपाई में मदद करता है। लिंक एक नए टैब में Revolut खोलता है।",
+      "coffee.cancel": "शायद बाद में", "coffee.go": "Revolut पर दान करें",
+      "update.available": "नया संस्करण उपलब्ध है", "update.reload": "फिर से लोड करें", "update.updating": "अपडेट हो रहा है…", "update.updated": "नवीनतम संस्करण पर अपडेट किया गया", "update.dismiss": "बंद करें",
+      "title.landing": "Crono — आयोजकों के लिए सरल रेस टाइमिंग", "title.app": "Crono — रेस स्टॉपवॉच", "title.bibs": "रेस बिब नंबर प्रिंट करें — Crono",
+      "stats.participants.one": "{n} प्रतिभागी लोड हुआ", "stats.duplicates.one": "{n} डुप्लिकेट",
       "start.title": "प्रारंभ समय", "start.setNow": "अभी सेट करें", "start.sincePrefix": "प्रारंभ",
       "start.hint": "दौड़ कब शुरू हुई — हर परिणाम यहीं से मापा जाता है। इसे बदलने पर सभी समय फिर से गणना होते हैं।",
       "start.timeSince": "प्रारंभ से समय",
@@ -813,6 +861,21 @@
     return s;
   }
 
+  // Plural-aware lookup: uses the language's "one" form (key + ".one") when the count is
+  // singular per Intl.PluralRules, else the base ("other") key. {n} is filled from `n`.
+  function tn(key, n, params) {
+    var cat = "other";
+    try { cat = new Intl.PluralRules(current).select(n); } catch (e) {}
+    function pickFrom(lang) {
+      var tbl = STR[lang]; if (!tbl) return null;
+      if (cat === "one" && tbl[key + ".one"] != null) return tbl[key + ".one"];
+      return tbl[key] != null ? tbl[key] : null;
+    }
+    var raw = pickFrom(current); if (raw == null) raw = pickFrom("en"); if (raw == null) raw = key;
+    params = params || {}; if (params.n == null) params.n = n;
+    return raw.replace(/\{(\w+)\}/g, function (_, k) { return params[k] != null ? params[k] : "{" + k + "}"; });
+  }
+
   function applyDom(scope) {
     scope = scope || document;
     var nodes = scope.querySelectorAll("[data-i18n]"), i;
@@ -865,6 +928,7 @@
         sels[i].addEventListener("change", function () { setLang(this.value); });
       }
       applyDom(document);
+      document.documentElement.classList.remove("i18n-wait");   // reveal (head.js hid non-EN to avoid a flash)
       fire();
     }
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready);
@@ -873,7 +937,7 @@
 
   return {
     LANGS: LANGS, NAMES: NAMES, STR: STR,
-    t: t, setLang: setLang, apply: applyDom,
+    t: t, tn: tn, setLang: setLang, apply: applyDom,
     lang: function () { return current; },
     _initBrowser: _initBrowser
   };
