@@ -113,13 +113,22 @@ a { color: inherit; text-decoration: none; }
 .card h3 { margin: 0 0 8px; font-size: 1.08rem; }
 .card p { margin: 0; color: var(--muted); font-size: .95rem; }
 
-/* how it works */
-.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.step { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 22px; }
-.step-num { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 12px;
-  font-family: var(--font-display); font-weight: 700; color: var(--on-accent); background: var(--primary); margin-bottom: 14px; }
-.step h3 { margin: 0 0 6px; font-size: 1.08rem; }
-.step p { margin: 0; color: var(--muted); font-size: .95rem; }
+/* how it works — role flow diagram (organiser → volunteers → results) */
+.steps-intro { text-align: center; max-width: 660px; margin: -6px auto 28px; color: var(--muted); }
+.flow { display: flex; align-items: stretch; gap: 14px; }
+.flow-step { flex: 1 1 0; min-width: 0; background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px 20px; text-align: center; }
+.flow-ic { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; margin-bottom: 14px;
+  color: var(--primary); background: rgba(var(--primary-rgb), .12); border: 1px solid rgba(var(--primary-rgb), .25); }
+.flow-ic svg { width: 26px; height: 26px; }
+.flow-step h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.flow-step p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.5; }
+.flow-link { flex: 0 0 auto; align-self: center; color: var(--muted); }
+.flow-link svg { width: 24px; height: 24px; display: block; }
+.flow-offline { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 640px;
+  margin: 22px auto 0; padding: 12px 20px; color: var(--text); font-weight: 600; font-size: .92rem;
+  background: rgba(var(--accent-2-rgb), .1); border: 1px solid rgba(var(--accent-2-rgb), .3); border-radius: var(--radius); }
+.flow-offline svg { width: 20px; height: 20px; flex: 0 0 auto; color: var(--accent-2); }
 
 /* faq */
 .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
@@ -176,7 +185,9 @@ a { color: inherit; text-decoration: none; }
 }
 @media (max-width: 720px) {
   .features { grid-template-columns: 1fr; }
-  .steps-grid { grid-template-columns: 1fr; }
+  /* Flow stacks vertically; the connector chevrons point down between stages. */
+  .flow { flex-direction: column; }
+  .flow-link { transform: rotate(90deg); }
   .hero { padding: 28px 0 40px; }
   /* Soften the background route so it doesn't cut across the hero buttons. */
   .bg-motif { opacity: .35; }
@@ -213,13 +224,13 @@ a { color: inherit; text-decoration: none; }
 /* ===== Animations (only when .js-anim is set; respects reduced-motion) ===== */
 .js-anim .hero-copy, .js-anim .hero-art, .js-anim .section-head,
 .js-anim .faq-list, .js-anim .cta-band,
-.js-anim .features .card, .js-anim .steps-grid .step {
+.js-anim .features .card, .js-anim .flow .flow-step {
   opacity: 0; transform: translateY(18px);
   transition: opacity .6s ease, transform .6s ease;
 }
 .js-anim .hero-copy.is-in, .js-anim .hero-art.is-in, .js-anim .section-head.is-in,
 .js-anim .faq-list.is-in, .js-anim .cta-band.is-in,
-.js-anim .features.is-in .card, .js-anim .steps-grid.is-in .step {
+.js-anim .features.is-in .card, .js-anim .flow.is-in .flow-step {
   opacity: 1; transform: none;
 }
 /* staggered children */
@@ -228,8 +239,8 @@ a { color: inherit; text-decoration: none; }
 .js-anim .features.is-in .card:nth-child(4) { transition-delay: .21s; }
 .js-anim .features.is-in .card:nth-child(5) { transition-delay: .28s; }
 .js-anim .features.is-in .card:nth-child(6) { transition-delay: .35s; }
-.js-anim .steps-grid.is-in .step:nth-child(2) { transition-delay: .1s; }
-.js-anim .steps-grid.is-in .step:nth-child(3) { transition-delay: .2s; }
+.js-anim .flow.is-in .flow-step:nth-of-type(2) { transition-delay: .1s; }
+.js-anim .flow.is-in .flow-step:nth-of-type(3) { transition-delay: .2s; }
 
 /* hero illustration comes in a touch later for a layered feel */
 .js-anim .hero-art { transition-delay: .12s; }
