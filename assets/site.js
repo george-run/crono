@@ -170,6 +170,7 @@
   var hiwRows = document.getElementById("hiwRows");
   var hiwPath = document.getElementById("hiwRoute");
   var hiwPin = document.getElementById("hiwPin");
+  var hiwPinNum = document.getElementById("hiwPinNum");
   var hiwType = document.getElementById("hiwType");
   var hiwBubble = document.getElementById("hiwBubble");
   if (hiwClock && hiwRows && hiwPath && hiwPin && hiwType && hiwPath.getTotalLength) {
@@ -195,6 +196,7 @@
     // Respect reduced motion: show the finished board statically, no looping.
     if (!document.documentElement.classList.contains("js-anim")) {
       setPin(1);
+      if (hiwPinNum) hiwPinNum.textContent = HFIN[HFIN.length - 1].n;
       for (var i = 0; i < HFIN.length; i++) { var el = hiwRowEl(i + 1, HFIN[i]); el.classList.remove("in0"); hiwRows.appendChild(el); }
       hiwType.textContent = HFIN[HFIN.length - 1].n;
     } else {
@@ -203,6 +205,7 @@
       function hiwReset() { hiwRows.innerHTML = ""; hiwType.textContent = ""; hi = 0; setPin(0); setTimeout(hiwRun, 800); }
       function hiwRun() {
         if (hi >= HFIN.length) { setTimeout(hiwReset, 2600); return; }
+        if (hiwPinNum) hiwPinNum.textContent = HFIN[hi].n;   // the runner carries this bib…
         var start = null, DUR = 1700;
         function step(ts) {
           if (start == null) start = ts;
