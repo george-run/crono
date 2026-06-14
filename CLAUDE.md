@@ -22,7 +22,11 @@ Prose drifts when it relies on memory, so the invariants are now **tests**. `npm
 (= `node --test`) runs `test/architecture.test.js` alongside the helper unit tests and fails loudly on:
 - the `sw.js` `CACHE` version not mirrored in the **Status** block,
 - a `sw.js` `ASSETS` path that doesn't exist, or an `assets/*` file missing from **Structure**,
-- an `assets/*.js` no page loads, an inline `<style>`/`<script>`, or an absolute `/assets/…` path.
+- an `assets/*.js` no page loads, an inline `<style>`/`<script>`, or an absolute `/assets/…` path,
+- **i18n:** languages with different key sets, an empty value, a `data-i18n*` key in HTML or a `t()`/`tn()` key in JS missing from the tables, or `{placeholder}` tokens that differ across languages,
+- an `assets/*.css` no page loads, or any `assets/*.{js,css}` missing from the `ASSETS` precache list,
+- a page whose markup needs a script/style it doesn't load (`data-i18n`→i18n.js, `data-coffee`→coffee.js/css, toasts→toast.css),
+- hardcoded primary lime (`#a3e635`/`rgba(163,230,53…)`) outside `theme.css`, a duplicate `id` within a page, or a page missing its CSP `<meta>`.
 
 **Ritual (the "periodic check"):** run `npm test` at the **start** of a session and again **before every
 deploy**. When you add/rename/remove a file, bump the cache, or add a token, fix the matching prose
