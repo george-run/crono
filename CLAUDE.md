@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v111"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v112"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/crono-update-notification-loop-4wpiuo`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** header is consistent on every page — **logo (30px) + Oswald wordmark (1.5rem)**, same size/treatment everywhere (no chip); the **language picker (short codes EN/RO/…) · theme toggle · donation** actions are grouped into a **pill toolbar** on the right (`.header-actions` containing `.lang-wrap`/`.hbtn-theme` + `.hbtn-coffee` amber) — **icon + label** on desktop, collapsing to **icon-only** under 720px (`.hbtn-label` hidden); the in-app **Demo** modal exists (`#demoModal`) but the toolbar button was removed (no Demo entry on any page now); **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
@@ -47,6 +47,7 @@ deploy**. When you add/rename/remove a file, bump the cache, or add a token, fix
 index.html        Landing page            → crono.run/
 app.html          The chronometer app     → crono.run/app.html
 bibs.html         Bib-number generator     → crono.run/bibs.html (separate page; preview + colour picker/presets + logo upload-or-link)
+display.html      Live results display     → crono.run/display.html (read-only leaderboard for a 2nd screen/projector; mirrors the timer LIVE via the cross-tab `storage` event — no network)
 CNAME             Custom domain for GitHub Pages (contains: crono.run) — must persist across deploys
 terms.html        Standalone Terms page    privacy.html  Standalone Privacy page
 favicon.svg       Logo mark
@@ -57,6 +58,7 @@ assets/
   app.css     App styles            app.js   App logic (IIFE)
   site.css    Landing styles        site.js  Landing animations (reveal, demo loop) + consent gate (separate IIFEs; both run even under reduced-motion)
   bibs.css    Bib-generator page styles + print sheet   bibs.js  Bib-number generator logic (loaded by bibs.html)
+  display.css Live-results display styles   display.js  Live-results logic — reads crono.* from localStorage, re-renders on the `storage` event, ticks the clock, ranking tabs, auto-scroll (loaded by display.html). Pure compute (`computePlaces`, `category`) is shared from helpers.js.
   legal.css   Styles for the standalone terms.html / privacy.html pages
   toolbar.css Shared header toolbar (language · theme · support) — `.header-actions`/`.hbtn*`/`.lang-wrap`; loaded by app.html, index.html AND bibs.html (single source, reused on every page)
   toast.css   Shared toast styles (`.toasts`/`.toast*`, update prompt + "Updated" confirmation, `.toasts-top`, `.toast-amber`) — loaded by app.html, index.html AND bibs.html. App-only `.toast-action`/`.toast-btn` (Undo) stay in app.css.
@@ -109,13 +111,23 @@ test/architecture.test.js   Guards (cache↔Status, ASSETS exist, no inline CSS/
 
 ## Data model (localStorage)
 Keys: `crono.startEpoch`, `crono.entries`, `crono.participants`, `crono.distanceKm`,
-`crono.sound`, `crono.cards`, `crono.consent`, `crono.theme` (`"light"`/`"dark"`; absent = follow OS — managed by `head.js`), `crono.lang` (UI language; absent = follow `navigator.language`, fallback EN — managed by `i18n.js`).
+`crono.sound`, `crono.cards`, `crono.consent`, `crono.webhook` (optional results-push URL; `""`/absent = off — see below), `crono.theme` (`"light"`/`"dark"`; absent = follow OS — managed by `head.js`), `crono.lang` (UI language; absent = follow `navigator.language`, fallback EN — managed by `i18n.js`).
 ```
 entry        = { id, runnerNumber: string, finishEpoch: ms, details: string }
 participants = { "<number>": { name: string, sex: "M"|"F"|"", birthYear: number|null } }
 startEpoch   = absolute ms; elapsed = finishEpoch - startEpoch (handles midnight)
 backup JSON  = { app:"crono", v:1, exportedAt, startEpoch, distanceKm, entries, participants }
+results push = { app:"crono", type:"results", v:1, exportedAt, startEpoch, distanceKm,
+                 results:[{ place, categoryPlace, runnerNumber, name, sex, category, finishEpoch, elapsedMs, time, pace, note, duplicate }] }
 ```
+**Live display + optional webhook (`app.js`):** `display.html` is a read-only mirror — a 2nd
+tab/projector reads the same `localStorage` and re-renders on the cross-tab `storage` event
+(zero network, offline). **Optional** results push: if the operator sets `crono.webhook` (a URL,
+off by default), `save()` debounces a fire-and-forget `fetch` POST of the **results push** JSON
+above — it never blocks recording and fails silently offline. This is the **only** outbound call,
+so **`app.html` alone** relaxes its CSP to `connect-src 'self' https:` (the endpoint is a
+user-typed arbitrary https host); `display.html` keeps strict `connect-src 'self'`. Disclosed in
+Privacy; `CONSENT_VERSION` is **not** bumped (nothing leaves the device unless configured).
 `consent` = `{ v: CONSENT_VERSION, at }`. Backups do NOT include consent.
 
 ## Code map — `assets/app.js` (section comments in this order)

@@ -33,7 +33,7 @@
     <h2>1. Overview</h2>
     <p>Crono ("the Service"), operated by George Vlada ("the operator"), is a free chronometer that runs entirely in your web browser. It is designed to be privacy-friendly: it does <strong>not</strong> use tracking, advertising or analytics cookies, it does <strong>not</strong> create user accounts, and it does <strong>not</strong> send your timing data to any server. This policy explains what is stored and where.</p>
     <h2>2. Data stored on your device</h2>
-    <p>To work, Crono saves information locally in your browser's storage (the <code>localStorage</code> mechanism). This data stays on your device and is not transmitted to the operator or to any third party. It includes:</p>
+    <p>To work, Crono saves information locally in your browser's storage (the <code>localStorage</code> mechanism). This data stays on your device and is not transmitted to the operator or to any third party — unless you turn on the optional results webhook described below. It includes:</p>
     <ul>
       <li>the race start time you set;</li>
       <li>recorded finish times and their order;</li>
@@ -46,6 +46,7 @@
     <p>The Service does not load advertising, does not use analytics or tracking cookies, and does not build any profile of you. No third-party marketing scripts are included.</p>
     <h2>4. Hosting &amp; fonts</h2>
     <p>The Service is published as static files via GitHub Pages. Like any website, when your browser requests the page, the hosting provider (GitHub) may process technical connection data such as your IP address and user-agent in its server logs in order to deliver the site. The Service also loads its web fonts from Google Fonts, so your browser contacts Google's servers (which may receive your IP address) to download them. No analytics, advertising or tracking scripts are used, and the operator keeps no server logs of your activity.</p>
+    <p><strong>Optional results webhook.</strong> Crono can optionally send your results to a web address (a "webhook") that you configure yourself in the app's Options. This is <strong>off by default</strong> — nothing is sent unless you enter a URL. When enabled, the results (start time, finish times and any participant names/categories you added) are sent as JSON to that address whenever results change. The destination is entirely your choice and under your control; you are responsible for that endpoint and how it handles the data. Clear the field to turn it off and keep everything on your device.</p>
     <h2>5. Information about other people</h2>
     <p>If you import or enter details about participants (such as names or year of birth), that information is stored only on your device, under your control. You are responsible for having a lawful basis to process it and for handling it in accordance with any applicable data-protection laws. The operator never receives this information.</p>
     <h2>6. Your control over your data</h2>

@@ -4,6 +4,10 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Added
+- **Live results display for a second screen / projector.** A new page (`display.html`, opened from the app's Options → "Live display") shows a big, auto-updating leaderboard (Place · # · Name · Time · Pace) with ranking tabs, a live race clock and gentle auto-scroll. It mirrors the timer **live with zero network** — same-device tabs share storage, so recording a finish in the app updates the display instantly, even fully offline. Read-only; great on an external monitor at the finish.
+- **Optional results webhook (send to another system).** In Options you can paste a webhook URL and Crono will POST the results as JSON whenever they change — for a scoreboard, website or another app. Opt-in and **off by default** (nothing leaves the device unless you set a URL), fire-and-forget so it never blocks recording and fails silently offline. Disclosed in the Privacy Policy; `app.html` alone relaxes its CSP to allow the outbound call.
+
 ### Changed
 - **"How it works" is now an animated mini-demo.** A runner (map pin) rides a curvy route — the same motion style as the hero — toward a single **finish volunteer on a laptop**, who "types" each bib into a bubble; a ranked row (Place · # · Time · Pace) then drops into the board, on loop. A live race clock runs above. Shows the payoff (a tap at the finish → instant ranked results with times and pace, offline). The separate start volunteer was dropped (the app is offline — the clock just starts with one tap). HTML/CSS + a small JS driver; static and readable under reduced-motion. (English copy finalized first; the other languages will be synced once the design is locked.)
 - **Hero headline now names the audience.** "The fastest way to time your race" → "The fastest way **for organisers** to time your race" (translated across all eight languages), so it's immediately clear who Crono is for.

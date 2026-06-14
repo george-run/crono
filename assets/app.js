@@ -9,7 +9,7 @@
   var H = (typeof CronoH !== "undefined") ? CronoH : {};
   var pad = H.pad, formatElapsed = H.formatElapsed, formatClockElapsed = H.formatClockElapsed,
       formatPace = H.formatPace, parseElapsedToMs = H.parseElapsedToMs, normalizeSex = H.normalizeSex,
-      AGE_BRACKETS = H.AGE_BRACKETS, bracketRange = H.bracketRange, csvCell = H.csvCell;
+      csvCell = H.csvCell, computePlaces = H.computePlaces, categoryOf = H.category;
 
   // ----- Storage keys -------------------------------------------------------
   var KEY_START = "crono.startEpoch";
@@ -18,6 +18,7 @@
   var KEY_DISTANCE = "crono.distanceKm";
   var KEY_SOUND = "crono.sound";
   var KEY_CARDS = "crono.cards";
+  var KEY_WEBHOOK = "crono.webhook";                       // optional results webhook URL ("" = off)
   var KEY_CONSENT = H.CONSENT_KEY || "crono.consent";      // shared with the landing banner
   var CONSENT_VERSION = H.CONSENT_VERSION || 1;            // bump in helpers.js to re-prompt
 
@@ -46,6 +47,9 @@
   var $statDupWrap = document.getElementById("statDupWrap");
   var $importFile = document.getElementById("importFile");
   var $restoreFile = document.getElementById("restoreFile");
+  var $displayBtn = document.getElementById("displayBtn");
+  var $webhookUrl = document.getElementById("webhookUrl");
+  var $webhookSend = document.getElementById("webhookSend");
   var $tabs = document.getElementById("rankingTabs");
   var $resultSearch = document.getElementById("resultSearch");
   var $soundToggle = document.getElementById("soundToggle");
@@ -121,6 +125,82 @@
     } catch (e) {
       console.warn("Could not persist data:", e);
     }
+    scheduleWebhook();   // optional: push results to a configured external system
+  }
+
+  // ----- Optional results webhook (opt-in; off when no URL is set) -----------
+  // Builds a versioned results JSON (mirrors the CSV/backup conventions) and POSTs
+  // it to the user-configured URL. Fire-and-forget: it never blocks recording and
+  // fails silently offline. Requires app.html's CSP `connect-src 'self' https:`.
+  function buildResultsPayload() {
+    var overall = computePlaces(entries);
+    var catLists = {};
+    entries.forEach(function (e) {
+      var c = entryCategory(e);
+      if (c) (catLists[c.key] = catLists[c.key] || []).push(e);
+    });
+    var catPlaces = {};
+    Object.keys(catLists).forEach(function (k) {
+      var p = computePlaces(catLists[k]);
+      Object.keys(p).forEach(function (id) { catPlaces[id] = p[id]; });
+    });
+    var dups = duplicateNumbers();
+    var results = entries.slice()
+      .sort(function (a, b) { return a.finishEpoch - b.finishEpoch; })
+      .map(function (e) {
+        var elapsed = e.finishEpoch - startEpoch;
+        var p = participants[e.runnerNumber] || {};
+        var c = entryCategory(e);
+        return {
+          place: overall[e.id] || null,
+          categoryPlace: c ? (catPlaces[e.id] || null) : null,
+          runnerNumber: e.runnerNumber,
+          name: p.name || "",
+          sex: p.sex || "",
+          category: c ? c.shortLabel : "",
+          finishEpoch: e.finishEpoch,
+          elapsedMs: elapsed,
+          time: formatElapsed(elapsed),
+          pace: formatPace(elapsed, distanceKm) || "",
+          note: e.details || "",
+          duplicate: !!dups[e.runnerNumber]
+        };
+      });
+    return {
+      app: "crono", type: "results", v: 1,
+      exportedAt: new Date().toISOString(),
+      startEpoch: startEpoch, distanceKm: distanceKm,
+      results: results
+    };
+  }
+
+  function webhookUrl() {
+    var u = $webhookUrl ? $webhookUrl.value.trim() : "";
+    if (!u) { try { u = localStorage.getItem(KEY_WEBHOOK) || ""; } catch (e) {} }
+    return u;
+  }
+
+  var webhookTimer = null;
+  function scheduleWebhook() {
+    if (!webhookUrl()) return;
+    clearTimeout(webhookTimer);
+    webhookTimer = setTimeout(function () { pushWebhook(false); }, 1500);
+  }
+
+  function pushWebhook(manual) {
+    var url = webhookUrl();
+    if (!url) { if (manual) toast(t("send.off"), "error"); return; }
+    var ok = function () { if (manual) toast(t("send.ok")); };
+    var fail = function () { if (manual) toast(t("send.fail"), "error"); };
+    try {
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildResultsPayload()),
+        keepalive: true,
+        mode: "cors"
+      }).then(function (res) { if (res && (res.ok || res.type === "opaque")) ok(); else fail(); }).catch(fail);
+    } catch (e) { fail(); }
   }
 
   function load() {
@@ -185,21 +265,15 @@
   function participantName(num) { var p = participants[num]; return p ? (p.name || "") : ""; }
 
   // Compute the sex+age category for a participant, or null when data is missing.
+  // The pure math lives in helpers (CronoH.category); we add the localized longLabel.
   function ageCategory(p) {
-    if (!p || !p.sex || !p.birthYear) return null;
-    var raceYear = new Date(startEpoch).getFullYear();
-    var age = raceYear - p.birthYear;
-    if (age < 0) return null;
-    var lo = AGE_BRACKETS[0];
-    for (var i = 0; i < AGE_BRACKETS.length; i++) {
-      if (age >= AGE_BRACKETS[i]) lo = AGE_BRACKETS[i];
-    }
-    var range = bracketRange(lo);
-    var sexWord = p.sex === "M" ? t("tab.men") : t("tab.women");
+    var c = categoryOf(p, new Date(startEpoch).getFullYear());
+    if (!c) return null;
+    var sexWord = c.sex === "M" ? t("tab.men") : t("tab.women");
     return {
-      key: p.sex + "|" + lo,
-      shortLabel: p.sex + range,          // e.g. "M30–39"
-      longLabel: sexWord + " " + range    // e.g. "Men 30–39"
+      key: c.key,
+      shortLabel: c.shortLabel,           // e.g. "M30–39"
+      longLabel: sexWord + " " + c.range  // e.g. "Men 30–39"
     };
   }
 
@@ -245,15 +319,6 @@
     if (filter === "M" || filter === "F") return !!p && p.sex === filter;
     var c = ageCategory(p);
     return !!c && c.key === filter;
-  }
-
-  // Map of entry id -> 1-based place within `list`, ranked by finish time.
-  function computePlaces(list) {
-    var places = {};
-    list.slice()
-      .sort(function (a, b) { return a.finishEpoch - b.finishEpoch; })
-      .forEach(function (e, i) { places[e.id] = i + 1; });
-    return places;
   }
 
   // ----- Rendering ----------------------------------------------------------
@@ -718,6 +783,15 @@
   document.getElementById("clearBtn").addEventListener("click", clearResults);
   document.getElementById("backupBtn").addEventListener("click", exportBackup);
   document.getElementById("restoreBtn").addEventListener("click", function () { $restoreFile.click(); });
+  if ($displayBtn) $displayBtn.addEventListener("click", function () { window.open("display.html", "_blank", "noopener"); });
+  if ($webhookUrl) {
+    try { $webhookUrl.value = localStorage.getItem(KEY_WEBHOOK) || ""; } catch (e) {}
+    $webhookUrl.addEventListener("change", function () { try { localStorage.setItem(KEY_WEBHOOK, $webhookUrl.value.trim()); } catch (e) {} });
+  }
+  if ($webhookSend) $webhookSend.addEventListener("click", function () {
+    try { localStorage.setItem(KEY_WEBHOOK, $webhookUrl.value.trim()); } catch (e) {}
+    pushWebhook(true);
+  });
 
   // Participants modal
   document.getElementById("partBtn").addEventListener("click", openParticipants);
