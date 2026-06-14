@@ -19,9 +19,9 @@ img { max-width: 100%; }
 /* Header */
 .bibs-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 0; flex-wrap: wrap; }
 .bibs-head-actions { display: inline-flex; align-items: center; gap: 10px; }
-.brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.4rem;
+.brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.5rem;
   letter-spacing: -.4px; font-family: var(--font-display); color: var(--text); }
-.brand .logo { width: 34px; height: 34px; color: var(--primary); }
+.brand .logo { width: 30px; height: 30px; color: var(--primary); }
 
 .btn { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: 1px solid var(--border);
   background: transparent; color: var(--text); border-radius: 999px; padding: var(--btn-pad);
@@ -32,6 +32,10 @@ img { max-width: 100%; }
 .btn.primary { background: var(--accent-4); border-color: var(--accent-4); color: var(--on-accent); font-weight: 700; }
 .btn.primary:hover { filter: brightness(1.06); transform: translateY(-1px); color: var(--on-accent); }
 .btn.primary:disabled { opacity: .5; cursor: not-allowed; filter: none; transform: none; }
+/* Header "Open app" uses the global lime primary for cross-page consistency
+   (the orange .btn.primary is the bib page's own theme, e.g. Generate). */
+.bibs-head-actions .btn.primary { background: var(--primary); border-color: var(--primary); }
+.bibs-head-actions .btn.primary:hover { background: var(--primary); border-color: var(--primary); color: var(--on-accent); }
 
 /* Intro */
 .bibs-intro { text-align: center; max-width: 660px; margin: 8px auto 28px; }
