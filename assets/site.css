@@ -281,6 +281,8 @@ a { color: inherit; text-decoration: none; }
 .js-anim .features.is-in .card:nth-child(4) { transition-delay: .21s; }
 .js-anim .features.is-in .card:nth-child(5) { transition-delay: .28s; }
 .js-anim .features.is-in .card:nth-child(6) { transition-delay: .35s; }
+.js-anim .features.is-in .card:nth-child(7) { transition-delay: .42s; }
+.js-anim .features.is-in .card:nth-child(8) { transition-delay: .49s; }
 
 /* hero illustration comes in a touch later for a layered feel */
 .js-anim .hero-art { transition-delay: .12s; }
