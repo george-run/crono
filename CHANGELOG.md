@@ -4,6 +4,9 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Fixed
+- **No more stale UI after a deploy.** The service worker now serves **all files network-first when online** (HTML *and* CSS/JS), so a returning user always gets the current page together with its current styles/scripts — eliminating the "one load behind" window where new markup could render with old styling (e.g. a different header logo size). The cache remains the full offline fallback, and updates still never auto-reload mid-race.
+
 ### Added
 - **Printed bibs now carry a small QR code to crono.run** (+ a discreet "crono.run" caption) so events promote the app. The QR is fixed, generated once by a zero-dependency byte-mode encoder (`tools/make-qr.cjs` → `assets/qr-crono.svg`), so nothing extra ships or runs at print time and it works offline.
 
