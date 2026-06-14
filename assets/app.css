@@ -227,6 +227,7 @@
   .integration-row { display: flex; gap: 8px; flex-wrap: wrap; }
   .integration-row input { flex: 1 1 240px; min-width: 0; }
   .integration-row button { flex: 0 0 auto; white-space: nowrap; }
+  .integration-tech { color: var(--muted); font-size: .82rem; line-height: 1.55; margin: 10px 0 0; }
   @media (max-width: 560px) { .integration-row button { width: 100%; } }
 
   /* Compact results summary line (replaces the old stats panel; the secondary
