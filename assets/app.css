@@ -91,9 +91,14 @@
   .setup-row { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; }
   .setup-row .field { flex: 0 1 220px; }
   .setup-row .field.grow { flex: 1 1 300px; }
-  .field-inline { display: flex; gap: 8px; align-items: center; }
-  .field-inline #startTime { flex: 1 1 auto; width: auto; min-width: 0; text-align: left; }
-  .field-inline #setStartNow { flex: 0 0 auto; white-space: nowrap; }
+  /* Time input + "Set now" button. Wraps so a long translated button label
+     (e.g. "Maintenant", "अभी सेट करें") can drop full-width below the input
+     instead of overflowing the card. The input keeps a usable min width so it
+     never collapses; it grabs almost all spare space (grow 100) so the button
+     stays compact when they share a line, but fills the line once it wraps. */
+  .field-inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .field-inline #startTime { flex: 100 1 150px; min-width: 140px; width: auto; text-align: left; }
+  .field-inline #setStartNow { flex: 1 1 auto; white-space: nowrap; justify-content: center; }
   .field-help { font-size: .8rem; color: var(--muted); margin-top: 5px; line-height: 1.45; }
 
   /* Live "time since start" chronometer inside the Start card. */
@@ -112,8 +117,9 @@
   /* Collapsible "Start time" setup card */
   .setup-summary { display: flex; align-items: center; gap: 12px; cursor: pointer; list-style: none; user-select: none; }
   .setup-summary::-webkit-details-marker { display: none; }
-  .setup-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; }
-  .setup-preview { color: var(--muted); font-size: .9rem; }
+  .setup-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600;
+    white-space: nowrap; flex: 0 0 auto; }
+  .setup-preview { color: var(--muted); font-size: .9rem; flex: 0 1 auto; min-width: 0; }
   .setup-preview strong { font-family: var(--font-display); font-variant-numeric: tabular-nums; color: var(--primary); }
   .setup-chevron { width: 20px; height: 20px; color: var(--muted); margin-left: auto; flex: 0 0 auto; transition: transform .15s ease; }
   .setup[open] .setup-chevron { transform: rotate(180deg); }
