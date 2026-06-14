@@ -11,11 +11,11 @@ assets changed. There is **no network, no image tooling and no browser/render to
 
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
-- **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v119"` in `sw.js` — bump it next time any cached asset changes.
+- **Live & in sync** as of **2026-06-14**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
+- **Service worker cache:** `CACHE = "crono-v120"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/crono-update-notification-loop-4wpiuo`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
-- **Recent UI direction (don't undo without asking):** header is consistent on every page — **logo (30px) + Oswald wordmark (1.5rem)**, same size/treatment everywhere (no chip); the **language picker (short codes EN/RO/…) · theme toggle · donation** actions are grouped into a **pill toolbar** on the right (`.header-actions` containing `.lang-wrap`/`.hbtn-theme` + `.hbtn-coffee` amber) — **icon + label** on desktop, collapsing to **icon-only** under 720px (`.hbtn-label` hidden); the in-app **Demo** modal exists (`#demoModal`) but the toolbar button was removed (no Demo entry on any page now); **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
+- **Recent UI direction (don't undo without asking):** header is consistent on every page — **logo (30px) + Oswald wordmark (1.5rem)**, same size/treatment everywhere (no chip); the **language picker (short codes EN/RO/…) · theme toggle · donation** actions are grouped into a **pill toolbar** on the right (`.header-actions` containing `.lang-wrap`/`.hbtn-theme` + `.hbtn-coffee` amber) — **icon + label** on desktop, collapsing to **icon-only** under 720px (`.hbtn-label` hidden); there is **no Demo entry** anywhere (the old in-app demo modal + landing auto-play mock were removed; the landing's **"How it works" mini-demo** `.hiw` replaces them); **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
 
 ## Keeping this file honest (run the audit)
 Prose drifts when it relies on memory, so the invariants are now **tests**. `npm test`
@@ -56,7 +56,7 @@ robots.txt, sitemap.xml       SEO (absolute URLs; update them on the custom-doma
 assets/
   theme.css   Shared design tokens (:root) — single source of truth
   app.css     App styles            app.js   App logic (IIFE)
-  site.css    Landing styles        site.js  Landing animations (reveal, demo loop) + consent gate (separate IIFEs; both run even under reduced-motion)
+  site.css    Landing styles        site.js  Landing animations (reveal, hero scene, the "How it works" mini-demo `.hiw`) + consent gate (separate IIFEs; both run even under reduced-motion)
   bibs.css    Bib-generator page styles + print sheet   bibs.js  Bib-number generator logic (loaded by bibs.html)
   display.css Live-results display styles   display.js  Live-results logic — reads crono.* from localStorage, re-renders on the `storage` event, ticks the clock, ranking tabs, auto-scroll (loaded by display.html). Pure compute (`computePlaces`, `category`) is shared from helpers.js.
   legal.css   Styles for the standalone terms.html / privacy.html pages
@@ -144,7 +144,7 @@ CSV/PDF (`exportCSV`, `exportPDF`, `download`) · `importCSV`/`parseCsvLine` · 
 (`exportBackup`, `importBackup`) · Participants modal (`openParticipants`, `renderParticipants`,
 `addParticipant`) · Wire up (incl. delegated row listener + debounced search) · Consent gate ·
 Doc modal (`openDoc`) · Row edit modal (`openRowEdit`/`saveRowEdit`/`deleteRowEdit`, `#rowModal`) ·
-Toasts (`toast`) · Demo modal (`openDemo`/`closeDemo`) · Confirm modal (`confirmModal`) · Init.
+Toasts (`toast`) · Optional results webhook (`buildResultsPayload`/`pushWebhook`/`scheduleWebhook`) · Confirm modal (`confirmModal`) · Init.
 SW registration + update toast are **not** here — they live in `assets/sw-register.js`.
 
 ## Patterns to follow (reuse these)
@@ -242,7 +242,10 @@ Start time (+confirm) with a **live "time since start" stopwatch** in the Start 
 record on Enter/Record with **beep** (toggle), centiseconds, midnight-safe,
 duplicates, per-row notes, **inline edit of number & time**, sex/age-category rankings via **tabs**,
 **pace** (distance), **results search**, **participant manager** (add/edit/delete/search/CSV import),
-**CSV + PDF (print) export**, **backup/restore JSON**, consent + Terms/Privacy (the **same blocking
+**CSV + PDF (print) export**, **backup/restore JSON**, a **live results display** (`display.html`, opened
+from the results header — read-only leaderboard for a 2nd screen/projector, mirrors the timer via the
+cross-tab `storage` event), an **optional results webhook** (`crono.webhook`, off by default — POSTs
+results JSON, re-syncs every 5s), consent + Terms/Privacy (the **same blocking
 welcome gate on the app AND the landing** — both share `crono.consent`; standalone Terms/Privacy
 pages too), **clicking the app logo returns to the landing**, **PWA**
 (installable/offline) with a dismissible **"new version"
@@ -257,6 +260,6 @@ prints **2 per A4** via `#printArea` + `@media print` (all in `bibs.css`); logic
 ## Known constraints / TODO ideas
 - `addParticipant()` uses a `prompt()` for the new number (could become an inline row).
 - PWA/home-screen icons are crisp PNGs (`assets/icon-180/192/512.png`, generated by `tools/make-icon.cjs`); favicon.svg stays the browser-tab icon.
-- Perf bonus (not done): pause `updateElapsed` interval + the landing demo/clock on `visibilitychange`
+- Perf bonus (not done): pause `updateElapsed` interval + the landing hero clock / `.hiw` mini-demo on `visibilitychange`
   (save battery when the tab is hidden).
 - Possible next: waves/net time, splits/laps, multiple events, team scoring, i18n (RO/EN).
