@@ -12,7 +12,7 @@
 
   // Reveal blocks as they scroll into view.
   var targets = document.querySelectorAll(
-    ".hero-copy,.hero-art,.section-head,.features,.steps-grid,.faq-list,.cta-band"
+    ".hero-copy,.hero-art,.section-head,.features,.flow,.faq-list,.cta-band"
   );
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {

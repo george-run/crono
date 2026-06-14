@@ -5,6 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
+- **"How it works" now shows the real workflow as a diagram.** Replaced the three generic steps with a role-based flow — *Organiser starts the clock → Volunteers record finishers → Rank & export* — plus an intro that explains Crono is for smaller races (runners finishing a few at a time) and an offline note: it works at the start, finish or any checkpoint with no signal, saving every time on the device. Translated across all eight languages; the diagram stacks vertically with down-arrows on mobile.
 - **Hero headline now names the audience.** "The fastest way to time your race" → "The fastest way **for organisers** to time your race" (translated across all eight languages), so it's immediately clear who Crono is for.
 - **Clearer hero value props.**
 
