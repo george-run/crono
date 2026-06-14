@@ -34,8 +34,9 @@ a { color: inherit; text-decoration: none; }
 
 .badge { display: inline-flex; align-items: center; gap: 8px; font-size: .8rem; font-weight: 700;
   letter-spacing: .3px; color: var(--primary); background: rgba(var(--primary-rgb),.1);
-  border: 1px solid rgba(var(--primary-rgb),.25); padding: 6px 14px; border-radius: 999px; margin-bottom: 22px; }
-.badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px rgba(var(--primary-rgb),.18); }
+  border: 1px solid rgba(var(--primary-rgb),.25); padding: 6px 14px; border-radius: 999px; margin-bottom: 22px;
+  max-width: 100%; text-align: center; text-wrap: balance; }
+.badge-dot { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px rgba(var(--primary-rgb),.18); }
 
 .hero h1 { font-family: var(--font-display); font-weight: 700;
   font-size: clamp(2.4rem, 5.2vw, 3.8rem); line-height: 1.05; margin: 0 0 18px; letter-spacing: -.5px; }
@@ -189,6 +190,8 @@ a { color: inherit; text-decoration: none; }
   .bib-logo-row { align-items: stretch; }
 }
 @media (max-width: 480px) {
+  /* Longer languages (RO/DE/FR/ES) make the hero badge wrap — shrink it a touch to help it fit. */
+  .badge { font-size: .72rem; letter-spacing: .2px; padding: 5px 12px; }
   .hero-scene { max-width: 300px; }
   .float-card { left: 0; bottom: 2%; padding: 8px 10px; gap: 9px; }
   /* Tiny scene: shrink the chasing card hard so it reads as a small label trailing the pin. */
