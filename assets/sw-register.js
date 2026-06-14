@@ -78,6 +78,19 @@
     try { return localStorage.getItem(DISMISS_KEY) || ""; } catch (e) { return ""; }
   }
 
+  // Fill any [data-app-version] element with the RUNNING worker's build (e.g. "v120").
+  // Single source = sw.js CACHE, which we bump every deploy, so the shown version
+  // updates automatically (and correctly shows the *current* build until the user reloads).
+  function showAppVersion(reg) {
+    var els = document.querySelectorAll("[data-app-version]");
+    if (!els.length) return;
+    var worker = navigator.serviceWorker.controller || (reg && reg.active);
+    workerVersion(worker).then(function (v) {
+      var label = v ? v.replace(/^crono-/, "") : "";
+      for (var i = 0; i < els.length; i++) els[i].textContent = label;
+    });
+  }
+
   // Show the toast only for a waiting version the user hasn't already dismissed, so the
   // prompt doesn't reappear on every page navigation when "×" was clicked (not "Reload").
   function maybeShowToast(reg) {
@@ -97,6 +110,7 @@
 
   window.addEventListener("load", function () {
     confirmUpdateIfJustReloaded();
+    navigator.serviceWorker.ready.then(showAppVersion).catch(function () {});
     navigator.serviceWorker.register("sw.js").then(function (reg) {
       // An update may have finished installing on a previous visit and be waiting.
       maybeShowToast(reg);
