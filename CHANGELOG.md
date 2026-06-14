@@ -6,7 +6,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Added
-- **First-run quick tour** in the app — a small, in-house coachmark overlay (no external plugin) that spotlights the key steps: set the start, record finishers, switch ranking tabs, Options (participants/export), and the live results screen. Shows once, is skippable, respects reduced motion, is translated in all 8 languages, and can be replayed anytime via the new "Quick start guide" button in Options.
+- **First-run quick tour** in the app — a small, in-house coachmark overlay (no external plugin) that spotlights the key steps: set the start, record finishers, switch ranking tabs, Options (participants/export), and the live results screen. It opens with an opt-in prompt ("Take a quick tour?") rather than starting unannounced, is skippable, respects reduced motion, is translated in all 8 languages, and can be replayed anytime via the "Quick start guide" button in Options. Strong scrim + glowing lime ring for clear contrast on dark/mobile; the spotlight scrolls instantly so it always lands on the right element (no mid-animation misalignment on mobile/PWA).
 
 ### Changed
 - **Legal operator name** changed from a personal name to "the Crono project" across Terms, Privacy, the in-app legal templates and the page author metadata.

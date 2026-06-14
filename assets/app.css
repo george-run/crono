@@ -558,4 +558,8 @@
 .tour-skip { color: var(--muted); }
 .tour-next.primary { background: var(--primary); border-color: var(--primary); color: var(--on-accent); font-weight: 700; }
 .tour-restart { margin-top: 4px; }
+/* First-run opt-in prompt — a centred card on its own dimmed backdrop. */
+.tour-intro-overlay { position: fixed; inset: 0; z-index: 1255; display: flex; align-items: center;
+  justify-content: center; padding: 20px; background: rgba(3, 6, 10, .92); }
+.tour-pop.tour-intro { position: static; }
 @media (prefers-reduced-motion: reduce) { .tour-spot { transition: none; } }

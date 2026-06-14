@@ -26,8 +26,9 @@
   var reduce = false;
   try { reduce = matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
-  var els = null;   // built overlay nodes while the tour is open
-  var steps = [];   // resolved steps (only those with a visible target)
+  var els = null;     // built overlay nodes while the tour is open
+  var introEls = null; // the first-run opt-in prompt, if showing
+  var steps = [];     // resolved steps (only those with a visible target)
   var idx = 0;
 
   // ----- State -----
@@ -89,9 +90,12 @@
     els.back.style.visibility = idx === 0 ? "hidden" : "visible";
     els.skip.textContent = t("tour.skip");
     els.next.textContent = (idx + 1 >= steps.length) ? t("tour.done") : t("tour.next");
-    try { step.el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" }); }
-    catch (e) { step.el.scrollIntoView(); }
-    setTimeout(place, reduce ? 0 : 260);
+    // Scroll INSTANTLY (not smooth): a fixed-position spotlight must be placed against the
+    // target's final rect. Smooth scrolling left the ring stranded mid-animation on mobile/PWA.
+    try { step.el.scrollIntoView({ behavior: "auto", block: "center" }); } catch (e) {}
+    place();
+    requestAnimationFrame(place);
+    setTimeout(place, 80);
     try { els.next.focus(); } catch (e) {}
   }
 
@@ -136,15 +140,45 @@
     if (trg) { e.preventDefault(); start(); }
   });
 
-  // Auto first-run: once, and only after the consent gate is satisfied.
+  // First-run opt-in: ask before launching the tour, rather than starting it unannounced.
+  function showIntro() {
+    if (introEls || els) return;
+    var ov = document.createElement("div"); ov.className = "tour-intro-overlay";
+    var card = document.createElement("div");
+    card.className = "tour-pop tour-intro"; card.setAttribute("role", "dialog"); card.setAttribute("aria-modal", "true");
+    var title = document.createElement("h3"); title.className = "tour-title"; title.textContent = t("tour.introTitle");
+    var body = document.createElement("p"); body.className = "tour-body"; body.textContent = t("tour.introBody");
+    var foot = document.createElement("div"); foot.className = "tour-foot";
+    var spacer = document.createElement("span"); spacer.className = "tour-spacer";
+    var no = btn("tour-skip"); no.textContent = t("tour.introNo");
+    var yes = btn("tour-next primary"); yes.textContent = t("tour.introStart");
+    foot.appendChild(spacer); foot.appendChild(no); foot.appendChild(yes);
+    card.appendChild(title); card.appendChild(body); card.appendChild(foot);
+    ov.appendChild(card); document.body.appendChild(ov);
+    introEls = ov;
+    function closeIntro() {
+      if (introEls && introEls.parentNode) introEls.parentNode.removeChild(introEls);
+      introEls = null; document.removeEventListener("keydown", introKey, true);
+    }
+    function introKey(e) {
+      if (e.key === "Escape") { closeIntro(); markDone(); }
+      else if (e.key === "Tab") { e.preventDefault(); try { yes.focus(); } catch (er) {} }
+    }
+    no.addEventListener("click", function () { closeIntro(); markDone(); });   // declined → don't auto-ask again
+    yes.addEventListener("click", function () { closeIntro(); start(); });
+    document.addEventListener("keydown", introKey, true);
+    try { yes.focus(); } catch (e) {}
+  }
+
+  // Auto first-run: ask once, and only after the consent gate is satisfied.
   function maybeAuto() {
     if (done()) return;
-    if (consentAccepted()) { setTimeout(start, 600); return; }
+    if (consentAccepted()) { setTimeout(showIntro, 500); return; }
     var accept = document.getElementById("consentAccept");
     if (!accept) return;
     accept.addEventListener("click", function () {
-      // app.js writes consent + hides the gate on this same click; start just after.
-      setTimeout(function () { if (consentAccepted() && !done()) start(); }, 500);
+      // app.js writes consent + hides the gate on this same click; ask just after.
+      setTimeout(function () { if (consentAccepted() && !done()) showIntro(); }, 500);
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", maybeAuto);
