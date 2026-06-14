@@ -17,6 +17,11 @@ a { color: inherit; text-decoration: none; }
 .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.5rem; letter-spacing: -.4px; font-family: var(--font-display); }
 .brand .logo { width: 30px; height: 30px; color: var(--primary); }
 
+/* Section quick-nav in the header (desktop only — hidden ≤820px, links also live in the footer). */
+.site-nav { display: inline-flex; align-items: center; gap: 24px; }
+.site-nav a { color: var(--muted); font-weight: 600; font-size: .95rem; transition: color var(--transition); }
+.site-nav a:hover { color: var(--primary); }
+
 .btn { display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
   border: 1px solid var(--border); background: transparent; color: var(--text);
   border-radius: 999px; padding: var(--btn-pad); font-size: .95rem; font-weight: 600;
@@ -223,6 +228,8 @@ a { color: inherit; text-decoration: none; }
   .footer-brand { grid-column: 1 / -1; }
   /* Keep the header light on tablets/phones — the bib entry lives in the orange band + footer. */
   .nav-actions .btn.bib { display: none; }
+  /* Section quick-nav collapses on tablets/phones — the links remain in the footer. */
+  .site-nav { display: none; }
 }
 @media (max-width: 720px) {
   .features { grid-template-columns: 1fr; }
