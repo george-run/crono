@@ -40,7 +40,7 @@
   // A brief, auto-dismissing confirmation toast (no buttons).
   function showInfoToast(message) {
     var el = document.createElement("div");
-    el.className = "toast toast-amber";   // match the update prompt: amber accent
+    el.className = "toast toast-amber toast-confirm";   // match the update prompt: amber accent + same width
     el.setAttribute("role", "status");
     el.textContent = message;
     toastHost(true).appendChild(el);      // top-anchored, like the update prompt
