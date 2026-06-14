@@ -99,6 +99,10 @@ img { max-width: 100%; }
 .bib-preview .bib-name[hidden], .bib-preview .bib-race[hidden], .bib-preview .bib-date[hidden] { display: none; }
 .bib-preview .bib-no { flex: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-display);
   font-weight: 700; color: var(--bibc); font-size: clamp(3rem, 12vw, 6rem); line-height: 1; letter-spacing: -1px; }
+/* Promo: a small QR to crono.run printed on each bib. */
+.bib-preview .bib-promo { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 0 14px 10px; }
+.bib-qr { width: 42px; height: 42px; display: block; border-radius: 4px; background: #fff; }
+.bib-promo-url { font-family: var(--font-display); font-weight: 700; font-size: .82rem; letter-spacing: .3px; color: var(--bibc); }
 .bib-hint { color: var(--muted); font-size: .82rem; margin: 10px 0 0; }
 
 /* Footer */
@@ -138,4 +142,8 @@ img { max-width: 100%; }
   #printArea .bib-date { font-size: 11pt; opacity: .92; }
   #printArea .bib-no { flex: 1; display: flex; align-items: center; justify-content: center;
     font-family: var(--font-display); font-weight: 700; color: var(--bibc); font-size: 120pt; line-height: 1; letter-spacing: -2pt; }
+  #printArea .bib-promo { display: flex; align-items: center; justify-content: flex-end; gap: 4mm; padding: 0 8mm 6mm; }
+  #printArea .bib-qr { width: 22mm; height: 22mm; }
+  #printArea .bib-promo-url { font-family: var(--font-display); font-weight: 700; font-size: 13pt; color: var(--bibc);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

@@ -100,8 +100,9 @@
           (race ? '<span class="bib-race">' + esc(race) + "</span>" : "") +
           (date ? '<span class="bib-date">' + esc(date) + "</span>" : "") +
         "</div></div>";
+    var promo = '<div class="bib-promo"><img class="bib-qr" src="assets/qr-crono.svg" alt="crono.run"><span class="bib-promo-url">crono.run</span></div>';
     var cards = nums.map(function (n) {
-      return '<div class="bib-card">' + head + '<div class="bib-no">' + n + "</div></div>";
+      return '<div class="bib-card">' + head + '<div class="bib-no">' + n + "</div>" + promo + "</div>";
     }).join("");
     printArea.style.setProperty("--bibc", color);
     printArea.style.setProperty("--bibtext", textOn(color));
