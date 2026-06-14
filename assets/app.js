@@ -179,17 +179,37 @@
     return u;
   }
 
+  // Signature of the results data (excludes the volatile exportedAt) so we only POST
+  // when something actually changed since the last *successful* send.
+  function payloadSig() {
+    return JSON.stringify({ s: startEpoch, d: distanceKm, e: entries, p: participants });
+  }
+  var lastSentSig = null;     // signature of the payload last confirmed sent
+
   var webhookTimer = null;
   function scheduleWebhook() {
     if (!webhookUrl()) return;
     clearTimeout(webhookTimer);
-    webhookTimer = setTimeout(function () { pushWebhook(false); }, 1500);
+    webhookTimer = setTimeout(function () { if (payloadSig() !== lastSentSig) pushWebhook(false); }, 1500);
+  }
+
+  // Re-sync every 5s: keeps the external system live and self-heals a push that failed
+  // while briefly offline. Skips when nothing changed since the last successful send,
+  // so it never spams identical data.
+  function startWebhookHeartbeat() {
+    setInterval(function () {
+      if (!webhookUrl()) return;
+      if (startEpoch == null && entries.length === 0) return;   // nothing to send yet
+      if (payloadSig() === lastSentSig) return;                  // already in sync
+      pushWebhook(false);
+    }, 5000);
   }
 
   function pushWebhook(manual) {
     var url = webhookUrl();
     if (!url) { if (manual) toast(t("send.off"), "error"); return; }
-    var ok = function () { if (manual) toast(t("send.ok")); };
+    var sig = payloadSig();
+    var ok = function () { lastSentSig = sig; if (manual) toast(t("send.ok")); };
     var fail = function () { if (manual) toast(t("send.fail"), "error"); };
     try {
       fetch(url, {
@@ -790,6 +810,7 @@
     try { localStorage.setItem(KEY_WEBHOOK, $webhookUrl.value.trim()); } catch (e) {}
     pushWebhook(true);
   });
+  startWebhookHeartbeat();   // re-sync the external system every 5s when a URL is set
 
   // Participants modal
   document.getElementById("partBtn").addEventListener("click", openParticipants);
