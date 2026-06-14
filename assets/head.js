@@ -24,6 +24,21 @@
 
   apply(saved() || osTheme());   // before paint → no flash
 
+  // Avoid a flash of English text: hide the page until i18n.js applies, but ONLY when a
+  // non-English language will be used (English is the in-markup default → no swap needed).
+  // i18n.js removes .i18n-wait after its first apply; a failsafe timer clears it regardless.
+  try {
+    var NON_EN = ["ro", "es", "de", "fr", "ja", "zh", "hi"];   // keep in sync with i18n.js LANGS (minus en)
+    var lg = null;
+    try { lg = localStorage.getItem("crono.lang"); } catch (e) {}
+    if (!lg) { try { lg = (navigator.language || "").slice(0, 2).toLowerCase(); } catch (e) {} }
+    // Only on pages that actually run i18n (marked with data-i18n-page) — not the EN-only legal pages.
+    if (root.hasAttribute("data-i18n-page") && lg && lg !== "en" && NON_EN.indexOf(lg) > -1) {
+      root.classList.add("i18n-wait");
+      setTimeout(function () { root.classList.remove("i18n-wait"); }, 1500);
+    }
+  } catch (e) {}
+
   function label(theme) { return theme === "light" ? "Switch to dark theme" : "Switch to light theme"; }
   function syncButtons(theme) {
     var btns = document.querySelectorAll("[data-theme-toggle]"), i;

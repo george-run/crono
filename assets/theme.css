@@ -49,3 +49,7 @@
   --shadow-soft: 0 8px 24px rgba(15, 23, 42, .12);
   --shadow-pop: 0 12px 30px rgba(15, 23, 42, .18);
 }
+
+/* Hide the page until i18n applies, to avoid a flash of English (head.js adds .i18n-wait
+   only on i18n pages for non-English; i18n.js removes it, with a failsafe timer). */
+html.i18n-wait body { visibility: hidden; }

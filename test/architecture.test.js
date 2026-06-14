@@ -70,3 +70,29 @@ test("i18n: every language has the exact same key set as English", () => {
     assert.deepEqual(extra, [], `"${lang}" has unknown keys: ${extra.join(", ")}`);
   });
 });
+
+test("i18n: every translation value is a non-empty string in every language", () => {
+  const i18n = require("../assets/i18n.js");
+  i18n.LANGS.forEach((lang) => {
+    Object.keys(i18n.STR[lang]).forEach((k) => {
+      const v = i18n.STR[lang][k];
+      assert.ok(typeof v === "string" && v.trim().length > 0, `${lang}."${k}" is empty/blank — every language must have real text`);
+    });
+  });
+});
+
+test("i18n: every data-i18n* key used in HTML exists in the EN table", () => {
+  const en = require("../assets/i18n.js").STR.en;
+  const used = new Set();
+  HTML.forEach((p) => {
+    const html = read(p);
+    let m;
+    const re = /data-i18n(?:-html)?="([^"]+)"/g;
+    while ((m = re.exec(html))) used.add(m[1]);
+    const reAttr = /data-i18n-attr="([^"]+)"/g;
+    while ((m = reAttr.exec(html))) {
+      m[1].split(",").forEach((pair) => { const k = (pair.split(":")[1] || "").trim(); if (k) used.add(k); });
+    }
+  });
+  used.forEach((k) => assert.ok(en[k] != null, `HTML references data-i18n key "${k}" but it's missing from the EN table in i18n.js`));
+});
