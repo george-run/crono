@@ -238,40 +238,35 @@
     </div>
     <p class="steps-intro" data-i18n="steps.intro">Crono suits smaller races where runners finish a few at a time. The organiser sets the start; volunteers then tap in each bib number as runners arrive — at the finish line or any point on the course.</p>
 
-    <div class="scene-wrap">
-    <svg class="scene" viewBox="0 0 640 240" role="img" aria-label="Race scene" data-i18n-attr="aria-label:flow.diagramAlt">
-      <!-- running lane -->
-      <rect class="scene-lane" x="70" y="138" width="380" height="28" rx="14"/>
-      <line class="scene-mid" x1="82" y1="152" x2="438" y2="152"/>
-      <!-- start line + flag -->
-      <line class="scene-startline" x1="70" y1="116" x2="70" y2="192"/>
-      <path class="scene-flag" d="M70 116 h24 l-7 8 7 8 h-24 z"/>
-      <text class="scene-lbl" x="70" y="214" text-anchor="middle" data-i18n="flow.startLine">Start</text>
-      <!-- finish line + checkered flag -->
-      <line class="scene-finline" x1="450" y1="116" x2="450" y2="192"/>
-      <g class="scene-checker">
-        <rect x="438" y="112" width="7" height="6"/><rect x="452" y="112" width="7" height="6"/>
-        <rect x="445" y="118" width="7" height="6"/>
-        <rect x="438" y="124" width="7" height="6"/><rect x="452" y="124" width="7" height="6"/>
-      </g>
-      <text class="scene-lbl" x="450" y="214" text-anchor="middle" data-i18n="flow.finishLine">Finish</text>
-      <!-- runners moving along the lane -->
-      <g class="scene-runner"><circle cx="70" cy="152" r="9"/></g>
-      <g class="scene-runner r2"><circle cx="70" cy="152" r="7"/></g>
-      <!-- volunteer + results card filling in -->
-      <g class="scene-person"><circle cx="476" cy="98" r="6"/><path d="M468 116a8 8 0 0 1 16 0"/></g>
-      <rect class="scene-card" x="492" y="84" width="134" height="128" rx="12"/>
-      <circle class="scene-dot" cx="506" cy="104" r="3"/>
-      <text class="scene-card-t" x="516" y="108">Crono</text>
-      <g class="scene-row"><text class="scene-rk" x="506" y="139">1</text><text class="scene-bib" x="526" y="139">#92</text><path class="scene-check" d="M604 135 l3 4 l7 -9"/></g>
-      <g class="scene-row k2"><text class="scene-rk" x="506" y="167">2</text><text class="scene-bib" x="526" y="167">#183</text><path class="scene-check" d="M604 163 l3 4 l7 -9"/></g>
-      <g class="scene-row k3"><text class="scene-rk" x="506" y="195">3</text><text class="scene-bib" x="526" y="195">#47</text><path class="scene-check" d="M604 191 l3 4 l7 -9"/></g>
-    </svg>
+    <div class="hiw-laptop">
+      <div class="hiw" role="img" aria-label="Live timing demo" data-i18n-attr="aria-label:flow.diagramAlt">
+        <div class="hiw-clock">
+          <span class="hiw-clock-k" data-i18n="flow.clockLabel">Live race time</span>
+          <span class="hiw-clock-v" id="hiwClock">00:00.00</span>
+        </div>
+        <div class="hiw-lane">
+          <span class="hiw-runner" id="hiwRunner"></span>
+          <span class="hiw-finish"></span>
+          <span class="hiw-finish-lbl" data-i18n="flow.finishLine">Finish</span>
+        </div>
+        <div class="hiw-entry">
+          <svg class="hiw-kb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="11" rx="1.5"/><path d="M2 20h20"/></svg>
+          <span class="hiw-field"><span class="hiw-hash">#</span><span class="hiw-type" id="hiwType"></span><span class="hiw-caret"></span></span>
+          <span class="hiw-rec" id="hiwRec"><span class="hiw-rec-dot"></span><span data-i18n="btn.record">Record</span></span>
+        </div>
+        <div class="hiw-board">
+          <div class="hiw-row hiw-row--head">
+            <span data-i18n="th.place">Place</span><span>#</span><span data-i18n="th.time">Time</span><span data-i18n="flow.thPace">Pace</span>
+          </div>
+          <ul class="hiw-rows" id="hiwRows"></ul>
+        </div>
+      </div>
+      <div class="hiw-laptop-base" aria-hidden="true"></div>
     </div>
     <ol class="scene-legend">
       <li><span class="sl-num">1</span><span data-i18n="flow.zoneStart">Organiser sets the start</span></li>
-      <li><span class="sl-num">2</span><span data-i18n="flow.zoneFinish">Volunteers record each bib</span></li>
-      <li><span class="sl-num">3</span><span data-i18n="flow.zoneResults">Rankings + CSV export</span></li>
+      <li><span class="sl-num">2</span><span data-i18n="flow.zoneFinish">A volunteer at the finish types each bib on a laptop</span></li>
+      <li><span class="sl-num">3</span><span data-i18n="flow.zoneResults">Crono ranks them instantly + CSV</span></li>
     </ol>
 
     <p class="flow-offline">

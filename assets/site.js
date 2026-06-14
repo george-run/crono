@@ -12,7 +12,7 @@
 
   // Reveal blocks as they scroll into view.
   var targets = document.querySelectorAll(
-    ".hero-copy,.hero-art,.section-head,.features,.scene,.faq-list,.cta-band"
+    ".hero-copy,.hero-art,.section-head,.features,.hiw-laptop,.faq-list,.cta-band"
   );
   if ("IntersectionObserver" in window) {
     var io = new IntersectionObserver(function (entries) {
@@ -161,6 +161,66 @@
       setTimeout(demoType, 1100);
     }
     demoReset();
+  }
+
+  // "How it works" mini-demo (the finish volunteer's laptop): a live clock runs, a
+  // runner crosses the finish, the volunteer types the bib, and a ranked row
+  // (place · # · time · pace) drops into the board. Shows what Crono produces.
+  var hiwClock = document.getElementById("hiwClock");
+  var hiwRows = document.getElementById("hiwRows");
+  var hiwRunner = document.getElementById("hiwRunner");
+  var hiwType = document.getElementById("hiwType");
+  var hiwRec = document.getElementById("hiwRec");
+  if (hiwClock && hiwRows && hiwRunner && hiwType) {
+    var hpad = function (n) { return (n < 10 ? "0" : "") + n; };
+    var hiwT0 = Date.now();
+    setInterval(function () {
+      var ms = (Date.now() - hiwT0) % (60 * 60 * 1000);
+      hiwClock.textContent = hpad(Math.floor(ms / 60000)) + ":" + hpad(Math.floor(ms / 1000) % 60) + "." + hpad(Math.floor(ms / 10) % 100);
+    }, 73);
+
+    var HFIN = [{ n: "92", t: "24:31", p: "4:54" }, { n: "183", t: "25:08", p: "5:02" }, { n: "47", t: "25:50", p: "5:10" }];
+    var RUN_END = "calc(100% - 50px)";
+    function hiwRowEl(pl, f) {
+      var li = document.createElement("li");
+      li.className = "hiw-row in0";
+      li.innerHTML = '<span>' + pl + '</span><span class="hiw-bib">#' + f.n + '</span><span>' + f.t + '</span><span>' + f.p + '</span>';
+      return li;
+    }
+    // Respect reduced motion: show the finished board statically, no looping.
+    if (!document.documentElement.classList.contains("js-anim")) {
+      hiwRunner.style.left = RUN_END;
+      for (var i = 0; i < HFIN.length; i++) { var el = hiwRowEl(i + 1, HFIN[i]); el.classList.remove("in0"); hiwRows.appendChild(el); }
+      hiwType.textContent = HFIN[HFIN.length - 1].n;
+    } else {
+      var hi;
+      function hiwReset() { hiwRows.innerHTML = ""; hiwType.textContent = ""; hi = 0; hiwRunner.style.left = "8px"; setTimeout(hiwRun, 800); }
+      function hiwRun() {
+        if (hi >= HFIN.length) { setTimeout(hiwReset, 2600); return; }
+        hiwRunner.style.left = RUN_END;          // runner sprints to the finish line
+        setTimeout(hiwArrive, 1650);
+      }
+      function hiwArrive() {                      // volunteer types the bib on the laptop
+        var f = HFIN[hi];
+        (function typeN(k) {
+          if (k > f.n.length) { setTimeout(hiwRecord, 430); return; }
+          hiwType.textContent = f.n.slice(0, k);
+          setTimeout(function () { typeN(k + 1); }, 230);
+        })(1);
+      }
+      function hiwRecord() {
+        if (hiwRec) { hiwRec.classList.add("on"); setTimeout(function () { hiwRec.classList.remove("on"); }, 340); }
+        var li = hiwRowEl(hi + 1, HFIN[hi]);
+        hiwRows.appendChild(li);
+        requestAnimationFrame(function () { li.classList.remove("in0"); });
+        hiwType.textContent = "";
+        hiwRunner.style.transition = "none"; hiwRunner.style.left = "8px";
+        void hiwRunner.offsetWidth; hiwRunner.style.transition = "";   // reset to start without animating back
+        hi += 1;
+        setTimeout(hiwRun, 1200);
+      }
+      hiwReset();
+    }
   }
 })();
 
