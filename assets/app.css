@@ -277,6 +277,8 @@
   footer.app a { color: var(--muted); text-decoration: underline; }
   footer.app a:hover { color: var(--primary); }
   .footer-links { margin-top: 6px; }
+  .app-version { display: block; margin-top: 8px; font-size: .72rem; color: var(--muted); opacity: .7; font-variant-numeric: tabular-nums; }
+  .app-version:empty { display: none; }
 
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 

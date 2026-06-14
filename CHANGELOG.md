@@ -4,9 +4,12 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
-_Everything since 0.1.0 — the big modernization cycle._
+
+## [0.2.0] — 2026-06-14
+_The big modernization cycle since 0.1.0._
 
 ### Added
+- **Visible app version** in the app footer — shows the running build (e.g. `v120`), so it's clear which version is live; it updates automatically every deploy (sourced from the service-worker cache).
 - **Multi-language (8 languages).** English, Romanian, Spanish, German, French, Japanese, Chinese, Hindi — a picker switches instantly and remembers the choice (`crono.lang`), zero-dependency and offline. The whole app, landing and bib generator are translated (legal pages + CSV/PDF headers stay English).
 - **Light theme** alongside the dark default — a sun/moon toggle, follows the device by default, applied before first paint (no flash), on every page.
 - **Bib-number generator on its own page (`bibs.html`).** Live WYSIWYG preview, event/race/date fields, any colour (presets + picker, auto black/white header text), logo by upload or https link, prints 2 per A4 — with a small QR to crono.run on each bib.
