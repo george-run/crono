@@ -113,18 +113,26 @@ a { color: inherit; text-decoration: none; }
 .card h3 { margin: 0 0 8px; font-size: 1.08rem; }
 .card p { margin: 0; color: var(--muted); font-size: .95rem; }
 
-/* how it works — role flow diagram (organiser → volunteers → results) */
+/* how it works — animated UML-style sequence diagram (organiser · Crono · volunteers) */
 .steps-intro { text-align: center; max-width: 660px; margin: -6px auto 28px; color: var(--muted); }
-.flow { display: flex; align-items: stretch; gap: 14px; }
-.flow-step { flex: 1 1 0; min-width: 0; background: var(--panel); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 24px 20px; text-align: center; }
-.flow-ic { display: inline-grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; margin-bottom: 14px;
-  color: var(--primary); background: rgba(var(--primary-rgb), .12); border: 1px solid rgba(var(--primary-rgb), .25); }
-.flow-ic svg { width: 26px; height: 26px; }
-.flow-step h3 { margin: 0 0 6px; font-size: 1.05rem; }
-.flow-step p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.5; }
-.flow-link { flex: 0 0 auto; align-self: center; color: var(--muted); }
-.flow-link svg { width: 24px; height: 24px; display: block; }
+.seq-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.seq { display: block; width: 100%; min-width: 440px; max-width: 660px; height: auto; margin: 0 auto; }
+.seq text { font-family: var(--font-ui); }
+.seq-actor-box { fill: var(--panel); stroke: var(--border); stroke-width: 1.5; }
+.seq-actor-box.is-app { fill: rgba(var(--primary-rgb), .12); stroke: rgba(var(--primary-rgb), .4); }
+.seq-actor { fill: var(--text); font-size: 16px; font-weight: 700; }
+.seq-life { stroke: var(--border); stroke-width: 2; stroke-dasharray: 3 7; }
+.seq-act { fill: rgba(var(--primary-rgb), .12); stroke: rgba(var(--primary-rgb), .3); stroke-width: 1; }
+.seq-label { fill: var(--muted); font-size: 14px; font-weight: 600; }
+.seq-grp { color: var(--primary); }                /* action messages = lime */
+.seq-grp-self { color: var(--accent-2); }           /* self message = teal */
+.seq-grp-ret { color: var(--muted); }               /* return message = muted */
+.seq-line { stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.seq-line.is-dashed { stroke-dasharray: 6 5; }
+.seq-head { fill: currentColor; stroke: none; }
+.seq-flow { opacity: 0; }
+.seq-flow circle { fill: var(--primary); }
+.seq-grp-ret .seq-flow circle { fill: var(--muted); }
 .flow-offline { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 640px;
   margin: 22px auto 0; padding: 12px 20px; color: var(--text); font-weight: 600; font-size: .92rem;
   background: rgba(var(--accent-2-rgb), .1); border: 1px solid rgba(var(--accent-2-rgb), .3); border-radius: var(--radius); }
@@ -185,9 +193,6 @@ a { color: inherit; text-decoration: none; }
 }
 @media (max-width: 720px) {
   .features { grid-template-columns: 1fr; }
-  /* Flow stacks vertically; the connector chevrons point down between stages. */
-  .flow { flex-direction: column; }
-  .flow-link { transform: rotate(90deg); }
   .hero { padding: 28px 0 40px; }
   /* Soften the background route so it doesn't cut across the hero buttons. */
   .bg-motif { opacity: .35; }
@@ -224,14 +229,28 @@ a { color: inherit; text-decoration: none; }
 /* ===== Animations (only when .js-anim is set; respects reduced-motion) ===== */
 .js-anim .hero-copy, .js-anim .hero-art, .js-anim .section-head,
 .js-anim .faq-list, .js-anim .cta-band,
-.js-anim .features .card, .js-anim .flow .flow-step {
+.js-anim .features .card, .js-anim .seq {
   opacity: 0; transform: translateY(18px);
   transition: opacity .6s ease, transform .6s ease;
 }
 .js-anim .hero-copy.is-in, .js-anim .hero-art.is-in, .js-anim .section-head.is-in,
 .js-anim .faq-list.is-in, .js-anim .cta-band.is-in,
-.js-anim .features.is-in .card, .js-anim .flow.is-in .flow-step {
+.js-anim .features.is-in .card, .js-anim .seq.is-in {
   opacity: 1; transform: none;
+}
+/* Sequence-diagram message pulses travel along each arrow, staggered, looping. */
+.seq-flow--lr  { --seq-dx: 214px; }
+.seq-flow--rl  { --seq-dx: -214px; }
+.seq-flow--rl2 { --seq-dx: -214px; }
+.js-anim .seq-flow { animation: seqFlow 3.6s cubic-bezier(.45,0,.55,1) infinite; }
+.js-anim .seq-flow.d2 { animation-delay: .9s; }
+.js-anim .seq-flow.d3 { animation-delay: 1.8s; }
+.js-anim .seq-flow.d4 { animation-delay: 2.7s; }
+@keyframes seqFlow {
+  0%       { transform: translateX(0); opacity: 0; }
+  6%       { opacity: 1; }
+  60%      { opacity: 1; }
+  72%, 100% { transform: translateX(var(--seq-dx)); opacity: 0; }
 }
 /* staggered children */
 .js-anim .features.is-in .card:nth-child(2) { transition-delay: .07s; }
@@ -239,8 +258,6 @@ a { color: inherit; text-decoration: none; }
 .js-anim .features.is-in .card:nth-child(4) { transition-delay: .21s; }
 .js-anim .features.is-in .card:nth-child(5) { transition-delay: .28s; }
 .js-anim .features.is-in .card:nth-child(6) { transition-delay: .35s; }
-.js-anim .flow.is-in .flow-step:nth-of-type(2) { transition-delay: .1s; }
-.js-anim .flow.is-in .flow-step:nth-of-type(3) { transition-delay: .2s; }
 
 /* hero illustration comes in a touch later for a layered feel */
 .js-anim .hero-art { transition-delay: .12s; }

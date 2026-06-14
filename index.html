@@ -238,24 +238,62 @@
     </div>
     <p class="steps-intro" data-i18n="steps.intro">Crono suits smaller races where runners finish a few at a time. The organiser sets the start; volunteers then tap in each bib number as runners arrive — at the finish line or any point on the course.</p>
 
-    <div class="flow">
-      <div class="flow-step">
-        <span class="flow-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V3"/><path d="M5 4h11l-2.5 3.5L16 11H5"/></svg></span>
-        <h3 data-i18n="step1T">Organiser starts the clock</h3>
-        <p data-i18n="step1D">One tap when the gun goes off sets the start time for every runner (or type an exact time).</p>
-      </div>
-      <span class="flow-link" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
-      <div class="flow-step">
-        <span class="flow-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
-        <h3 data-i18n="step2T">Volunteers record finishers</h3>
-        <p data-i18n="step2D">As each runner crosses, type their bib number and press Record (or Enter) — a few at a time, easy to keep up.</p>
-      </div>
-      <span class="flow-link" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
-      <div class="flow-step">
-        <span class="flow-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M5 4H3v1a3 3 0 0 0 3 3"/><path d="M19 4h2v1a3 3 0 0 1-3 3"/></svg></span>
-        <h3 data-i18n="step3T">Rank &amp; export</h3>
-        <p data-i18n="step3D">Switch ranking tabs, add a distance for pace, then export everything to CSV.</p>
-      </div>
+    <div class="seq-wrap">
+    <svg class="seq" viewBox="0 0 640 348" role="img" aria-label="Sequence diagram" data-i18n-attr="aria-label:flow.diagramAlt">
+      <!-- actor heads -->
+      <g class="seq-actor-g">
+        <rect class="seq-actor-box" x="25" y="6" width="150" height="40" rx="10"/>
+        <text class="seq-actor" x="100" y="31" text-anchor="middle" data-i18n="flow.actorOrg">Organiser</text>
+      </g>
+      <g class="seq-actor-g">
+        <rect class="seq-actor-box is-app" x="245" y="6" width="150" height="40" rx="10"/>
+        <text class="seq-actor" x="320" y="31" text-anchor="middle">Crono</text>
+      </g>
+      <g class="seq-actor-g">
+        <rect class="seq-actor-box" x="465" y="6" width="150" height="40" rx="10"/>
+        <text class="seq-actor" x="540" y="31" text-anchor="middle" data-i18n="flow.actorVol">Volunteer</text>
+      </g>
+      <!-- lifelines -->
+      <line class="seq-life" x1="100" y1="46" x2="100" y2="334"/>
+      <line class="seq-life" x1="320" y1="46" x2="320" y2="334"/>
+      <line class="seq-life" x1="540" y1="46" x2="540" y2="334"/>
+      <!-- activation bar on Crono -->
+      <rect class="seq-act" x="314" y="92" width="12" height="214" rx="3"/>
+      <!-- m1: Organiser → Crono "Set start" -->
+      <g class="seq-grp seq-grp-action">
+        <text class="seq-label" x="207" y="96" text-anchor="middle" data-i18n="flow.m1">Set start</text>
+        <line class="seq-line" x1="100" y1="104" x2="314" y2="104"/>
+        <path class="seq-head" d="M314 104 l-9 -4 l0 8 z"/>
+        <g class="seq-flow seq-flow--lr"><circle cx="100" cy="104" r="5"/></g>
+      </g>
+      <!-- m2: Crono self "Timing · offline" -->
+      <g class="seq-grp seq-grp-self">
+        <text class="seq-label" x="356" y="146" text-anchor="start" data-i18n="flow.m2">Timing · offline</text>
+        <path class="seq-line" d="M326 134 H350 V150 H326"/>
+        <path class="seq-head" d="M326 150 l9 -4 l0 8 z"/>
+      </g>
+      <!-- m3: Volunteer → Crono "Record #92" -->
+      <g class="seq-grp seq-grp-action">
+        <text class="seq-label" x="433" y="194" text-anchor="middle" data-i18n="flow.m3">Record #92</text>
+        <line class="seq-line" x1="540" y1="202" x2="326" y2="202"/>
+        <path class="seq-head" d="M326 202 l9 -4 l0 8 z"/>
+        <g class="seq-flow seq-flow--rl d2"><circle cx="540" cy="202" r="5"/></g>
+      </g>
+      <!-- m4: Volunteer → Crono "Record #183" -->
+      <g class="seq-grp seq-grp-action">
+        <text class="seq-label" x="433" y="240" text-anchor="middle" data-i18n="flow.m4">Record #183</text>
+        <line class="seq-line" x1="540" y1="248" x2="326" y2="248"/>
+        <path class="seq-head" d="M326 248 l9 -4 l0 8 z"/>
+        <g class="seq-flow seq-flow--rl d3"><circle cx="540" cy="248" r="5"/></g>
+      </g>
+      <!-- m5: Crono → Organiser "Rankings + CSV" (return) -->
+      <g class="seq-grp seq-grp-ret">
+        <text class="seq-label" x="207" y="296" text-anchor="middle" data-i18n="flow.m5">Rankings + CSV</text>
+        <line class="seq-line is-dashed" x1="314" y1="304" x2="100" y2="304"/>
+        <path class="seq-head" d="M100 304 l9 -4 l0 8 z"/>
+        <g class="seq-flow seq-flow--rl2 d4"><circle cx="314" cy="304" r="5"/></g>
+      </g>
+    </svg>
     </div>
 
     <p class="flow-offline">
