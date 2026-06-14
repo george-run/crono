@@ -163,15 +163,16 @@
     demoReset();
   }
 
-  // "How it works" mini-demo: a live clock runs, a runner crosses from the start
-  // volunteer to the finish volunteer, the finish volunteer "types" the bib into a
-  // bubble, and a ranked row (place · # · time · pace) drops into the board.
+  // "How it works" mini-demo: a runner (map pin) rides a curvy route — like the hero —
+  // toward the finish volunteer, who "types" each bib into a bubble; a ranked row
+  // (place · # · time · pace) then drops into the board, on loop.
   var hiwClock = document.getElementById("hiwClock");
   var hiwRows = document.getElementById("hiwRows");
-  var hiwRunner = document.getElementById("hiwRunner");
+  var hiwPath = document.getElementById("hiwRoute");
+  var hiwPin = document.getElementById("hiwPin");
   var hiwType = document.getElementById("hiwType");
   var hiwBubble = document.getElementById("hiwBubble");
-  if (hiwClock && hiwRows && hiwRunner && hiwType) {
+  if (hiwClock && hiwRows && hiwPath && hiwPin && hiwType && hiwPath.getTotalLength) {
     var hpad = function (n) { return (n < 10 ? "0" : "") + n; };
     var hiwT0 = Date.now();
     setInterval(function () {
@@ -180,7 +181,11 @@
     }, 73);
 
     var HFIN = [{ n: "92", t: "24:31", p: "4:54" }, { n: "183", t: "25:08", p: "5:02" }, { n: "47", t: "25:50", p: "5:10" }];
-    var RUN_END = "calc(100% - 24px)";
+    var HLEN = hiwPath.getTotalLength();
+    function setPin(t) {
+      var pt = hiwPath.getPointAtLength(Math.max(0, Math.min(1, t)) * HLEN);
+      hiwPin.setAttribute("transform", "translate(" + pt.x.toFixed(1) + "," + pt.y.toFixed(1) + ")");
+    }
     function hiwRowEl(pl, f) {
       var li = document.createElement("li");
       li.className = "hiw-row in0";
@@ -189,16 +194,24 @@
     }
     // Respect reduced motion: show the finished board statically, no looping.
     if (!document.documentElement.classList.contains("js-anim")) {
-      hiwRunner.style.left = RUN_END;
+      setPin(1);
       for (var i = 0; i < HFIN.length; i++) { var el = hiwRowEl(i + 1, HFIN[i]); el.classList.remove("in0"); hiwRows.appendChild(el); }
       hiwType.textContent = HFIN[HFIN.length - 1].n;
     } else {
       var hi;
-      function hiwReset() { hiwRows.innerHTML = ""; hiwType.textContent = ""; hi = 0; hiwRunner.style.left = "8px"; setTimeout(hiwRun, 800); }
+      setPin(0);
+      function hiwReset() { hiwRows.innerHTML = ""; hiwType.textContent = ""; hi = 0; setPin(0); setTimeout(hiwRun, 800); }
       function hiwRun() {
         if (hi >= HFIN.length) { setTimeout(hiwReset, 2600); return; }
-        hiwRunner.style.left = RUN_END;          // runner sprints to the finish line
-        setTimeout(hiwArrive, 1650);
+        var start = null, DUR = 1700;
+        function step(ts) {
+          if (start == null) start = ts;
+          var k = Math.min(1, (ts - start) / DUR);
+          var e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;   // easeInOut
+          setPin(e);
+          if (k < 1) requestAnimationFrame(step); else hiwArrive();
+        }
+        requestAnimationFrame(step);
       }
       function hiwArrive() {                      // finish volunteer types the bib into the bubble
         var f = HFIN[hi];
@@ -214,8 +227,7 @@
         hiwRows.appendChild(li);
         requestAnimationFrame(function () { li.classList.remove("in0"); });
         setTimeout(function () { hiwType.textContent = ""; }, 380);
-        hiwRunner.style.transition = "none"; hiwRunner.style.left = "8px";
-        void hiwRunner.offsetWidth; hiwRunner.style.transition = "";   // reset to start without animating back
+        setPin(0);                                // next runner re-enters from the start
         hi += 1;
         setTimeout(hiwRun, 1200);
       }
