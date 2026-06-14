@@ -5,6 +5,9 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
+### Added
+- **First-run quick tour** in the app — a small, in-house coachmark overlay (no external plugin) that spotlights the key steps: set the start, record finishers, switch ranking tabs, Options (participants/export), and the live results screen. Shows once, is skippable, respects reduced motion, is translated in all 8 languages, and can be replayed anytime via the new "Quick start guide" button in Options.
+
 ### Changed
 - **Legal operator name** changed from a personal name to "the Crono project" across Terms, Privacy, the in-app legal templates and the page author metadata.
 - **Landing copy & nav pass.** Header now has a desktop section nav (How it works · Features · FAQ; hidden ≤820px, links still in the footer). Fixed the hero headline's person mix ("time **your** race" → "time **a** race") while keeping the "for organisers" framing front-and-centre; the hero lead now leads with the audience. Trimmed repeated "offline / no-account" copy in the secondary CTA note and final CTA band, and synced the static landing fallbacks to the (tighter) translated strings.

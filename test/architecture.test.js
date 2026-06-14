@@ -113,7 +113,7 @@ test("i18n: {placeholders} match across all languages", () => {
 
 test("i18n: every t()/tn() key used in JS exists in the EN table", () => {
   const en = require("../assets/i18n.js").STR.en;
-  ["assets/app.js", "assets/bibs.js", "assets/coffee.js", "assets/sw-register.js"].forEach((p) => {
+  ["assets/app.js", "assets/bibs.js", "assets/coffee.js", "assets/sw-register.js", "assets/tour.js"].forEach((p) => {
     const js = read(p);
     let m;
     const re = /\b(?:tn|t)\(\s*"([^"]+)"/g;
