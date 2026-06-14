@@ -16,6 +16,8 @@
 
   var LANGS = ["en", "ro", "es", "de", "fr", "ja", "zh", "hi"];
   var NAMES = { en: "English", ro: "Română", es: "Español", de: "Deutsch", fr: "Français", ja: "日本語", zh: "中文", hi: "हिन्दी" };
+  // Short codes shown in the compact header picker (full names would crowd the toolbar).
+  var CODES = { en: "EN", ro: "RO", es: "ES", de: "DE", fr: "FR", ja: "JA", zh: "ZH", hi: "HI" };
 
   var STR = {
     en: {
@@ -920,7 +922,7 @@
         if (!sels[i].options.length) {
           for (k = 0; k < LANGS.length; k++) {
             var o = document.createElement("option");
-            o.value = LANGS[k]; o.textContent = NAMES[LANGS[k]];
+            o.value = LANGS[k]; o.textContent = CODES[LANGS[k]]; o.title = NAMES[LANGS[k]];
             sels[i].appendChild(o);
           }
         }

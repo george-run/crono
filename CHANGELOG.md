@@ -8,6 +8,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 - **Printed bibs now carry a small QR code to crono.run** (+ a discreet "crono.run" caption) so events promote the app. The QR is fixed, generated once by a zero-dependency byte-mode encoder (`tools/make-qr.cjs` → `assets/qr-crono.svg`), so nothing extra ships or runs at print time and it works offline.
 
 ### Changed
+- **Consistent header across all pages.** The brand mark + wordmark now render at the same size and font everywhere (logo 30px, Oswald 1.5rem — the app's logo "chip" and the size differences are gone). The language picker shows **short codes** (EN, RO, ES…) instead of full names to save space (full name on hover). On the bib generator, the header **Open app** button is the standard lime primary again (it was picking up the page's orange theme).
 - **Lighter, more useful landing copy.** Trimmed the hero intro and rewrote the six feature blurbs to be benefit-led and jargon-free (e.g. "Centisecond precision, even across midnight" → "Quick and accurate"; "standard 10-year age categories" → "age group"). Applied across all eight languages. The hero badge tagline was also shortened ("works offline" → "offline") so it fits without awkward wrapping on longer languages.
 
 ### Fixed
