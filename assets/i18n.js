@@ -137,6 +137,7 @@
       "tour.s3t": "3. Live rankings", "tour.s3d": "Switch between overall, men, women and age categories with these tabs.",
       "tour.s4t": "4. Participants & export", "tour.s4d": "In Options you can add participants, import a CSV, and export results to CSV or PDF.",
       "tour.s5t": "5. Live results screen", "tour.s5d": "Open a big leaderboard in a second tab for a monitor or projector — it updates live.",
+      "tour.introTitle": "Welcome to Crono", "tour.introBody": "Take a quick tour to see how race timing works?", "tour.introStart": "Take the tour", "tour.introNo": "No thanks",
     },
     ro: {
       "tagline": "Cronometru pentru competiții sportive mici și interne",
@@ -255,6 +256,7 @@
       "tour.s3t": "3. Clasamente live", "tour.s3d": "Comută între general, bărbați, femei și categorii de vârstă din aceste taburi.",
       "tour.s4t": "4. Participanți și export", "tour.s4d": "În Opțiuni poți adăuga participanți, importa un CSV și exporta rezultatele în CSV sau PDF.",
       "tour.s5t": "5. Ecran de rezultate live", "tour.s5d": "Deschide un clasament mare într-un alt tab, pentru un monitor sau proiector — se actualizează live.",
+      "tour.introTitle": "Bun venit la Crono", "tour.introBody": "Vrei un tur rapid ca să vezi cum funcționează cronometrarea?", "tour.introStart": "Pornește turul", "tour.introNo": "Nu, mulțumesc",
     },
     es: {
       "tagline": "Cronómetro para competiciones deportivas pequeñas e internas",
@@ -373,6 +375,7 @@
       "tour.s3t": "3. Clasificaciones en vivo", "tour.s3d": "Cambia entre general, hombres, mujeres y categorías de edad con estas pestañas.",
       "tour.s4t": "4. Participantes y exportar", "tour.s4d": "En Opciones puedes añadir participantes, importar un CSV y exportar resultados a CSV o PDF.",
       "tour.s5t": "5. Pantalla de resultados en vivo", "tour.s5d": "Abre una clasificación grande en otra pestaña para un monitor o proyector — se actualiza en vivo.",
+      "tour.introTitle": "Bienvenido a Crono", "tour.introBody": "¿Quieres un tour rápido para ver cómo funciona el cronometraje?", "tour.introStart": "Hacer el tour", "tour.introNo": "No, gracias",
     },
     de: {
       "tagline": "Stoppuhr für kleine und interne Sportwettbewerbe",
@@ -491,6 +494,7 @@
       "tour.s3t": "3. Live-Wertungen", "tour.s3d": "Wechsle mit diesen Tabs zwischen Gesamt, Männer, Frauen und Altersklassen.",
       "tour.s4t": "4. Teilnehmer & Export", "tour.s4d": "Unter Optionen kannst du Teilnehmer hinzufügen, eine CSV importieren und Ergebnisse als CSV oder PDF exportieren.",
       "tour.s5t": "5. Live-Ergebnisanzeige", "tour.s5d": "Öffne eine große Rangliste in einem zweiten Tab für einen Monitor oder Beamer — sie aktualisiert sich live.",
+      "tour.introTitle": "Willkommen bei Crono", "tour.introBody": "Eine kurze Tour, um zu sehen, wie die Zeitnahme funktioniert?", "tour.introStart": "Tour starten", "tour.introNo": "Nein, danke",
     },
     fr: {
       "tagline": "Chronomètre pour petites compétitions sportives internes",
@@ -609,6 +613,7 @@
       "tour.s3t": "3. Classements en direct", "tour.s3d": "Basculez entre général, hommes, femmes et catégories d'âge avec ces onglets.",
       "tour.s4t": "4. Participants et export", "tour.s4d": "Dans Options, ajoutez des participants, importez un CSV et exportez les résultats en CSV ou PDF.",
       "tour.s5t": "5. Écran de résultats en direct", "tour.s5d": "Ouvrez un grand classement dans un second onglet pour un moniteur ou un projecteur — il se met à jour en direct.",
+      "tour.introTitle": "Bienvenue sur Crono", "tour.introBody": "Faire une visite rapide pour voir comment fonctionne le chronométrage ?", "tour.introStart": "Faire la visite", "tour.introNo": "Non merci",
     },
     ja: {
       "tagline": "小規模・社内スポーツ大会向けのストップウォッチ",
@@ -727,6 +732,7 @@
       "tour.s3t": "3. ライブ順位", "tour.s3d": "これらのタブで総合・男子・女子・年齢別カテゴリを切り替えます。",
       "tour.s4t": "4. 参加者とエクスポート", "tour.s4d": "オプションで参加者の追加、CSVの取り込み、結果のCSV／PDF出力ができます。",
       "tour.s5t": "5. ライブ結果画面", "tour.s5d": "別タブで大きなリーダーボードを開き、モニターやプロジェクターに表示 — ライブで更新されます。",
+      "tour.introTitle": "Cronoへようこそ", "tour.introBody": "計測の使い方を簡単なツアーで見てみますか？", "tour.introStart": "ツアーを開始", "tour.introNo": "いいえ",
     },
     zh: {
       "tagline": "适用于小型及内部体育比赛的计时器",
@@ -845,6 +851,7 @@
       "tour.s3t": "3. 实时排名", "tour.s3d": "用这些标签在总排名、男子、女子和年龄组之间切换。",
       "tour.s4t": "4. 参与者与导出", "tour.s4d": "在“选项”中可添加参与者、导入CSV，并将成绩导出为CSV或PDF。",
       "tour.s5t": "5. 实时成绩屏幕", "tour.s5d": "在第二个标签页打开大屏排行榜，用于显示器或投影仪——实时更新。",
+      "tour.introTitle": "欢迎使用 Crono", "tour.introBody": "来个快速导览，看看计时如何使用？", "tour.introStart": "开始导览", "tour.introNo": "不用了",
     },
     hi: {
       "tagline": "छोटी और आंतरिक खेल प्रतियोगिताओं के लिए स्टॉपवॉच",
@@ -963,6 +970,7 @@
       "tour.s3t": "3. लाइव रैंकिंग", "tour.s3d": "इन टैब से कुल, पुरुष, महिला और आयु श्रेणियों के बीच स्विच करें।",
       "tour.s4t": "4. प्रतिभागी और निर्यात", "tour.s4d": "विकल्प में आप प्रतिभागी जोड़ सकते हैं, CSV आयात कर सकते हैं, और परिणाम CSV या PDF में निर्यात कर सकते हैं।",
       "tour.s5t": "5. लाइव परिणाम स्क्रीन", "tour.s5d": "मॉनिटर या प्रोजेक्टर के लिए दूसरे टैब में बड़ा लीडरबोर्ड खोलें — यह लाइव अपडेट होता है।",
+      "tour.introTitle": "Crono में आपका स्वागत है", "tour.introBody": "समय मापन कैसे काम करता है, यह देखने के लिए एक त्वरित टूर लें?", "tour.introStart": "टूर शुरू करें", "tour.introNo": "नहीं, धन्यवाद",
     }
   };
 
