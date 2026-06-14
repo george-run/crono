@@ -104,6 +104,8 @@
   var hiwPinNum = document.getElementById("hiwPinNum");
   var hiwType = document.getElementById("hiwType");
   var hiwBubble = document.getElementById("hiwBubble");
+  var hiwCard = document.getElementById("hiwCard");
+  var hiwCardNum = document.getElementById("hiwCardNum");
   if (hiwClock && hiwRows && hiwPath && hiwPin && hiwType && hiwPath.getTotalLength) {
     var hpad = function (n) { return (n < 10 ? "0" : "") + n; };
     var hiwT0 = Date.now();
@@ -132,20 +134,44 @@
       hiwType.textContent = HFIN[HFIN.length - 1].n;
     } else {
       var hi;
-      setPin(0);
-      function hiwReset() { hiwRows.innerHTML = ""; hiwType.textContent = ""; hi = 0; setPin(0); setTimeout(hiwRun, 800); }
+      function hidePin() { if (hiwPin) hiwPin.style.opacity = "0"; }
+      function showPin() { if (hiwPin) hiwPin.style.opacity = "1"; }
+      function cardReset() {
+        if (!hiwCard) return;
+        hiwCard.style.transition = "none";
+        hiwCard.style.transform = "translateY(-8px)";
+        hiwCard.style.opacity = "0";
+      }
+      // The printer prints the bib, it slides out, then it's handed to the runner
+      // at the start (who "wears" it) — then `done()` starts the run.
+      function printAndHandoff(done) {
+        if (!hiwCard) { showPin(); done(); return; }
+        cardReset();
+        void hiwCard.getBoundingClientRect();
+        hiwCard.style.transition = "transform .5s ease, opacity .3s ease";
+        requestAnimationFrame(function () { hiwCard.style.transform = "translateY(4px)"; hiwCard.style.opacity = "1"; });
+        setTimeout(function () { hiwCard.style.transform = "translate(42px,6px)"; }, 700);  // hand it to the runner
+        setTimeout(function () { hiwCard.style.opacity = "0"; showPin(); done(); }, 1200);   // runner wears it, sets off
+      }
+      setPin(0); hidePin();
+      function hiwReset() { hiwRows.innerHTML = ""; hiwType.textContent = ""; hi = 0; setPin(0); hidePin(); cardReset(); setTimeout(hiwRun, 700); }
       function hiwRun() {
         if (hi >= HFIN.length) { setTimeout(hiwReset, 2600); return; }
-        if (hiwPinNum) hiwPinNum.textContent = HFIN[hi].n;   // the runner carries this bib…
-        var start = null, DUR = 1700;
-        function step(ts) {
-          if (start == null) start = ts;
-          var k = Math.min(1, (ts - start) / DUR);
-          var e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;   // easeInOut
-          setPin(e);
-          if (k < 1) requestAnimationFrame(step); else hiwArrive();
-        }
-        requestAnimationFrame(step);
+        var num = HFIN[hi].n;
+        if (hiwPinNum) hiwPinNum.textContent = num;     // the runner will carry this bib…
+        if (hiwCardNum) hiwCardNum.textContent = num;   // …the same number the printer prints
+        setPin(0); hidePin();
+        printAndHandoff(function () {
+          var start = null, DUR = 1700;
+          function step(ts) {
+            if (start == null) start = ts;
+            var k = Math.min(1, (ts - start) / DUR);
+            var e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;   // easeInOut
+            setPin(e);
+            if (k < 1) requestAnimationFrame(step); else hiwArrive();
+          }
+          requestAnimationFrame(step);
+        });
       }
       function hiwArrive() {                      // finish volunteer types the bib into the bubble
         var f = HFIN[hi];
@@ -161,7 +187,7 @@
         hiwRows.appendChild(li);
         requestAnimationFrame(function () { li.classList.remove("in0"); });
         setTimeout(function () { hiwType.textContent = ""; }, 380);
-        setPin(0);                                // next runner re-enters from the start
+        setPin(0); hidePin();                     // next runner re-enters from the start (after the next print)
         hi += 1;
         setTimeout(hiwRun, 1200);
       }
