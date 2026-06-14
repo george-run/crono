@@ -224,6 +224,10 @@ Any change to a **cached** CSS file → bump `sw.js` `CACHE` and refresh the **S
 - Bump `CONSENT_VERSION` in `helpers.js` if the terms change materially (it's the single source shared by the in-app gate and the landing consent gate — both read it via `CronoH`). Texts are templates, not legal advice.
 
 ## Deploy (run every change)
+**Standing authorization (operator, 2026-06-14): deploy WITHOUT asking.** After committing & pushing a
+change to the dev branch, run the full deploy ritual below automatically (dev → master → gh-pages, bump
+`sw.js` cache + Status when cached assets change) — don't ask for per-deploy confirmation. Still never
+force-push or rewrite history without an explicit request.
 ```sh
 # 1) commit on the dev branch
 git add -A && git commit -m "…" && git push -u origin <dev-branch>
