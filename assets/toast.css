@@ -12,6 +12,8 @@
 .toast.in { opacity: 1; transform: none; }
 .toast.error { border-left-color: var(--danger); }
 .toast-amber { border-left-color: var(--accent-3); }   /* update prompt + its confirmation */
+/* "Updated" confirmation — same width as the update prompt so the two don't look mismatched. */
+.toast-confirm { width: min(380px, 88vw); text-align: center; }
 /* "New version available" prompt — interactive (toasts container is pointer-events:none); amber to stand out. */
 .toast-update { pointer-events: auto; display: flex; align-items: center; gap: 12px; width: min(380px, 88vw); border-left-color: var(--accent-3); }
 .toast-update span { flex: 1 1 auto; min-width: 0; }
