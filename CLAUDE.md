@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v85"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v86"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/crono-update-notification-loop-4wpiuo`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** app header — logo (in a subtle lime **chip**) + wordmark left; the **language picker · theme toggle · donation** actions are grouped into a **pill toolbar** on the right (`.header-actions` containing `.lang-wrap`/`.hbtn-theme` + `.hbtn-coffee` amber) — **icon + label** on desktop, collapsing to **icon-only** under 720px (`.hbtn-label` hidden); the in-app **Demo** modal exists (`#demoModal`) but the toolbar button was removed (no Demo entry on any page now); **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
@@ -54,7 +54,8 @@ assets/
   site.css    Landing styles        site.js  Landing animations (reveal, demo loop) + consent gate (separate IIFEs; both run even under reduced-motion)
   bibs.css    Bib-generator page styles + print sheet   bibs.js  Bib-number generator logic (loaded by bibs.html)
   legal.css   Styles for the standalone terms.html / privacy.html pages
-  toolbar.css Shared header toolbar (language · theme · demo · support) — `.header-actions`/`.hbtn*`/`.lang-wrap`; loaded by app.html, index.html AND bibs.html (single source, reused on every page)
+  toolbar.css Shared header toolbar (language · theme · support) — `.header-actions`/`.hbtn*`/`.lang-wrap`; loaded by app.html, index.html AND bibs.html (single source, reused on every page)
+  toast.css   Shared toast styles (`.toasts`/`.toast*`, update prompt + "Updated" confirmation, `.toasts-top`, `.toast-amber`) — loaded by app.html, index.html AND bibs.html. App-only `.toast-action`/`.toast-btn` (Undo) stay in app.css.
   helpers.js  Pure helpers (UMD: window.CronoH + Node require) — unit-tested; loaded by app.html, index.html AND bibs.html (bibs uses `bibRange`; landing uses the shared `consentAccepted`/`CONSENT_VERSION`/`CONSENT_KEY`)
   i18n.js     Multilanguage engine + string tables (UMD; en/ro/es/de/fr/ja/zh/hi). data-i18n / data-i18n-attr in HTML; CronoI18n.t() in JS; lang in `crono.lang`. Legal text stays EN. Key parity across langs is tested. (Full app UI, the landing AND the bib generator are translated; consent uses data-i18n-html. Legal pages + CSV/PDF headers stay EN.)
   head.js     runs in <head> before paint: applies the light/dark theme (data-theme on <html>, from `crono.theme` or OS) + wires any [data-theme-toggle]; adds .js-anim unless reduced-motion. Loaded by every page.
@@ -89,6 +90,14 @@ test/architecture.test.js   Guards (cache↔Status, ASSETS exist, no inline CSS/
 8. **Accessibility/motion:** gate animations behind `prefers-reduced-motion` (landing uses a
    `.js-anim` class added only when motion is allowed); keep focus-visible states and big tap targets.
 9. **Browser target:** modern evergreen + iOS/Safari. No transpiling.
+10. **i18n — never hardcode user-facing text.** Every visible string lives in `assets/i18n.js`
+    for **all 8 languages** (en/ro/es/de/fr/ja/zh/hi) and is shown via `data-i18n`/`data-i18n-attr`/
+    `data-i18n-html` in HTML or `CronoI18n.t()`/`tn()` in JS — **never** a bare English literal in
+    markup or `textContent`. When you add/change a string, update **all 8** tables in the same commit.
+    `npm test` enforces this: identical key sets across languages, no empty values, and every
+    `data-i18n*` key used in HTML must exist in the EN table. Pluralised counts use `tn(key, n)`
+    with a `key.one` form per language. **Exceptions (English by design):** the standalone legal
+    pages (`terms.html`/`privacy.html` + the in-app `#tpl-*` templates) and CSV/PDF export headers.
 
 ## Data model (localStorage)
 Keys: `crono.startEpoch`, `crono.entries`, `crono.participants`, `crono.distanceKm`,

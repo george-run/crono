@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'">
 <meta name="description" content="Open Crono's timer — record finishers bib-by-bib, rank by sex and age category, add pace and export to CSV. Works offline.">
 <meta name="author" content="George Vlada">
-<title>Crono — race timing app</title>
+<title data-i18n="title.app">Crono — race timing app</title>
 <link rel="canonical" href="https://crono.run/app.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Crono">
@@ -33,6 +33,7 @@
 <link rel="stylesheet" href="assets/theme.css">
 <link rel="stylesheet" href="assets/app.css">
 <link rel="stylesheet" href="assets/toolbar.css">
+<link rel="stylesheet" href="assets/toast.css">
 <link rel="stylesheet" href="assets/coffee.css">
 <script src="assets/head.js"></script>
 </head>
@@ -425,32 +426,6 @@
         <span class="spacer"></span>
         <button id="rowCancel" data-i18n="confirm.cancel">Cancel</button>
         <button id="rowSave" class="primary" data-i18n="row.save">Save</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Demo modal -->
-<div class="doc-overlay" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoTitle">
-  <div class="doc-modal demo-modal">
-    <div class="doc-modal-head">
-      <h2 id="demoTitle" data-i18n="demo.title">How to use Crono</h2>
-      <button class="doc-close" id="demoClose" title="Close" aria-label="Close">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
-      </button>
-    </div>
-    <div class="doc-modal-body">
-      <p class="demo-intro" data-i18n="demo.intro">Set the start and (optional) distance, then type each bib number and hit Record as runners finish. This preview plays by itself:</p>
-      <div class="demo" aria-hidden="true">
-        <div class="demo-setup">
-          <div class="demo-field"><span class="demo-k">Start</span><span class="demo-v">10:00:00</span></div>
-          <div class="demo-field"><span class="demo-k">Distance</span><span class="demo-v">5 km</span></div>
-        </div>
-        <div class="demo-capture">
-          <span class="demo-num" id="demoNum">0</span>
-          <span class="demo-rec" data-i18n="btn.record">Record</span>
-        </div>
-        <ul class="demo-list" id="demoList"></ul>
       </div>
     </div>
   </div>

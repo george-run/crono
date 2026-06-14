@@ -7,6 +7,7 @@
   "use strict";
   if (!("serviceWorker" in navigator)) return;
 
+  var t = (typeof CronoI18n !== "undefined") ? CronoI18n.t : function (k) { return k; };
   var reloading = false;          // guards against a double reload
   var userAskedToReload = false;  // only reload on controllerchange if the user asked
   var DISMISS_KEY = "crono.swDismissed";  // remembers a waiting version the user dismissed
@@ -39,10 +40,10 @@
   // A brief, auto-dismissing confirmation toast (no buttons).
   function showInfoToast(message) {
     var el = document.createElement("div");
-    el.className = "toast";
+    el.className = "toast toast-amber";   // match the update prompt: amber accent
     el.setAttribute("role", "status");
     el.textContent = message;
-    toastHost().appendChild(el);
+    toastHost(true).appendChild(el);      // top-anchored, like the update prompt
     requestAnimationFrame(function () { el.classList.add("in"); });
     setTimeout(function () {
       el.classList.remove("in");
@@ -54,7 +55,7 @@
   function confirmUpdateIfJustReloaded() {
     var flag = null;
     try { flag = sessionStorage.getItem(UPDATED_KEY); sessionStorage.removeItem(UPDATED_KEY); } catch (e) {}
-    if (flag) showInfoToast("Updated to the latest version");
+    if (flag) showInfoToast(t("update.updated"));
   }
 
   // Ask a worker for its CACHE name (so we can tell one waiting version from another).
@@ -132,12 +133,12 @@
     el.setAttribute("role", "status");
 
     var span = document.createElement("span");
-    span.textContent = "New version available";
+    span.textContent = t("update.available");
 
     var reload = document.createElement("button");
     reload.type = "button";
     reload.className = "toast-reload";
-    reload.textContent = "Reload";
+    reload.textContent = t("update.reload");
     reload.addEventListener("click", function () {
       if (reload.disabled) return;
       userAskedToReload = true;
@@ -145,7 +146,7 @@
       // seconds (especially the iOS fallback below), so show progress instead of a
       // button that looks like it did nothing.
       reload.disabled = true;
-      reload.textContent = "Updating…";
+      reload.textContent = t("update.updating");
       dismiss.disabled = true;
       dismiss.style.opacity = ".4";
       // Treat Reload as accepting this version too: on iOS Safari (especially with many
@@ -166,7 +167,7 @@
     var dismiss = document.createElement("button");
     dismiss.type = "button";
     dismiss.className = "toast-dismiss";
-    dismiss.setAttribute("aria-label", "Dismiss");
+    dismiss.setAttribute("aria-label", t("update.dismiss"));
     dismiss.textContent = "×";
     dismiss.addEventListener("click", function () {
       // Remember this version so the toast doesn't reappear on every navigation; a
