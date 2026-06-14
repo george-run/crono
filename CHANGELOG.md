@@ -6,6 +6,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 ## [Unreleased]
 
 ### Changed
+- **Legal operator name** changed from a personal name to "the Crono project" across Terms, Privacy, the in-app legal templates and the page author metadata.
 - **Landing copy & nav pass.** Header now has a desktop section nav (How it works · Features · FAQ; hidden ≤820px, links still in the footer). Fixed the hero headline's person mix ("time **your** race" → "time **a** race") while keeping the "for organisers" framing front-and-centre; the hero lead now leads with the audience. Trimmed repeated "offline / no-account" copy in the secondary CTA note and final CTA band, and synced the static landing fallbacks to the (tighter) translated strings.
 
 ## [0.2.0] — 2026-06-14
