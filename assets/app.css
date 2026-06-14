@@ -536,12 +536,17 @@
 
 /* ----- First-run quick tour (built by assets/tour.js) ----- */
 .tour-catch { position: fixed; inset: 0; z-index: 1240; }
+/* A strong, near-opaque scrim + a glowing lime ring so the spotlight reads clearly as a
+   tour focus — especially on dark themes, where a dim-over-dark scrim alone is too subtle. */
 .tour-spot { position: fixed; border-radius: var(--radius-sm); border: 2px solid var(--primary);
-  box-shadow: 0 0 0 9999px var(--overlay); pointer-events: none; z-index: 1250;
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), .55),
+              0 0 26px 6px rgba(var(--primary-rgb), .4),
+              0 0 0 9999px rgba(3, 6, 10, .92);
+  pointer-events: none; z-index: 1250;
   transition: top .2s ease, left .2s ease, width .2s ease, height .2s ease; }
 .tour-pop { position: fixed; z-index: 1260; width: 360px; max-width: calc(100vw - 24px);
-  background: var(--panel); color: var(--text); border: 1px solid var(--border);
-  border-radius: var(--radius); box-shadow: var(--shadow-pop); padding: 16px; }
+  background: var(--panel); color: var(--text); border: 1px solid rgba(var(--primary-rgb), .4);
+  border-radius: var(--radius); box-shadow: var(--shadow-pop), 0 0 0 1px rgba(var(--primary-rgb), .15); padding: 16px; }
 .tour-title { margin: 0 0 6px; font-size: 1.05rem; }
 .tour-body { margin: 0 0 14px; color: var(--muted); font-size: .95rem; line-height: 1.5; }
 .tour-foot { display: flex; align-items: center; gap: 8px; }
