@@ -65,6 +65,29 @@
     return lo + "–" + (AGE_BRACKETS[idx + 1] - 1);
   }
 
+  // Sex+age category for a participant, or null when data is missing. Pure: the
+  // race year is passed in (callers derive it from the start time). shortLabel is
+  // language-neutral (e.g. "M30–39"); the localized long label ("Men 30–39") is
+  // built by the caller from `sex` + `range` so this stays i18n-free.
+  function category(p, raceYear) {
+    if (!p || !p.sex || !p.birthYear) return null;
+    var age = raceYear - p.birthYear;
+    if (age < 0) return null;
+    var lo = AGE_BRACKETS[0];
+    for (var i = 0; i < AGE_BRACKETS.length; i++) { if (age >= AGE_BRACKETS[i]) lo = AGE_BRACKETS[i]; }
+    var range = bracketRange(lo);
+    return { key: p.sex + "|" + lo, sex: p.sex, lo: lo, range: range, shortLabel: p.sex + range };
+  }
+
+  // Map of entry id -> 1-based place within `list`, ranked by finish time (ties share order).
+  function computePlaces(list) {
+    var places = {};
+    list.slice()
+      .sort(function (a, b) { return a.finishEpoch - b.finishEpoch; })
+      .forEach(function (e, i) { places[e.id] = i + 1; });
+    return places;
+  }
+
   // Inclusive integer range from..to for printable bib numbers. Returns an array
   // of numbers, or null when the input is unusable: non-integers, negatives,
   // from > to, or a count larger than `max` (guards against a runaway print job).
@@ -113,6 +136,8 @@
     normalizeSex: normalizeSex,
     AGE_BRACKETS: AGE_BRACKETS,
     bracketRange: bracketRange,
+    category: category,
+    computePlaces: computePlaces,
     bibRange: bibRange,
     csvCell: csvCell,
     CONSENT_KEY: CONSENT_KEY,
