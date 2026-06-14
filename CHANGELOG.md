@@ -5,7 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Added
-- **Live results display for a second screen / projector.** A new page (`display.html`, opened from the app's Options → "Live display") shows a big, auto-updating leaderboard (Place · # · Name · Time · Pace) with ranking tabs, a live race clock and gentle auto-scroll. It mirrors the timer **live with zero network** — same-device tabs share storage, so recording a finish in the app updates the display instantly, even fully offline. Read-only; great on an external monitor at the finish.
+- **Live results display for a second screen / projector.** A new page (`display.html`, opened with the "Live display" button in the app's results header) shows a big, auto-updating leaderboard (Place · # · Name · Time · Pace) with ranking tabs, a live race clock and gentle auto-scroll. It mirrors the timer **live with zero network** — same-device tabs share storage, so recording a finish in the app updates the display instantly, even fully offline. Read-only; great on an external monitor at the finish.
 - **Optional results webhook (send to another system).** In Options you can paste a webhook URL and Crono will POST the results as JSON whenever they change — for a scoreboard, website or another app. Opt-in and **off by default** (nothing leaves the device unless you set a URL), fire-and-forget so it never blocks recording and fails silently offline. Disclosed in the Privacy Policy; `app.html` alone relaxes its CSP to allow the outbound call.
 
 ### Changed
