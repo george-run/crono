@@ -12,7 +12,7 @@ assets changed. There is **no network, no image tooling and no browser/render to
 ## Status (handoff — update on every deploy)
 _So a new session knows where things stand. Keep this block + `CHANGELOG.md [Unreleased]` current; bump the date/cache below whenever you deploy._
 - **Live & in sync** as of **2026-06-13**: `master` == `gh-pages` (Pages serves `gh-pages`), last `git diff --stat origin/master origin/gh-pages` empty. Now on the **custom domain `crono.run`** (DNS via Cloudflare, `CNAME` file in repo); all absolute URLs (OG/canonical/sitemap/robots) point at `https://crono.run/`.
-- **Service worker cache:** `CACHE = "crono-v93"` in `sw.js` — bump it next time any cached asset changes.
+- **Service worker cache:** `CACHE = "crono-v94"` in `sw.js` — bump it next time any cached asset changes.
 - **Dev branch:** `claude/crono-update-notification-loop-4wpiuo`.
 - **In-flight / recent changes:** `CHANGELOG.md → [Unreleased]` is the source of truth for *what* changed; this block only tracks deploy state + cache version.
 - **Recent UI direction (don't undo without asking):** header is consistent on every page — **logo (30px) + Oswald wordmark (1.5rem)**, same size/treatment everywhere (no chip); the **language picker (short codes EN/RO/…) · theme toggle · donation** actions are grouped into a **pill toolbar** on the right (`.header-actions` containing `.lang-wrap`/`.hbtn-theme` + `.hbtn-coffee` amber) — **icon + label** on desktop, collapsing to **icon-only** under 720px (`.hbtn-label` hidden); the in-app **Demo** modal exists (`#demoModal`) but the toolbar button was removed (no Demo entry on any page now); **no** "Works offline" badge in the header (offline message stays on landing/FAQ); **Record** = lime **rounded-rect** (not pill), full-width on its own row, **label dead-centred with the stopwatch icon pinned left** (absolute); all `.actions` buttons have centred labels; demo mocks (landing + in-app) are **grey** with a small **"DEMO"** watermark. On mobile the landing hero CTAs stack **full-width/equal** and the background route (`#heroRoute` in `.bg-motif`) is **dimmed** so it doesn't cross them. The landing shows the **same blocking consent gate as the app** (`#consent` "Welcome to Crono" modal: checkbox + Terms/Privacy links opening the standalone pages + "Accept & continue") — it shares the app's `crono.consent` key, so accepting in either place satisfies both. The **app logo/wordmark links back to the landing** (`index.html`); the existing `beforeunload` guard warns when results would be lost.
@@ -172,20 +172,23 @@ breakpoint (don't scatter several `560px` blocks); no inline `<style>` (CSP); no
 Any change to a **cached** CSS file → bump `sw.js` `CACHE` and refresh the **Status** block.
 
 ## Service worker / cache (IMPORTANT)
-- `sw.js`: **network-first for HTML pages** (so deploys show immediately when online),
-  **stale-while-revalidate for static assets** (css/js/images) — served instantly from cache, then
-  refreshed in the background, so the cache self-heals on the next load. Versioned `CACHE = "crono-vN"`.
+- `sw.js`: **network-first for everything — HTML pages AND static assets** (css/js/images). When online
+  the server is asked first and the cache is updated; the cache is the **offline fallback**. This keeps a
+  returning user's page and its CSS/JS **consistent in the same load** (no "one load behind" mismatch like
+  new HTML + old styles). Versioned `CACHE = "crono-vN"`. (History: assets were stale-while-revalidate,
+  which served a returning user the *previous* asset for the current load — that one-load gap is why the
+  app could show new markup with old styling right after a deploy.)
 - **All SW fetches bypass/validate the HTTP cache** so GitHub Pages' `max-age=600` can't serve stale
-  bytes: precache uses `fetch(…, {cache:"reload"})`; the network-first HTML fetch **and** the
-  stale-while-revalidate refresh use `fetch(…, {cache:"no-cache"})` (validate with the server, 304 when
-  unchanged). Without this the SWR refresh re-stored the *old* asset from the HTTP cache, so a deploy
-  never reached returning users until a new worker activated — the bug that made the update toast loop.
+  bytes: precache uses `fetch(…, {cache:"reload"})`; the network-first fetch (HTML **and** assets) uses
+  `fetch(…, {cache:"no-cache"})` (validate with the server, 304 when unchanged — cheap when nothing
+  changed). Without this, GitHub Pages would hand back the *old* file and we'd re-store that stale copy.
   The SW main script is fetched from network by default (`updateViaCache:"imported"`), so a `CACHE` bump
   propagates on the next navigation.
 - **Bump `CACHE` whenever any cached asset changes**, and keep the `ASSETS` precache list in sync.
-  (Bumping drops the old cache + forces a fresh precache; SWR covers you if you forget, one load later.)
-- SW runs only over http(s) (GitHub Pages), not `file://`. With SWR a returning user may still see the
-  previous asset for the current load; the next load is fresh.
+  (Bumping drops the old cache + forces a fresh precache; network-first means returning online users are
+  already current even before the new worker activates.)
+- SW runs only over http(s) (GitHub Pages), not `file://`. Online, every load is current; offline serves
+  the last-cached copy of each file.
 - **Update lifecycle (never auto-reload — bad mid-race):** a freshly-installed worker does **not**
   `skipWaiting()` on its own — it stays in *waiting* and the running version is untouched. `sw-register.js`
   shows a dismissible **"new version" toast**; clicking **Reload** posts `{type:"SKIP_WAITING"}` to the

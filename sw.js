@@ -1,12 +1,14 @@
 /* Crono service worker.
-   - HTML pages: network-first (deploys show immediately when online; cache is the offline fallback).
-   - Static assets: stale-while-revalidate (instant + offline, and the cache self-heals on the next
-     load even if CACHE wasn't bumped).
+   - HTML pages AND static assets: network-first (deploys show immediately when online; the cache
+     is the offline fallback). Both validate against the server ("no-cache") so GitHub Pages'
+     max-age=600 can't hand back stale bytes. This keeps a returning user's HTML and its CSS/JS
+     CONSISTENT in the same load — no "one load behind" mismatch (e.g. new page + old styles).
+   - Offline: every response falls back to the cache, so the whole app still works with no network.
    - Updates WAIT: a freshly-installed worker does not skipWaiting on its own. The page's
      "new version" toast posts SKIP_WAITING when the user clicks Reload, so the running
      version is never swapped out mid-race. Bump CACHE to drop the old cache + force a
      fresh precache. Keep ASSETS in sync. */
-var CACHE = "crono-v93";
+var CACHE = "crono-v94";
 var ASSETS = [
   "./",
   "index.html",
@@ -78,36 +80,22 @@ self.addEventListener("fetch", function (e) {
   var isPage = req.mode === "navigate" ||
     (req.headers.get("accept") || "").indexOf("text/html") > -1;
 
-  if (isPage) {
-    // Network-first for HTML so deploys show up immediately when online. Revalidate
-    // against the server ("no-cache") so GitHub Pages' max-age=600 can't hand back a
-    // stale page right after a deploy.
-    e.respondWith(
-      fetch(req, { cache: "no-cache" }).then(function (res) {
-        if (res && res.ok) { var c = res.clone(); caches.open(CACHE).then(function (cc) { cc.put(req, c); }); }
-        return res;
-      }).catch(function () {
-        return caches.match(req).then(function (m) { return m || caches.match("app.html") || caches.match("index.html"); });
-      })
-    );
-    return;
-  }
-
-  // Static assets: stale-while-revalidate — serve cache instantly, refresh it in the background.
-  // The revalidation MUST bypass the HTTP cache ("no-cache"): otherwise GitHub Pages'
-  // max-age=600 returns the OLD asset, we re-store that stale copy, and a deploy never
-  // propagates to returning users (the new code only arrives via the precache, i.e. only
-  // once a new worker activates). Validating with the server (304 when unchanged) fixes that.
+  // Network-first for EVERYTHING (HTML + static assets). Validate against the server
+  // ("no-cache") so GitHub Pages' max-age=600 can't hand back stale bytes, and update the
+  // cache on every successful load. When online a returning user always gets the current
+  // page AND its current CSS/JS together (no one-load-behind mismatch); offline falls back
+  // to the cache so the whole app keeps working with no network.
   e.respondWith(
-    caches.match(req).then(function (cached) {
-      var network = fetch(req, { cache: "no-cache" }).then(function (res) {
-        if (res && res.ok) {
-          var copy = res.clone();
-          caches.open(CACHE).then(function (c) { c.put(req, copy); });
-        }
-        return res;
-      }).catch(function () { return cached; });
-      return cached || network;
+    fetch(req, { cache: "no-cache" }).then(function (res) {
+      if (res && res.ok) { var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); }); }
+      return res;
+    }).catch(function () {
+      return caches.match(req).then(function (m) {
+        if (m) return m;
+        // Navigations that miss the cache fall back to a shell page.
+        if (isPage) return caches.match("app.html") || caches.match("index.html");
+        return m;
+      });
     })
   );
 });
