@@ -160,6 +160,7 @@ a { color: inherit; text-decoration: none; }
   .hero-grid { grid-template-columns: 1fr; gap: 24px; text-align: center; }
   .hero-copy { max-width: 600px; margin: 0 auto; }
   .cta { justify-content: center; }
+  .hero-points { justify-content: center; }
   .hero-art { order: -1; }
   .hero-scene { max-width: 360px; }
   /* Smaller scene → shrink the chasing card so it still has room to travel. */
