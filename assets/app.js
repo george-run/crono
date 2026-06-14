@@ -47,7 +47,6 @@
   var $statDupWrap = document.getElementById("statDupWrap");
   var $importFile = document.getElementById("importFile");
   var $restoreFile = document.getElementById("restoreFile");
-  var $displayBtn = document.getElementById("displayBtn");
   var $webhookUrl = document.getElementById("webhookUrl");
   var $webhookSend = document.getElementById("webhookSend");
   var $tabs = document.getElementById("rankingTabs");
@@ -783,7 +782,6 @@
   document.getElementById("clearBtn").addEventListener("click", clearResults);
   document.getElementById("backupBtn").addEventListener("click", exportBackup);
   document.getElementById("restoreBtn").addEventListener("click", function () { $restoreFile.click(); });
-  if ($displayBtn) $displayBtn.addEventListener("click", function () { window.open("display.html", "_blank", "noopener"); });
   if ($webhookUrl) {
     try { $webhookUrl.value = localStorage.getItem(KEY_WEBHOOK) || ""; } catch (e) {}
     $webhookUrl.addEventListener("change", function () { try { localStorage.setItem(KEY_WEBHOOK, $webhookUrl.value.trim()); } catch (e) {} });
