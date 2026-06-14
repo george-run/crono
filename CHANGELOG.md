@@ -5,7 +5,7 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 ### Changed
-- **"How it works" is now an animated race scene.** A concrete, easy-to-grasp picture: a START line (organiser), a lane with runners moving along it, and a FINISH line where a volunteer records each bib into a results card (#92, #183, #47) — with a simple numbered legend (1 Organiser sets the start · 2 Volunteers record each bib · 3 Rankings + CSV). Animation loops (runners run, results tick in) and is static/readable under reduced-motion. Translated across all eight languages, with an accessible text description.
+- **"How it works" is now an animated mini-demo that shows Crono's payoff.** Framed as the finish volunteer's **laptop**: a live race clock runs, a runner sprints to the finish line, the volunteer **types the bib number** in, and a ranked results row (Place · # · Time · Pace) drops into the board — looping through a few finishers, then resetting. Makes the value obvious (one tap at the finish → instant ranked results with times and pace, offline). HTML/CSS + a small JS driver; static and readable under reduced-motion. Numbered legend + offline note kept; translated across all eight languages.
 - **Hero headline now names the audience.** "The fastest way to time your race" → "The fastest way **for organisers** to time your race" (translated across all eight languages), so it's immediately clear who Crono is for.
 - **Clearer hero value props.**
 
