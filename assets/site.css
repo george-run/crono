@@ -113,26 +113,32 @@ a { color: inherit; text-decoration: none; }
 .card h3 { margin: 0 0 8px; font-size: 1.08rem; }
 .card p { margin: 0; color: var(--muted); font-size: .95rem; }
 
-/* how it works — animated UML-style sequence diagram (organiser · Crono · volunteers) */
+/* how it works — animated race scene (start · lane + runners · finish + results) */
 .steps-intro { text-align: center; max-width: 660px; margin: -6px auto 28px; color: var(--muted); }
-.seq-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.seq { display: block; width: 100%; min-width: 440px; max-width: 660px; height: auto; margin: 0 auto; }
-.seq text { font-family: var(--font-ui); }
-.seq-actor-box { fill: var(--panel); stroke: var(--border); stroke-width: 1.5; }
-.seq-actor-box.is-app { fill: rgba(var(--primary-rgb), .12); stroke: rgba(var(--primary-rgb), .4); }
-.seq-actor { fill: var(--text); font-size: 16px; font-weight: 700; }
-.seq-life { stroke: var(--border); stroke-width: 2; stroke-dasharray: 3 7; }
-.seq-act { fill: rgba(var(--primary-rgb), .12); stroke: rgba(var(--primary-rgb), .3); stroke-width: 1; }
-.seq-label { fill: var(--muted); font-size: 14px; font-weight: 600; }
-.seq-grp { color: var(--primary); }                /* action messages = lime */
-.seq-grp-self { color: var(--accent-2); }           /* self message = teal */
-.seq-grp-ret { color: var(--muted); }               /* return message = muted */
-.seq-line { stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.seq-line.is-dashed { stroke-dasharray: 6 5; }
-.seq-head { fill: currentColor; stroke: none; }
-.seq-flow { opacity: 0; }
-.seq-flow circle { fill: var(--primary); }
-.seq-grp-ret .seq-flow circle { fill: var(--muted); }
+.scene-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.scene { display: block; width: 100%; min-width: 460px; max-width: 680px; height: auto; margin: 0 auto; }
+.scene text { font-family: var(--font-ui); }
+.scene-lane { fill: rgba(var(--primary-rgb), .06); stroke: var(--border); stroke-width: 1.5; }
+.scene-mid { stroke: var(--muted); stroke-width: 2; stroke-dasharray: 4 12; opacity: .45; }
+.scene-startline { stroke: var(--primary); stroke-width: 3; stroke-linecap: round; }
+.scene-flag { fill: var(--primary); }
+.scene-finline { stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
+.scene-checker rect { fill: var(--text); }
+.scene-lbl { fill: var(--text); font-size: 15px; font-weight: 700; }
+.scene-runner circle { fill: var(--primary); }
+.scene-person { fill: none; stroke: var(--accent-2); stroke-width: 2; }
+.scene-card { fill: var(--panel); stroke: var(--border); stroke-width: 1.5; }
+.scene-dot { fill: var(--primary); }
+.scene-card-t { fill: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .5px; }
+.scene-rk { fill: var(--muted); font-size: 13px; font-weight: 700; }
+.scene-bib { fill: var(--text); font-size: 15px; font-weight: 700; }
+.scene-check { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+/* numbered legend mapping the scene to the workflow */
+.scene-legend { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px;
+  max-width: 760px; margin: 20px auto 0; padding: 0; }
+.scene-legend li { display: inline-flex; align-items: center; gap: 9px; color: var(--text); font-weight: 600; font-size: .95rem; }
+.sl-num { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 999px;
+  font-size: .8rem; font-weight: 700; color: var(--on-accent); background: var(--primary); flex: 0 0 auto; }
 .flow-offline { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 640px;
   margin: 22px auto 0; padding: 12px 20px; color: var(--text); font-weight: 600; font-size: .92rem;
   background: rgba(var(--accent-2-rgb), .1); border: 1px solid rgba(var(--accent-2-rgb), .3); border-radius: var(--radius); }
@@ -229,28 +235,35 @@ a { color: inherit; text-decoration: none; }
 /* ===== Animations (only when .js-anim is set; respects reduced-motion) ===== */
 .js-anim .hero-copy, .js-anim .hero-art, .js-anim .section-head,
 .js-anim .faq-list, .js-anim .cta-band,
-.js-anim .features .card, .js-anim .seq {
+.js-anim .features .card, .js-anim .scene {
   opacity: 0; transform: translateY(18px);
   transition: opacity .6s ease, transform .6s ease;
 }
 .js-anim .hero-copy.is-in, .js-anim .hero-art.is-in, .js-anim .section-head.is-in,
 .js-anim .faq-list.is-in, .js-anim .cta-band.is-in,
-.js-anim .features.is-in .card, .js-anim .seq.is-in {
+.js-anim .features.is-in .card, .js-anim .scene.is-in {
   opacity: 1; transform: none;
 }
-/* Sequence-diagram message pulses travel along each arrow, staggered, looping. */
-.seq-flow--lr  { --seq-dx: 214px; }
-.seq-flow--rl  { --seq-dx: -214px; }
-.seq-flow--rl2 { --seq-dx: -214px; }
-.js-anim .seq-flow { animation: seqFlow 3.6s cubic-bezier(.45,0,.55,1) infinite; }
-.js-anim .seq-flow.d2 { animation-delay: .9s; }
-.js-anim .seq-flow.d3 { animation-delay: 1.8s; }
-.js-anim .seq-flow.d4 { animation-delay: 2.7s; }
-@keyframes seqFlow {
-  0%       { transform: translateX(0); opacity: 0; }
-  6%       { opacity: 1; }
-  60%      { opacity: 1; }
-  72%, 100% { transform: translateX(var(--seq-dx)); opacity: 0; }
+/* Race scene: runners run the lane and finishers tick into the results card, looping.
+   Static fallback (no .js-anim): runners sit on the lane, all result rows shown. */
+.scene-runner { transform: translateX(160px); }
+.scene-runner.r2 { transform: translateX(300px); }
+.js-anim .scene-runner { transform: translateX(0); animation: sceneRun 3.6s ease-in-out infinite; }
+.js-anim .scene-runner.r2 { animation-delay: 1.3s; }
+@keyframes sceneRun {
+  0%        { transform: translateX(0); opacity: 0; }
+  10%       { opacity: 1; }
+  80%       { opacity: 1; }
+  94%, 100% { transform: translateX(380px); opacity: 0; }
+}
+.js-anim .scene-row { opacity: 0; animation: sceneRow 3.6s ease-out infinite; }
+.js-anim .scene-row.k2 { animation-delay: .5s; }
+.js-anim .scene-row.k3 { animation-delay: 1s; }
+@keyframes sceneRow {
+  0%, 14%  { opacity: 0; transform: translateX(-6px); }
+  28%      { opacity: 1; transform: none; }
+  90%      { opacity: 1; transform: none; }
+  100%     { opacity: 0; transform: none; }
 }
 /* staggered children */
 .js-anim .features.is-in .card:nth-child(2) { transition-delay: .07s; }

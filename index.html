@@ -238,63 +238,41 @@
     </div>
     <p class="steps-intro" data-i18n="steps.intro">Crono suits smaller races where runners finish a few at a time. The organiser sets the start; volunteers then tap in each bib number as runners arrive — at the finish line or any point on the course.</p>
 
-    <div class="seq-wrap">
-    <svg class="seq" viewBox="0 0 640 348" role="img" aria-label="Sequence diagram" data-i18n-attr="aria-label:flow.diagramAlt">
-      <!-- actor heads -->
-      <g class="seq-actor-g">
-        <rect class="seq-actor-box" x="25" y="6" width="150" height="40" rx="10"/>
-        <text class="seq-actor" x="100" y="31" text-anchor="middle" data-i18n="flow.actorOrg">Organiser</text>
+    <div class="scene-wrap">
+    <svg class="scene" viewBox="0 0 640 240" role="img" aria-label="Race scene" data-i18n-attr="aria-label:flow.diagramAlt">
+      <!-- running lane -->
+      <rect class="scene-lane" x="70" y="138" width="380" height="28" rx="14"/>
+      <line class="scene-mid" x1="82" y1="152" x2="438" y2="152"/>
+      <!-- start line + flag -->
+      <line class="scene-startline" x1="70" y1="116" x2="70" y2="192"/>
+      <path class="scene-flag" d="M70 116 h24 l-7 8 7 8 h-24 z"/>
+      <text class="scene-lbl" x="70" y="214" text-anchor="middle" data-i18n="flow.startLine">Start</text>
+      <!-- finish line + checkered flag -->
+      <line class="scene-finline" x1="450" y1="116" x2="450" y2="192"/>
+      <g class="scene-checker">
+        <rect x="438" y="112" width="7" height="6"/><rect x="452" y="112" width="7" height="6"/>
+        <rect x="445" y="118" width="7" height="6"/>
+        <rect x="438" y="124" width="7" height="6"/><rect x="452" y="124" width="7" height="6"/>
       </g>
-      <g class="seq-actor-g">
-        <rect class="seq-actor-box is-app" x="245" y="6" width="150" height="40" rx="10"/>
-        <text class="seq-actor" x="320" y="31" text-anchor="middle">Crono</text>
-      </g>
-      <g class="seq-actor-g">
-        <rect class="seq-actor-box" x="465" y="6" width="150" height="40" rx="10"/>
-        <text class="seq-actor" x="540" y="31" text-anchor="middle" data-i18n="flow.actorVol">Volunteer</text>
-      </g>
-      <!-- lifelines -->
-      <line class="seq-life" x1="100" y1="46" x2="100" y2="334"/>
-      <line class="seq-life" x1="320" y1="46" x2="320" y2="334"/>
-      <line class="seq-life" x1="540" y1="46" x2="540" y2="334"/>
-      <!-- activation bar on Crono -->
-      <rect class="seq-act" x="314" y="92" width="12" height="214" rx="3"/>
-      <!-- m1: Organiser → Crono "Set start" -->
-      <g class="seq-grp seq-grp-action">
-        <text class="seq-label" x="207" y="96" text-anchor="middle" data-i18n="flow.m1">Set start</text>
-        <line class="seq-line" x1="100" y1="104" x2="314" y2="104"/>
-        <path class="seq-head" d="M314 104 l-9 -4 l0 8 z"/>
-        <g class="seq-flow seq-flow--lr"><circle cx="100" cy="104" r="5"/></g>
-      </g>
-      <!-- m2: Crono self "Timing · offline" -->
-      <g class="seq-grp seq-grp-self">
-        <text class="seq-label" x="356" y="146" text-anchor="start" data-i18n="flow.m2">Timing · offline</text>
-        <path class="seq-line" d="M326 134 H350 V150 H326"/>
-        <path class="seq-head" d="M326 150 l9 -4 l0 8 z"/>
-      </g>
-      <!-- m3: Volunteer → Crono "Record #92" -->
-      <g class="seq-grp seq-grp-action">
-        <text class="seq-label" x="433" y="194" text-anchor="middle" data-i18n="flow.m3">Record #92</text>
-        <line class="seq-line" x1="540" y1="202" x2="326" y2="202"/>
-        <path class="seq-head" d="M326 202 l9 -4 l0 8 z"/>
-        <g class="seq-flow seq-flow--rl d2"><circle cx="540" cy="202" r="5"/></g>
-      </g>
-      <!-- m4: Volunteer → Crono "Record #183" -->
-      <g class="seq-grp seq-grp-action">
-        <text class="seq-label" x="433" y="240" text-anchor="middle" data-i18n="flow.m4">Record #183</text>
-        <line class="seq-line" x1="540" y1="248" x2="326" y2="248"/>
-        <path class="seq-head" d="M326 248 l9 -4 l0 8 z"/>
-        <g class="seq-flow seq-flow--rl d3"><circle cx="540" cy="248" r="5"/></g>
-      </g>
-      <!-- m5: Crono → Organiser "Rankings + CSV" (return) -->
-      <g class="seq-grp seq-grp-ret">
-        <text class="seq-label" x="207" y="296" text-anchor="middle" data-i18n="flow.m5">Rankings + CSV</text>
-        <line class="seq-line is-dashed" x1="314" y1="304" x2="100" y2="304"/>
-        <path class="seq-head" d="M100 304 l9 -4 l0 8 z"/>
-        <g class="seq-flow seq-flow--rl2 d4"><circle cx="314" cy="304" r="5"/></g>
-      </g>
+      <text class="scene-lbl" x="450" y="214" text-anchor="middle" data-i18n="flow.finishLine">Finish</text>
+      <!-- runners moving along the lane -->
+      <g class="scene-runner"><circle cx="70" cy="152" r="9"/></g>
+      <g class="scene-runner r2"><circle cx="70" cy="152" r="7"/></g>
+      <!-- volunteer + results card filling in -->
+      <g class="scene-person"><circle cx="476" cy="98" r="6"/><path d="M468 116a8 8 0 0 1 16 0"/></g>
+      <rect class="scene-card" x="492" y="84" width="134" height="128" rx="12"/>
+      <circle class="scene-dot" cx="506" cy="104" r="3"/>
+      <text class="scene-card-t" x="516" y="108">Crono</text>
+      <g class="scene-row"><text class="scene-rk" x="506" y="139">1</text><text class="scene-bib" x="526" y="139">#92</text><path class="scene-check" d="M604 135 l3 4 l7 -9"/></g>
+      <g class="scene-row k2"><text class="scene-rk" x="506" y="167">2</text><text class="scene-bib" x="526" y="167">#183</text><path class="scene-check" d="M604 163 l3 4 l7 -9"/></g>
+      <g class="scene-row k3"><text class="scene-rk" x="506" y="195">3</text><text class="scene-bib" x="526" y="195">#47</text><path class="scene-check" d="M604 191 l3 4 l7 -9"/></g>
     </svg>
     </div>
+    <ol class="scene-legend">
+      <li><span class="sl-num">1</span><span data-i18n="flow.zoneStart">Organiser sets the start</span></li>
+      <li><span class="sl-num">2</span><span data-i18n="flow.zoneFinish">Volunteers record each bib</span></li>
+      <li><span class="sl-num">3</span><span data-i18n="flow.zoneResults">Rankings + CSV export</span></li>
+    </ol>
 
     <p class="flow-offline">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M5 11a4 4 0 0 0 0 8h11"/><path d="M8.5 6.5A6 6 0 0 1 19 11a3.5 3.5 0 0 1 1.6 6.5"/></svg>
