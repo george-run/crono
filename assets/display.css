@@ -1,0 +1,52 @@
+/* Crono — live results display (projector / second screen). Big, high-contrast,
+   token-driven. The header toolbar is styled by toolbar.css; this file owns the
+   clock, ranking tabs and leaderboard table. No hardcoded colours — tokens only. */
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-ui); -webkit-font-smoothing: antialiased; }
+
+.disp { max-width: 1100px; margin: 0 auto; padding: 18px clamp(14px, 3vw, 34px) 64px; }
+
+/* Header: brand (left) + toolbar (right); the big clock drops to its own row below. */
+.disp-head { display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap; padding: 6px 0 14px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display);
+  font-weight: 700; font-size: 1.5rem; letter-spacing: -.4px; color: var(--text); text-decoration: none; }
+.brand .logo { width: 30px; height: 30px; color: var(--primary); }
+.header-actions { order: 2; margin-left: auto; }
+.disp-clock { order: 3; flex: 1 1 100%; display: flex; align-items: baseline; gap: 12px; margin-top: 6px; }
+.disp-clock-k { font-size: .74rem; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 700; }
+.disp-clock-v { font-family: var(--font-display); font-variant-numeric: tabular-nums; line-height: 1;
+  font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 700; color: var(--primary); }
+
+/* Ranking tabs */
+.disp-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 16px; }
+.disp-tabs .tab { border: 1px solid var(--border); background: var(--panel-2); color: var(--muted);
+  border-radius: 999px; padding: 8px 16px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: var(--transition); }
+.disp-tabs .tab:hover { color: var(--text); }
+.disp-tabs .tab.active { background: var(--primary); border-color: var(--primary); color: var(--on-accent); }
+.disp-tabs .tab:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* Leaderboard table — large for distance reading */
+.disp-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.disp-table thead th { text-align: left; font-size: .78rem; text-transform: uppercase; letter-spacing: .6px;
+  color: var(--muted); font-weight: 700; padding: 6px 14px; border-bottom: 2px solid var(--border); }
+.disp-table th.dt-time, .disp-table th.dt-pace,
+.disp-table td.dt-time, .disp-table td.dt-pace { text-align: right; }
+.disp-table tbody td { padding: 13px 14px; border-bottom: 1px solid var(--border);
+  font-size: clamp(1.1rem, 2.2vw, 1.55rem); }
+.disp-table tbody tr:hover { background: rgba(var(--primary-rgb), .05); }
+.dt-place { font-family: var(--font-display); font-weight: 700; color: var(--primary); width: 1%; white-space: nowrap; }
+.dt-num { color: var(--muted); font-weight: 700; width: 1%; white-space: nowrap; }
+.dt-name { font-weight: 600; }
+.dt-time { font-family: var(--font-display); font-weight: 700; white-space: nowrap; }
+.dt-pace { color: var(--muted); white-space: nowrap; }
+.dt-cat { display: inline-block; margin-left: 8px; font-size: .62em; font-weight: 700; color: var(--accent-2);
+  border: 1px solid rgba(var(--accent-2-rgb), .4); border-radius: 999px; padding: 1px 8px; vertical-align: middle; }
+.dt-dash { color: var(--muted); }
+
+.disp-empty { text-align: center; color: var(--muted); font-size: 1.1rem; padding: 48px 16px; }
+
+@media (max-width: 560px) {
+  .disp-table tbody td { padding: 11px 8px; }
+  .disp-table thead th { padding: 6px 8px; }
+}

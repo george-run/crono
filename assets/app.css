@@ -217,6 +217,18 @@
     font-size: .85rem; line-height: 1.45; margin: 8px 0;
   }
 
+  /* Optional "send results to another system" webhook (collapsed by default) */
+  .integration { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; font-size: .9rem; }
+  .integration > summary { cursor: pointer; color: var(--primary); width: fit-content; list-style: none; user-select: none; font-weight: 600; }
+  .integration > summary::before { content: "▸ "; }
+  .integration[open] > summary::before { content: "▾ "; }
+  .integration > summary:hover { color: var(--primary-hover); }
+  .integration-desc { color: var(--muted); margin: 8px 0 10px; line-height: 1.5; }
+  .integration-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .integration-row input { flex: 1 1 240px; min-width: 0; }
+  .integration-row button { flex: 0 0 auto; white-space: nowrap; }
+  @media (max-width: 560px) { .integration-row button { width: 100%; } }
+
   /* Compact results summary line (replaces the old stats panel; the secondary
      counts render only when non-zero, so the finisher list stays in focus). */
   .result-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-bottom: 14px; }

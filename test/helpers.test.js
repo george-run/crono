@@ -45,6 +45,29 @@ test("bracketRange", () => {
   assert.equal(H.bracketRange(60), "60+");
 });
 
+test("category", () => {
+  // age in 2026: 1990 -> 36 (M30–39), 1970 -> 56 (F50–59), 2010 -> 16 (M0–19), 1960 -> 66 (F60+)
+  assert.deepEqual(H.category({ sex: "M", birthYear: 1990 }, 2026),
+    { key: "M|30", sex: "M", lo: 30, range: "30–39", shortLabel: "M30–39" });
+  assert.equal(H.category({ sex: "F", birthYear: 1970 }, 2026).shortLabel, "F50–59");
+  assert.equal(H.category({ sex: "M", birthYear: 2010 }, 2026).shortLabel, "M0–19");
+  assert.equal(H.category({ sex: "F", birthYear: 1960 }, 2026).shortLabel, "F60+");
+  assert.equal(H.category({ sex: "", birthYear: 1990 }, 2026), null);   // missing sex
+  assert.equal(H.category({ sex: "M", birthYear: null }, 2026), null);  // missing year
+  assert.equal(H.category({ sex: "M", birthYear: 2030 }, 2026), null);  // negative age
+  assert.equal(H.category(null, 2026), null);
+});
+
+test("computePlaces", () => {
+  var places = H.computePlaces([
+    { id: "a", finishEpoch: 300 },
+    { id: "b", finishEpoch: 100 },
+    { id: "c", finishEpoch: 200 }
+  ]);
+  assert.deepEqual(places, { b: 1, c: 2, a: 3 });
+  assert.deepEqual(H.computePlaces([]), {});
+});
+
 test("bibRange", () => {
   assert.deepEqual(H.bibRange(1, 5), [1, 2, 3, 4, 5]);
   assert.deepEqual(H.bibRange(10, 10), [10]);
