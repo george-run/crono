@@ -92,12 +92,15 @@
       var elapsed = (state.startEpoch != null) ? (e.finishEpoch - state.startEpoch) : null;
       var name = participantName(e.runnerNumber);
       var catTag = "";
-      if (showCat) { var c = categoryForEntry(e); if (c) catTag = ' <span class="dt-cat">' + esc(c.shortLabel) + "</span>"; }
+      if (showCat) { var c = categoryForEntry(e); if (c) catTag = '<span class="dt-cat">' + esc(c.shortLabel) + "</span>"; }
+      var nameCell = esc(name);
+      if (catTag) nameCell += (name ? " " : "") + catTag;
+      if (!nameCell) nameCell = '<span class="dt-dash">—</span>';
       var pace = formatPace(elapsed, state.distanceKm);
       return "<tr>" +
         '<td class="dt-place">' + places[e.id] + "</td>" +
         '<td class="dt-num">' + esc(e.runnerNumber) + "</td>" +
-        '<td class="dt-name">' + (name ? esc(name) : '<span class="dt-dash">—</span>') + catTag + "</td>" +
+        '<td class="dt-name">' + nameCell + "</td>" +
         '<td class="dt-time">' + formatElapsed(elapsed) + "</td>" +
         '<td class="dt-pace">' + (pace || '<span class="dt-dash">—</span>') + "</td>" +
         "</tr>";
