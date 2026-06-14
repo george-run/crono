@@ -4,6 +4,9 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Changed
+- **Clearer hero value props.** The thin one-line badge ("For organisers · offline · no account") is now **three distinct icon chips** — *For organisers*, *Works offline* (accented), *No account* — so a first-time visitor grasps what Crono is and who it's for at a glance. Translated across all eight languages.
+
 ### Fixed
 - **No more stale UI after a deploy.** The service worker now serves **all files network-first when online** (HTML *and* CSS/JS), so a returning user always gets the current page together with its current styles/scripts — eliminating the "one load behind" window where new markup could render with old styling (e.g. a different header logo size). The cache remains the full offline fallback, and updates still never auto-reload mid-race.
 
