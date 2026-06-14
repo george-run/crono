@@ -4,6 +4,9 @@ All notable changes to Crono are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
+### Changed
+- **Lighter, more useful landing copy.** Trimmed the hero intro and rewrote the six feature blurbs to be benefit-led and jargon-free (e.g. "Centisecond precision, even across midnight" → "Quick and accurate"; "standard 10-year age categories" → "age group"). Applied across all eight languages. The hero badge tagline was also shortened ("works offline" → "offline") so it fits without awkward wrapping on longer languages.
+
 ### Fixed
 - **i18n review pass.** Translated the two remaining English-only surfaces — the **donation explainer modal** and the **"new version" update prompt** (available/Reload/Updating…/Updated/Dismiss) — in all eight languages (they re-translate live on language switch). The browser **tab title** now follows the language too. Counts use proper **singular/plural** per language (`tn()` + a `.one` form). A brief **flash of English** on first load for non-English users is gone (the page is hidden until i18n applies, only on i18n pages). Removed the now-unused in-app demo modal (dead code). Consolidated toast styles into one shared `assets/toast.css` (the bib generator was missing the base toast styles and showed an out-of-style/lime prompt at the bottom).
 - **The "Updated to the latest version" confirmation is now amber and shown at the top**, matching the update prompt (was green and at the bottom).
