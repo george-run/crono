@@ -113,27 +113,52 @@ a { color: inherit; text-decoration: none; }
 .card h3 { margin: 0 0 8px; font-size: 1.08rem; }
 .card p { margin: 0; color: var(--muted); font-size: .95rem; }
 
-/* how it works — animated race scene (start · lane + runners · finish + results) */
+/* how it works — animated mini-demo framed as the finish volunteer's LAPTOP: a live
+   clock, a runner crossing the finish, the bib being typed in, and a ranked results
+   board (Place · # · Time · Pace) that fills as each crosses. */
 .steps-intro { text-align: center; max-width: 660px; margin: -6px auto 28px; color: var(--muted); }
-.scene-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.scene { display: block; width: 100%; min-width: 460px; max-width: 680px; height: auto; margin: 0 auto; }
-.scene text { font-family: var(--font-ui); }
-.scene-lane { fill: rgba(var(--primary-rgb), .06); stroke: var(--border); stroke-width: 1.5; }
-.scene-mid { stroke: var(--muted); stroke-width: 2; stroke-dasharray: 4 12; opacity: .45; }
-.scene-startline { stroke: var(--primary); stroke-width: 3; stroke-linecap: round; }
-.scene-flag { fill: var(--primary); }
-.scene-finline { stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
-.scene-checker rect { fill: var(--text); }
-.scene-lbl { fill: var(--text); font-size: 15px; font-weight: 700; }
-.scene-runner circle { fill: var(--primary); }
-.scene-person { fill: none; stroke: var(--accent-2); stroke-width: 2; }
-.scene-card { fill: var(--panel); stroke: var(--border); stroke-width: 1.5; }
-.scene-dot { fill: var(--primary); }
-.scene-card-t { fill: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .5px; }
-.scene-rk { fill: var(--muted); font-size: 13px; font-weight: 700; }
-.scene-bib { fill: var(--text); font-size: 15px; font-weight: 700; }
-.scene-check { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-/* numbered legend mapping the scene to the workflow */
+/* laptop: the card is the screen, the base bar below reads as the keyboard deck */
+.hiw-laptop { max-width: 480px; margin: 0 auto; }
+.hiw-laptop-base { height: 12px; width: calc(100% + 48px); margin: -1px 0 0 -24px; background: var(--panel-2);
+  border: 1px solid var(--border); border-top: none; border-radius: 0 0 16px 16px; }
+.hiw { background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 6px 6px; padding: 18px; box-shadow: var(--shadow-soft); }
+.hiw-clock { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.hiw-clock-k { font-size: .72rem; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 700; }
+.hiw-clock-v { font-family: var(--font-display); font-variant-numeric: tabular-nums; font-size: 1.9rem;
+  font-weight: 700; color: var(--primary); line-height: 1; }
+.hiw-rec { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: .72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px; color: var(--muted); opacity: .5; transition: opacity .15s ease, color .15s ease; }
+.hiw-rec-dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.hiw-rec.on { color: var(--primary); opacity: 1; }
+.hiw-lane { position: relative; height: 56px; margin: 14px 0 16px; border-radius: 12px;
+  background: rgba(var(--primary-rgb), .06); border: 1px solid var(--border); overflow: hidden; }
+.hiw-runner { position: absolute; top: 50%; left: 8px; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--primary); transform: translateY(-50%); box-shadow: 0 0 0 4px rgba(var(--primary-rgb), .18);
+  transition: left 1.6s cubic-bezier(.4,.05,.5,1); }
+.hiw-finish { position: absolute; top: 0; bottom: 0; right: 34px; width: 8px;
+  background-image: repeating-linear-gradient(45deg, var(--text) 0 4px, transparent 4px 8px); opacity: .8; }
+.hiw-finish-lbl { position: absolute; right: 6px; bottom: 4px; font-size: .68rem; font-weight: 700; color: var(--muted); }
+/* the volunteer's entry field — bib typed in here as each runner crosses */
+.hiw-entry { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 8px 12px;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: var(--radius-input); }
+.hiw-kb { width: 20px; height: 20px; flex: 0 0 auto; color: var(--accent-2); }
+.hiw-field { display: inline-flex; align-items: center; font-family: var(--font-display);
+  font-variant-numeric: tabular-nums; font-size: 1.15rem; font-weight: 700; color: var(--text); }
+.hiw-hash { color: var(--muted); }
+.hiw-caret { width: 2px; height: 1.05em; background: var(--primary); margin-left: 3px; }
+.hiw-board { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.hiw-row { display: grid; grid-template-columns: 1.1fr .9fr 1fr 1fr; gap: 6px; align-items: center;
+  padding: 9px 12px; font-size: .92rem; font-variant-numeric: tabular-nums; }
+.hiw-row span:first-child { font-weight: 700; }
+.hiw-row--head { background: var(--panel-2); color: var(--muted); font-size: .7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .4px; }
+.hiw-rows { list-style: none; margin: 0; padding: 0; min-height: 126px; }
+.hiw-rows li { border-top: 1px solid var(--border); color: var(--text); }
+.hiw-rows li .hiw-bib { color: var(--muted); font-weight: 600; }
+.hiw-rows li.in0 { opacity: 0; transform: translateY(-8px); }
+.hiw-rows li { transition: opacity .35s ease, transform .35s ease; }
+/* numbered legend mapping the demo to the workflow */
 .scene-legend { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px;
   max-width: 760px; margin: 20px auto 0; padding: 0; }
 .scene-legend li { display: inline-flex; align-items: center; gap: 9px; color: var(--text); font-weight: 600; font-size: .95rem; }
@@ -235,36 +260,19 @@ a { color: inherit; text-decoration: none; }
 /* ===== Animations (only when .js-anim is set; respects reduced-motion) ===== */
 .js-anim .hero-copy, .js-anim .hero-art, .js-anim .section-head,
 .js-anim .faq-list, .js-anim .cta-band,
-.js-anim .features .card, .js-anim .scene {
+.js-anim .features .card, .js-anim .hiw-laptop {
   opacity: 0; transform: translateY(18px);
   transition: opacity .6s ease, transform .6s ease;
 }
 .js-anim .hero-copy.is-in, .js-anim .hero-art.is-in, .js-anim .section-head.is-in,
 .js-anim .faq-list.is-in, .js-anim .cta-band.is-in,
-.js-anim .features.is-in .card, .js-anim .scene.is-in {
+.js-anim .features.is-in .card, .js-anim .hiw-laptop.is-in {
   opacity: 1; transform: none;
 }
-/* Race scene: runners run the lane and finishers tick into the results card, looping.
-   Static fallback (no .js-anim): runners sit on the lane, all result rows shown. */
-.scene-runner { transform: translateX(160px); }
-.scene-runner.r2 { transform: translateX(300px); }
-.js-anim .scene-runner { transform: translateX(0); animation: sceneRun 3.6s ease-in-out infinite; }
-.js-anim .scene-runner.r2 { animation-delay: 1.3s; }
-@keyframes sceneRun {
-  0%        { transform: translateX(0); opacity: 0; }
-  10%       { opacity: 1; }
-  80%       { opacity: 1; }
-  94%, 100% { transform: translateX(380px); opacity: 0; }
-}
-.js-anim .scene-row { opacity: 0; animation: sceneRow 3.6s ease-out infinite; }
-.js-anim .scene-row.k2 { animation-delay: .5s; }
-.js-anim .scene-row.k3 { animation-delay: 1s; }
-@keyframes sceneRow {
-  0%, 14%  { opacity: 0; transform: translateX(-6px); }
-  28%      { opacity: 1; transform: none; }
-  90%      { opacity: 1; transform: none; }
-  100%     { opacity: 0; transform: none; }
-}
+/* Blinking caret in the volunteer's entry field (the runner motion + row inserts are
+   driven by site.js; both only run when motion is allowed). */
+.js-anim .hiw-caret { animation: hiwCaret 1.05s steps(1) infinite; }
+@keyframes hiwCaret { 50% { opacity: 0; } }
 /* staggered children */
 .js-anim .features.is-in .card:nth-child(2) { transition-delay: .07s; }
 .js-anim .features.is-in .card:nth-child(3) { transition-delay: .14s; }
