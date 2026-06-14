@@ -129,7 +129,7 @@ a { color: inherit; text-decoration: none; }
 .hiw-route-path { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2 12; opacity: .55; }
 .hiw-route-start { fill: var(--primary); }
 .hiw-pin-body { fill: var(--primary); }
-.hiw-pin-dot { fill: var(--on-accent); }
+.hiw-pin-num { fill: var(--on-accent); font-family: var(--font-display); font-weight: 700; font-size: 9px; }
 .hiw-vol { flex: 0 0 auto; width: 60px; display: flex; flex-direction: column; align-items: center; gap: 5px; position: relative; }
 .hiw-vol-fig { width: 48px; height: 48px; color: var(--accent-2); }
 .hiw-vol-lap { fill: rgba(var(--accent-2-rgb), .18); }
