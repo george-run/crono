@@ -281,11 +281,12 @@
         <details class="integration">
           <summary data-i18n="integration.title">Send results to another system (optional)</summary>
           <div class="integration-body">
-            <p class="integration-desc" data-i18n="integration.desc">Paste a webhook URL and Crono will POST the results as JSON whenever they change — for a scoreboard, website or another app. It needs a connection; leave it empty to keep everything on this device.</p>
+            <p class="integration-desc" data-i18n="integration.desc">Paste a webhook URL and Crono will POST the results as JSON — instantly when they change and re-synced every 5 seconds, so the other system stays live. It needs a connection; leave it empty to keep everything on this device.</p>
             <div class="integration-row">
               <input type="url" id="webhookUrl" inputmode="url" autocomplete="off" placeholder="https://…" aria-label="Results webhook URL" data-i18n-attr="placeholder:integration.urlPh,aria-label:integration.title">
               <button type="button" id="webhookSend" data-i18n="btn.sendNow">Send now</button>
             </div>
+            <p class="integration-tech" data-i18n="integration.tech">Your endpoint must accept a cross-origin POST: answer the browser's preflight (OPTIONS) and return the headers Access-Control-Allow-Origin (your site or *), Access-Control-Allow-Methods: POST, OPTIONS and Access-Control-Allow-Headers: Content-Type. The body is JSON (Content-Type: application/json) over HTTPS.</p>
           </div>
         </details>
 
