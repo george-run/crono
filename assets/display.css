@@ -41,12 +41,21 @@ body { background: var(--bg); color: var(--text); font-family: var(--font-ui); -
 .dt-time { font-family: var(--font-display); font-weight: 700; white-space: nowrap; }
 .dt-pace { color: var(--muted); white-space: nowrap; }
 .dt-cat { display: inline-block; margin-left: 8px; font-size: .62em; font-weight: 700; color: var(--accent-2);
-  border: 1px solid rgba(var(--accent-2-rgb), .4); border-radius: 999px; padding: 1px 8px; vertical-align: middle; }
+  border: 1px solid rgba(var(--accent-2-rgb), .4); border-radius: 999px; padding: 1px 8px; vertical-align: middle; white-space: nowrap; }
 .dt-dash { color: var(--muted); }
 
 .disp-empty { text-align: center; color: var(--muted); font-size: 1.1rem; padding: 48px 16px; }
 
+/* Fullscreen is a desktop/projector feature — the API is unreliable on phones, so hide it there. */
+@media (max-width: 720px) { .hbtn-fs { display: none; } }
+
 @media (max-width: 560px) {
-  .disp-table tbody td { padding: 11px 8px; }
-  .disp-table thead th { padding: 6px 8px; }
+  .disp { padding: 14px 12px 48px; }
+  .disp-clock-v { font-size: clamp(2rem, 11vw, 2.6rem); }
+  .disp-table tbody td { padding: 11px 6px; font-size: 1rem; }
+  .disp-table thead th { padding: 6px 6px; font-size: .68rem; }
+  /* Pace is secondary — drop it on phones so Place · # · Name · Time fit without crowding. */
+  .dt-pace, .disp-table th.dt-pace { display: none; }
+  /* Category chip sits on its own line under the name on narrow screens. */
+  .dt-cat { display: inline-block; margin: 4px 0 0; }
 }
